@@ -32,7 +32,7 @@ public class AuthService {
         .claim("role","ADMIN")
         .issuer(issuer)
         .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + accessExpiration))
+        .expiration(new Date(System.currentTimeMillis() + Long.parseLong(accessExpiration)))
         .signWith(secretKey, io.jsonwebtoken.SignatureAlgorithm.HS512)
         .compact();
 
