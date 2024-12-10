@@ -5,7 +5,9 @@ import com.sparta_logistics.product.domain.repository.ProductRepository;
 import com.sparta_logistics.product.presentation.dto.CreateProductRequest;
 import com.sparta_logistics.product.presentation.dto.CreateProductResponse;
 import com.sparta_logistics.product.presentation.dto.ReadProductResponse;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,5 +31,10 @@ public class ProductService {
         .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
     return ReadProductResponse.of(product);
+  }
+
+  public List<ReadProductResponse> readProducts() {
+    List<Product> products = productRepository.findAll();
+    return products.stream().map(ReadProductResponse::of).collect(Collectors.toList());
   }
 }
