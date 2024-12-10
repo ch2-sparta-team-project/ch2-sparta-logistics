@@ -4,6 +4,7 @@ import com.sparta_logistics.product.application.service.ProductService;
 import com.sparta_logistics.product.presentation.dto.CreateProductRequest;
 import com.sparta_logistics.product.presentation.dto.CreateProductResponse;
 import com.sparta_logistics.product.presentation.dto.ReadProductResponse;
+import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,5 +35,11 @@ public class ProductController {
   public ResponseEntity<ReadProductResponse> readProduct(@PathVariable UUID productId) {
     ReadProductResponse response = productService.readProduct(productId);
     return ResponseEntity.ok(response);
+  }
+
+  @GetMapping
+  public ResponseEntity<List<ReadProductResponse>> readProducts() {
+    List<ReadProductResponse> responses = productService.readProducts();
+    return ResponseEntity.ok(responses);
   }
 }
