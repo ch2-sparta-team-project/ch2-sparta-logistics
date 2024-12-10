@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @Entity
@@ -39,11 +40,12 @@ public class User {
       final String username,
       final String password,
       final String slackId,
-      final Role role
+      final Role role,
+      PasswordEncoder passwordEncoder
   ) {
     return User.builder()
         .username(username)
-        .password(password)
+        .password(passwordEncoder.encode(password))
         .slackId(slackId)
         .role(role)
         .build();

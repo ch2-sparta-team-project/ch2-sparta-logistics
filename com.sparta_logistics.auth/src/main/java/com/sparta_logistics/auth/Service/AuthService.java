@@ -70,7 +70,7 @@ public class AuthService {
     log.info("Creating user");
     validateDuplicateUser(signUpRequestDto);
     Role role = validateAndGetRole(signUpRequestDto.getRole());
-    User user = User.create(signUpRequestDto.getUsername(), signUpRequestDto.getPassword(), signUpRequestDto.getSlackId(), role);
+    User user = User.create(signUpRequestDto.getUsername(), signUpRequestDto.getPassword(), signUpRequestDto.getSlackId(), role, passwordEncoder);
 
      userRepository.save(user);
     return "회원 가입 성공";
