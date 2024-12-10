@@ -1,16 +1,23 @@
 package com.sparta_logistics.product.presentation.dto;
 
 import java.util.UUID;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@AllArgsConstructor
 public class CreateProductResponse {
 
   private UUID productId;
+
+  public static CreateProductResponse of(UUID productId) {
+    return CreateProductResponse.builder().
+        productId(productId)
+        .build();
+  }
 }

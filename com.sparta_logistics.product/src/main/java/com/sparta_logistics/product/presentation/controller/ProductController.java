@@ -1,5 +1,6 @@
 package com.sparta_logistics.product.presentation.controller;
 
+import com.sparta_logistics.product.application.service.ProductService;
 import com.sparta_logistics.product.presentation.dto.CreateProductRequest;
 import com.sparta_logistics.product.presentation.dto.CreateProductResponse;
 import lombok.RequiredArgsConstructor;
