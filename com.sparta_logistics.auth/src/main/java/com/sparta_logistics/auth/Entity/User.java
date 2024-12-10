@@ -1,6 +1,5 @@
 package com.sparta_logistics.auth.Entity;
 
-import com.sparta_logistics.auth.Dto.SignUpDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,6 +7,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,7 +18,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "msa_user")
+@AllArgsConstructor
+@Table(name = "p_user")
+@Builder
 public class User {
 
   @Id
@@ -31,10 +34,18 @@ public class User {
   private Role role;
   private Status status;
 
-  public User(SignUpDto signUpDto, String password) {
-    this.username = signUpDto.getUsername();
-    this.password = password;
-    this.slackId = signUpDto.getSlackId();
-    this.role = signUpDto.getRole();
+  // 유저 생성 메서드
+  public static User create(
+      final String username,
+      final String password,
+      final String slackId,
+      final Role role
+  ) {
+    return User.builder()
+        .username(username)
+        .password(password)
+        .slackId(slackId)
+        .role(role)
+        .build();
   }
 }
