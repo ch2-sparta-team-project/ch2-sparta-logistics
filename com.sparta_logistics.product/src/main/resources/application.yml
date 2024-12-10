@@ -2,8 +2,8 @@ spring:
   application:
     name: product-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/sparta_logistics_auth
-    username: username
+    url: jdbc:postgresql://localhost:5432/sparta_logistics_product
+    username: postgres
     password: password
     driver-class-name: org.postgresql.Driver
   jpa:
