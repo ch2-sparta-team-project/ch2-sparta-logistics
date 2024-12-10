@@ -5,6 +5,8 @@ import com.sparta_logistics.product.domain.repository.ProductRepository;
 import com.sparta_logistics.product.presentation.dto.CreateProductRequest;
 import com.sparta_logistics.product.presentation.dto.CreateProductResponse;
 import com.sparta_logistics.product.presentation.dto.ReadProductResponse;
+import com.sparta_logistics.product.presentation.dto.UpdateProductRequest;
+import com.sparta_logistics.product.presentation.dto.UpdateProductResponse;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,5 +38,15 @@ public class ProductService {
   public List<ReadProductResponse> readProducts() {
     List<Product> products = productRepository.findAll();
     return products.stream().map(ReadProductResponse::of).collect(Collectors.toList());
+  }
+
+  public UpdateProductResponse updateProduct(UUID productId, UpdateProductRequest request) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+
+    product.updateProductUsingRequest(request);
+    productRepository.save(product);
+
+    return UpdateProductResponse.of(product.getId());
   }
 }

@@ -1,6 +1,7 @@
 package com.sparta_logistics.product.domain.model;
 
 import com.sparta_logistics.product.presentation.dto.CreateProductRequest;
+import com.sparta_logistics.product.presentation.dto.UpdateProductRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -54,5 +55,12 @@ public class Product extends BaseEntity {
         .imageUrl(request.getImageUrl())
         .price(request.getPrice())
         .build();
+  }
+
+  public void updateProductUsingRequest(UpdateProductRequest request) {
+    this.name = request.getProductName();
+    this.stock = request.getProductStock();
+    this.imageUrl = request.getProductImageUrl();
+    this.price = request.getProductPrice();
   }
 }
