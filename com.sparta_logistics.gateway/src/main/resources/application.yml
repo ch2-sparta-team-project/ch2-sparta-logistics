@@ -1,0 +1,55 @@
+server:
+  port: 19091
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+        - id: auth
+          uri: lb://auth
+          predicates:
+            - Path=/**
+
+        - id: hub
+          uri: lb://hub
+          predicates:
+            - Path=/**
+
+        - id: company
+          uri: lb://company
+          predicates:
+            - Path=/**
+
+        - id: order
+          uri: lb://order
+          predicates:
+            - Path=/**
+
+        - id: product
+          uri: lb://product
+          predicates:
+            - Path=/**
+
+        - id: delivery
+          uri: lb://delivery
+          predicates:
+            - Path=/**
+
+      discovery:
+        locator:
+          enabled: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:19090/eureka/
+
+
+service:
+  jwt:
+    access-expiration: 3600000
+    secret-key: ${JWT_SECRET_KEY}
