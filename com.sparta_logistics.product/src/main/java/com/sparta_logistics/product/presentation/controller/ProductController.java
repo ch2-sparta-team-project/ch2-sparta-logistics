@@ -4,6 +4,8 @@ import com.sparta_logistics.product.application.service.ProductService;
 import com.sparta_logistics.product.presentation.dto.CreateProductRequest;
 import com.sparta_logistics.product.presentation.dto.CreateProductResponse;
 import com.sparta_logistics.product.presentation.dto.ReadProductResponse;
+import com.sparta_logistics.product.presentation.dto.UpdateProductRequest;
+import com.sparta_logistics.product.presentation.dto.UpdateProductResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,5 +44,12 @@ public class ProductController {
   public ResponseEntity<List<ReadProductResponse>> readProducts() {
     List<ReadProductResponse> responses = productService.readProducts();
     return ResponseEntity.ok(responses);
+  }
+
+  @PutMapping("/{productId}")
+  public ResponseEntity<UpdateProductResponse> updateProduct(@PathVariable UUID productId,
+      @RequestBody UpdateProductRequest request) {
+    UpdateProductResponse response = productService.updateProduct(productId, request);
+    return ResponseEntity.ok(response);
   }
 }
