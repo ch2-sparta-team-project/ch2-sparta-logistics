@@ -1,8 +1,8 @@
 package com.sparta_logistics.order.application.port;
 
-import com.sparta_logistics.order.application.dto.CompanyDto;
+import com.sparta_logistics.order.infrastructure.client.dto.CompanyCreateDto;
 
 public interface CompanyClientPort {
 
-  CompanyDto findCompanyInfoByUserId(String userId);
+  CompanyCreateDto findCompanyInfoByUserId(String userId);
 }

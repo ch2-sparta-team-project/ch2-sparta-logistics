@@ -1,10 +1,11 @@
 package com.sparta_logistics.order.application.service;
 
-import com.sparta_logistics.order.application.dto.CompanyDto;
-import com.sparta_logistics.order.application.dto.CreateDeliveryReq;
+import com.sparta_logistics.order.application.dto.OrderReadResponse;
+import com.sparta_logistics.order.infrastructure.client.dto.CompanyCreateDto;
+import com.sparta_logistics.order.infrastructure.client.dto.DeliveryCreateRequest;
 import com.sparta_logistics.order.application.dto.CreateOrderDto;
 import com.sparta_logistics.order.application.dto.CreateOrderRes;
-import com.sparta_logistics.order.application.dto.UserDto;
+import com.sparta_logistics.order.infrastructure.client.dto.UserCreateDto;
 import com.sparta_logistics.order.application.port.CompanyClientPort;
 import com.sparta_logistics.order.application.port.DeliveryClientPort;
 import com.sparta_logistics.order.application.port.ProductClientPort;
@@ -32,8 +33,8 @@ public class OrderService {
     //Delivery 를 생성할 때 필요한 정보 생성
     //외부 포트 연결
     String sourceHubId = productClientPort.findHubIdByProductId(dto.getProductId());
-    CompanyDto companyInfo = companyClientPort.findCompanyInfoByUserId(dto.getUserId());
-    UserDto userInfo = userClientPort.findUserInfoByUserId(dto.getUserId());
+    CompanyCreateDto companyInfo = companyClientPort.findCompanyInfoByUserId(dto.getUserId());
+    UserCreateDto userInfo = userClientPort.findUserInfoByUserId(dto.getUserId());
 
     //Dto 를 Entity 로 변환
     Order order = Order.create(
@@ -52,7 +53,7 @@ public class OrderService {
 
     //Delivery 생성
     String deliveryId = deliveryClientPort.createDelivery(
-        CreateDeliveryReq.builder()
+        DeliveryCreateRequest.builder()
             .sourceHubId(sourceHubId)
             .orderId(order.getId())
             .address(companyInfo.address())
@@ -63,6 +64,8 @@ public class OrderService {
 
     //Order 에 DeliveryId 연결
     order.updateDeliveryId(deliveryId);
+    //product 수량 감소
+    productClientPort.updateProductQuantity(dto.getQuantity());
 
     return CreateOrderRes.builder()
         .orderId(order.getId())
@@ -71,5 +74,6 @@ public class OrderService {
         .requestDescription(order.getRequestDescription())
         .build();
   }
+
 
 }

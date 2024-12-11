@@ -1,9 +1,9 @@
-package com.sparta_logistics.order.application.dto;
+package com.sparta_logistics.order.infrastructure.client.dto;
 
 import lombok.Builder;
 
 @Builder
-public record CreateDeliveryReq(
+public record DeliveryCreateRequest(
     String sourceHubId,
     String orderId,
     String address,
