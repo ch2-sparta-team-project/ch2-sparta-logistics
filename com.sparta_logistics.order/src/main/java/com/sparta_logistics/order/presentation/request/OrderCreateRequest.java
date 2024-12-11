@@ -2,11 +2,11 @@ package com.sparta_logistics.order.presentation.request;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.sparta_logistics.order.application.dto.CreateOrderDto;
+import com.sparta_logistics.order.application.dto.OrderCreateDto;
 import jakarta.validation.constraints.NotNull;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record CreateOrderReq(
+public record OrderCreateRequest(
     @NotNull
     String supplierCompanyId, //프론트에서 전달
     @NotNull
@@ -18,8 +18,8 @@ public record CreateOrderReq(
     String requestDescription //사용자 기입
 ) {
 
-  public CreateOrderDto toDTO(String userId) {
-    return CreateOrderDto.builder()
+  public OrderCreateDto toDTO(String userId) {
+    return OrderCreateDto.builder()
         .supplierCompanyId(this.supplierCompanyId)
         .userId(userId)
         .productId(this.productId)

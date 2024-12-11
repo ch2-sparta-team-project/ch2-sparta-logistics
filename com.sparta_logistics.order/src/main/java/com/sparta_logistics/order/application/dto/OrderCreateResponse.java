@@ -6,7 +6,7 @@ import lombok.Builder;
 
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record CreateOrderRes(
+public record OrderCreateResponse(
     String orderId,
     String productName,
     Integer quantity,

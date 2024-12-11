@@ -1,10 +1,9 @@
 package com.sparta_logistics.order.application.service;
 
-import com.sparta_logistics.order.application.dto.OrderReadResponse;
 import com.sparta_logistics.order.infrastructure.client.dto.CompanyCreateDto;
 import com.sparta_logistics.order.infrastructure.client.dto.DeliveryCreateRequest;
-import com.sparta_logistics.order.application.dto.CreateOrderDto;
-import com.sparta_logistics.order.application.dto.CreateOrderRes;
+import com.sparta_logistics.order.application.dto.OrderCreateDto;
+import com.sparta_logistics.order.application.dto.OrderCreateResponse;
 import com.sparta_logistics.order.infrastructure.client.dto.UserCreateDto;
 import com.sparta_logistics.order.application.port.CompanyClientPort;
 import com.sparta_logistics.order.application.port.DeliveryClientPort;
@@ -28,7 +27,7 @@ public class OrderService {
   private final UserClientPort userClientPort;
 
   @Transactional
-  public CreateOrderRes createOrder(CreateOrderDto dto) {
+  public OrderCreateResponse createOrder(OrderCreateDto dto) {
 
     //Delivery 를 생성할 때 필요한 정보 생성
     //외부 포트 연결
@@ -67,7 +66,7 @@ public class OrderService {
     //product 수량 감소
     productClientPort.updateProductQuantity(dto.getQuantity());
 
-    return CreateOrderRes.builder()
+    return OrderCreateResponse.builder()
         .orderId(order.getId())
         .productName(dto.getProductName())
         .quantity(order.getQuantity())
