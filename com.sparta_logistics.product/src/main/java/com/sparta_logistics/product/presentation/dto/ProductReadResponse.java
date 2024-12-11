@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class ReadProductResponse {
+public class ProductReadResponse {
 
   private UUID productId;
   private UUID companyId;
@@ -22,8 +22,8 @@ public class ReadProductResponse {
   private String productImageUrl;
   private Long productPrice;
 
-  public static ReadProductResponse of(Product product) {
-    return ReadProductResponse.builder()
+  public static ProductReadResponse of(Product product) {
+    return ProductReadResponse.builder()
         .companyId(product.getCompanyId())
         .hubId(product.getHubId())
         .productId(product.getId())

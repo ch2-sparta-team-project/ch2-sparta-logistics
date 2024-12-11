@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class CreateProductResponse {
+public class ProductCreateResponse {
 
   private UUID productId;
 
-  public static CreateProductResponse of(UUID productId) {
-    return CreateProductResponse.builder().
+  public static ProductCreateResponse of(UUID productId) {
+    return ProductCreateResponse.builder().
         productId(productId)
         .build();
   }

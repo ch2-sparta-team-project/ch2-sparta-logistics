@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class UpdateProductResponse {
+public class ProductUpdateResponse {
 
   private UUID productId;
 
-  public static UpdateProductResponse of(UUID productId) {
-    return UpdateProductResponse.builder()
+  public static ProductUpdateResponse of(UUID productId) {
+    return ProductUpdateResponse.builder()
         .productId(productId)
         .build();
   }
