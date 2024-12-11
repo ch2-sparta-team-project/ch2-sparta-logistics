@@ -7,6 +7,7 @@ import com.sparta_logistics.order.presentation.request.OrderCreateRequest;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class OrderController {
   @PostMapping("")
   public ResponseEntity<OrderCreateResponse> createOrder(@RequestBody @Valid OrderCreateRequest req,
       @AuthenticationPrincipal RequestUserDetails user) {
-    return ResponseEntity.ok(orderService.createOrder(req.toDTO(user.getUserId())));
+    return ResponseEntity.status(HttpStatus.CREATED).body(orderService.createOrder(req.toDTO(user.getUserId())));
   }
 
 }
