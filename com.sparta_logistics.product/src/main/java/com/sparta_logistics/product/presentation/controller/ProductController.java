@@ -3,6 +3,7 @@ package com.sparta_logistics.product.presentation.controller;
 import com.sparta_logistics.product.application.service.ProductService;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
+import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
@@ -11,6 +12,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,5 +55,9 @@ public class ProductController {
     return ResponseEntity.ok(response);
   }
 
-
+  @DeleteMapping("/{productId}")
+  public ResponseEntity<ProductDeleteResponse> deleteProduct(@PathVariable UUID productId) {
+    ProductDeleteResponse response = productService.deleteProduct(productId);
+    return ResponseEntity.ok(response);
+  }
 }

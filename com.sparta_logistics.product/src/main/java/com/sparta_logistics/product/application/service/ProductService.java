@@ -4,6 +4,7 @@ import com.sparta_logistics.product.domain.model.Product;
 import com.sparta_logistics.product.domain.repository.ProductRepository;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
+import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
@@ -51,5 +52,15 @@ public class ProductService {
     product.updateProductUsingRequest(request);
 
     return ProductUpdateResponse.of(product.getId());
+  }
+
+  @Transactional
+  public ProductDeleteResponse deleteProduct(UUID productId) {
+    Product product = productRepository.findById(productId)
+        .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+
+    productRepository.delete(product);
+
+    return ProductDeleteResponse.of(product.getId());
   }
 }
