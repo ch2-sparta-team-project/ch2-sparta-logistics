@@ -12,13 +12,16 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ProductService {
 
   private final ProductRepository productRepository;
 
+  @Transactional
   public CreateProductResponse createProduct(CreateProductRequest request) {
     //COMPANY 유효성 체크
 
@@ -40,6 +43,7 @@ public class ProductService {
     return products.stream().map(ReadProductResponse::of).collect(Collectors.toList());
   }
 
+  @Transactional
   public UpdateProductResponse updateProduct(UUID productId, UpdateProductRequest request) {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
