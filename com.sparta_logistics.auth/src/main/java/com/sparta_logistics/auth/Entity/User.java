@@ -2,6 +2,8 @@ package com.sparta_logistics.auth.Entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,11 +31,18 @@ public class User {
   @Column(columnDefinition = "UUID", updatable = false, nullable = false)
   private UUID id = UUID.randomUUID();
 
+  @Column(nullable = false, length = 20)
   private String username;
+
+  @Column(nullable = false)
   private String password;
+
+  @Column(nullable = false, length = 20)
   private String slackId;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
   private Role role;
-  private Status status;
 
   // 유저 생성 메서드
   public static User create(

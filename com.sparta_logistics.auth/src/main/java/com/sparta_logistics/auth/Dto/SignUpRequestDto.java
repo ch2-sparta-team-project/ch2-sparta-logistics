@@ -1,10 +1,8 @@
 package com.sparta_logistics.auth.Dto;
 
 import com.sparta_logistics.auth.Entity.Role;
-import com.sparta_logistics.auth.Entity.User;
 import lombok.Getter;
 import jakarta.validation.constraints.Pattern;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
 public class SignUpRequestDto {
@@ -20,16 +18,7 @@ public class SignUpRequestDto {
       message = "비밀번호는 8~15자의 알파벳 대소문자, 숫자, 특수문자를 포함해야 합니다."
   )
   private String password;
-
   private String slackId;
   private Role role;
 
-  public User toUser(PasswordEncoder passwordEncoder) {
-    return User.builder()
-        .username(username)
-        .password(passwordEncoder.encode(password))
-        .slackId(slackId)
-        .role(role)
-        .build();
-  }
 }
