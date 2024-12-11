@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class AuthService {
+public class UserService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
 
 
-  public AuthService(@Value("${service.jwt.secret-key}") String secretKey,
+  public UserService(@Value("${service.jwt.secret-key}") String secretKey,
       UserRepository userRepository,
       PasswordEncoder passwordEncoder,
       JwtUtil jwtUtil) {

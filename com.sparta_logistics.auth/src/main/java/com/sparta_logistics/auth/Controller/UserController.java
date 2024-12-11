@@ -1,7 +1,7 @@
 package com.sparta_logistics.auth.Controller;
 
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
-import com.sparta_logistics.auth.Service.AuthService;
+import com.sparta_logistics.auth.Service.UserService;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,29 +14,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/user")
 @Slf4j
-public class AuthController {
+public class UserController {
 
-  private final AuthService authService;
+  private final UserService userService;
 
   @Getter
   private final String serverPort;
 
-  public AuthController(AuthService authService, @Value("${server.port}") String ServerPort) {
-    this.authService = authService;
-    this.serverPort = ServerPort;
+  public UserController(UserService userService, @Value("${server.port}") String serverPort) {
+    this.userService = userService;
+    this.serverPort = serverPort;
   }
 
-  @PostMapping("/SignUp")
-  public ResponseEntity<?> SignUp(@RequestBody SignUpRequestDto SignUpRequestDto) {
-    return ResponseEntity.ok((authService.signUp(SignUpRequestDto)));
+  @PostMapping("/signUp")
+  public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto SignUpRequestDto) {
+    return ResponseEntity.ok((userService.signUp(SignUpRequestDto)));
   }
 
   @GetMapping("/info")
-  public ResponseEntity<?> UserInfo(@RequestHeader("Authorization") String token) {
+  public ResponseEntity<?> userInfo(@RequestHeader("Authorization") String token) {
     String accessToken = token.replace("Bearer ", "");
-    return ResponseEntity.ok(authService.getUserInfoFromAccessToken(accessToken));
+    return ResponseEntity.ok(userService.getUserInfoFromAccessToken(accessToken));
   }
 
 }

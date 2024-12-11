@@ -18,7 +18,7 @@ import javax.crypto.SecretKey;
 
 @Slf4j
 @Component
-public class LocalJwtAuthenticationFilter implements GlobalFilter {
+public class JwtAuthenticationFilter implements GlobalFilter {
 
   @Value("${service.jwt.secret-key}")
   private String secretKey;
@@ -26,7 +26,7 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String path = exchange.getRequest().getURI().getPath();
-    if (path.equals("/auth/Login") || path.equals(("/auth/Sign-up"))) {
+    if (path.equals("/user/Login") || path.equals(("/auth/signUp"))) {
       return chain.filter(exchange);
     }
 
@@ -48,14 +48,18 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
     return null;
   }
 
-  private boolean validateToken(String token) {
+  private boolean validateToken(String token, ServerWebExchange exchange) {
     try {
       SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
       Jws<Claims> claimsJws = Jwts.parser()
           .verifyWith(key)
           .build().parseSignedClaims(token);
       log.info("#####payload :: " + claimsJws.getPayload().toString());
-
+      Claims claims = claimsJws.getPayload();
+      exchange.getRequest().mutate()
+          .header("X-Username", claims.get("username").toString())
+          .header("X-Role", claims.get("role").toString())
+          .build();
       return true;
     } catch (Exception e) {
       return false;
