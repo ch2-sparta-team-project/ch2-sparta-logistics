@@ -49,7 +49,6 @@ public class ProductService {
         .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
     product.updateProductUsingRequest(request);
-    productRepository.save(product);
 
     return UpdateProductResponse.of(product.getId());
   }
