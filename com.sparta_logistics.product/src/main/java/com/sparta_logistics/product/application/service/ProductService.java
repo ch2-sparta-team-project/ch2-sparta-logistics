@@ -59,7 +59,7 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
 
-    productRepository.delete(product);
+    product.delete();
 
     return ProductDeleteResponse.of(product.getId());
   }
