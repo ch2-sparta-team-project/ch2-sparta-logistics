@@ -4,5 +4,9 @@ import com.sparta_logistics.order.infrastructure.client.dto.CompanyCreateDto;
 
 public interface CompanyClientPort {
 
-  CompanyCreateDto findCompanyInfoByUserId(String userId);
+  CompanyCreateDto findCompanyInfoForCreateByUserId(String userId);
+
+  String findCompanyAffiliationHubIdByUserId(String userId);
+
+  String findCompanyNameByCompanyId(String companyId);
 }

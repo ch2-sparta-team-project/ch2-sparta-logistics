@@ -11,7 +11,17 @@ import org.springframework.stereotype.Component;
 public class CompanyClientAdapter implements CompanyClientPort {
 
   @Override
-  public CompanyCreateDto findCompanyInfoByUserId(String userId) {
+  public CompanyCreateDto findCompanyInfoForCreateByUserId(String userId) {
     return new CompanyCreateDto("mock_company_id", "mock_hub_id", "address", 111.1, 111.1);
+  }
+
+  @Override
+  public String findCompanyAffiliationHubIdByUserId(String userId) {
+    return "mock_affiliation_hub_id";
+  }
+
+  @Override
+  public String findCompanyNameByCompanyId(String companyId) {
+    return "mock_company_name";
   }
 }

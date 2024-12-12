@@ -10,7 +10,12 @@ import org.springframework.stereotype.Component;
 public class UserClientAdapter implements UserClientPort {
 
   @Override
-  public UserCreateDto findUserInfoByUserId(String userId) {
+  public UserCreateDto findUserInfoForCreateByUserId(String userId) {
     return new UserCreateDto("강찬욱", "kan0202@naver.com");
+  }
+
+  @Override
+  public String findUserNameByUserId(String userId) {
+    return "mock_user_name";
   }
 }
