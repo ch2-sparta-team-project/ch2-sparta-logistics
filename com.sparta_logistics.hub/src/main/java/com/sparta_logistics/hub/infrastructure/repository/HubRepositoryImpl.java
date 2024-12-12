@@ -33,7 +33,7 @@ public class HubRepositoryImpl implements HubRepositoryCustom {
             nameContains(searchRequest.name()),
             addressContains(searchRequest.address()),
             isCenterTrue(searchRequest.isCenter()),
-            centerHubContains(searchRequest.name()),
+            centerHubContains(searchRequest.centerHubName()),
             hub.deletedAt.isNull()
         )
         .orderBy(orders.toArray(new OrderSpecifier[0]))
@@ -62,25 +62,16 @@ public class HubRepositoryImpl implements HubRepositoryCustom {
   }
   private List<OrderSpecifier<?>> getAllOrderSpecifiers(Pageable pageable) {
     List<OrderSpecifier<?>> orders = new ArrayList<>();
-    String temp = "isCenter";
     if (pageable.getSort() != null) {
       for (Sort.Order sortOrder : pageable.getSort()) {
         com.querydsl.core.types.Order direction = sortOrder.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC;
         switch (sortOrder.getProperty()) {
-          case "name" :
-            orders.add(new OrderSpecifier<>(direction, hub.name));
-            break;
-          case "address":
-            orders.add(new OrderSpecifier<>(direction, hub.address));
-            break;
-          case "isCenter":
-            orders.add(new OrderSpecifier<>(direction, hub.isCenter));
-            break;
-          case "centerHubName":
-            orders.add(new OrderSpecifier<>(direction, hub.centerHub.name));
-            break;
-          default:
-            break;
+          case "name" -> orders.add(new OrderSpecifier<>(direction, hub.name));
+          case "address" -> orders.add(new OrderSpecifier<>(direction, hub.address));
+          case "isCenter" -> orders.add(new OrderSpecifier<>(direction, hub.isCenter));
+          case "centerHubName" -> orders.add(new OrderSpecifier<>(direction, hub.centerHub.name));
+          default -> {
+          }
         }
       }
     }
