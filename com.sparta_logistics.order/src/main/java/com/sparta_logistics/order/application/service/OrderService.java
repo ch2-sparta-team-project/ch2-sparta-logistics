@@ -2,6 +2,7 @@ package com.sparta_logistics.order.application.service;
 
 import com.sparta_logistics.order.application.dto.OrderDeleteResponse;
 import com.sparta_logistics.order.application.dto.OrderReadResponse;
+import com.sparta_logistics.order.application.dto.OrderUpdateResponse;
 import com.sparta_logistics.order.application.mapper.OrderDtoMapper;
 import com.sparta_logistics.order.global.exception.ApplicationException;
 import com.sparta_logistics.order.global.exception.ErrorCode;
@@ -16,6 +17,7 @@ import com.sparta_logistics.order.application.port.ProductClientPort;
 import com.sparta_logistics.order.application.port.UserClientPort;
 import com.sparta_logistics.order.domain.model.Order;
 import com.sparta_logistics.order.infrastructure.repository.OrderRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +70,7 @@ public class OrderService {
     );
 
     //Order 에 DeliveryId 연결
-    order.updateDeliveryId(deliveryId);
+    order.assignDelivery(deliveryId);
     //product 수량 감소
     productClientPort.updateProductQuantity(dto.getQuantity());
 
@@ -78,6 +80,14 @@ public class OrderService {
         .quantity(order.getQuantity())
         .requestDescription(order.getRequestDescription())
         .build();
+  }
+
+  @Transactional(readOnly = true)
+  public List<OrderReadResponse> readAllOrders(String userId, String role) {
+    // ROLE_MASTER 일 경우 전부 조회
+    // ROLE_HUB_MANAGER 일 경우 담당 허브만 조회
+    // 아닐 경우 본인의 주문만 조회
+    return null;
   }
 
   @Transactional(readOnly = true)
@@ -95,7 +105,7 @@ public class OrderService {
     if (role.equals("ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")) {
       verifyOrderAccessForUser(order.getUserId(), userId);
     }
-    
+
     // Response 내용 수집 후 반환
     String productName = productClientPort.findProductNameByProductId(order.getProductId());
     String receiverCompanyName = companyClientPort.findCompanyNameByCompanyId(
@@ -106,6 +116,22 @@ public class OrderService {
 
     return OrderDtoMapper.toOrderReadResponse(order, receiverCompanyName, supplierCompanyName,
         userName, productName);
+  }
+
+  @Transactional
+  public OrderUpdateResponse cancelOrder(String orderId, String userId, String role) {
+    // 취소할 Order 찾기
+    Order order = orderRepository.findByIdAndDeletedAtIsNull(orderId)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
+
+    // 허브 매니저일 경우 담당 허브의 주문만 취소 가능하도록 검증
+    if (role.equals("ROLE_HUB_MANAGER")) {
+      verifyOrderAccessForHubManager(userId, order);
+    }
+    // 주문 취소
+    order.refund();
+
+    return new OrderUpdateResponse(order.getId());
   }
 
   @Transactional
@@ -142,6 +168,4 @@ public class OrderService {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED_EXCEPTION);
     }
   }
-
-
 }

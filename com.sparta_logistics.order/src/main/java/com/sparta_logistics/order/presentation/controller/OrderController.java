@@ -3,11 +3,13 @@ package com.sparta_logistics.order.presentation.controller;
 import com.sparta_logistics.order.application.dto.OrderCreateResponse;
 import com.sparta_logistics.order.application.dto.OrderDeleteResponse;
 import com.sparta_logistics.order.application.dto.OrderReadResponse;
+import com.sparta_logistics.order.application.dto.OrderUpdateResponse;
 import com.sparta_logistics.order.application.service.OrderService;
 import com.sparta_logistics.order.presentation.dto.RequestUserDetails;
 import com.sparta_logistics.order.presentation.request.OrderCreateRequest;
 import jakarta.validation.Valid;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +32,26 @@ public class OrderController {
         .body(orderService.createOrder(req.toDTO(user.getUserId())));
   }
 
+  @GetMapping("")
+  public ResponseEntity<List<OrderReadResponse>> readAllOrders(
+      @AuthenticationPrincipal RequestUserDetails user
+  ) {
+    return ResponseEntity.ok(orderService.readAllOrders(user.getUserId(), user.getRole()));
+  }
+
   @GetMapping("{orderId}")
   public ResponseEntity<OrderReadResponse> readOrder(
       @PathVariable("orderId") String orderId,
       @AuthenticationPrincipal RequestUserDetails user) {
     return ResponseEntity.ok(orderService.readOrder(orderId, user.getUserId(), user.getRole()));
+  }
+
+  @Secured({"ROLE_MASTER", "ROLE_HUB_MANAGER"})
+  @PatchMapping("{orderId}")
+  public ResponseEntity<OrderUpdateResponse> cancelOrder(
+      @PathVariable("orderId") String orderId,
+      @AuthenticationPrincipal RequestUserDetails user) {
+    return ResponseEntity.ok(orderService.cancelOrder(orderId, user.getUserId(), user.getRole()));
   }
 
   @Secured({"ROLE_MASTER", "ROLE_HUB_MANAGER"})

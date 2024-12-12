@@ -54,7 +54,7 @@ public class Order extends Base {
       Integer quantity,
       String requestDescription,
       Boolean isRefunded
-  ){
+  ) {
     return Order.builder()
         .supplierCompanyId(supplierCompanyId)
         .receiverCompanyId(receiverCompanyId)
@@ -67,7 +67,11 @@ public class Order extends Base {
         .build();
   }
 
-  public void updateDeliveryId(String deliveryId){
+  public void refund() {
+    this.isRefunded = true;
+  }
+
+  public void assignDelivery(String deliveryId) {
     this.deliveryId = deliveryId;
   }
 }
