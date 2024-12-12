@@ -58,7 +58,7 @@ public class HubController {
   //허브 정보 수정
   @PutMapping("/{hub_id}")
   public HubReadResponse updateHub(@PathVariable(value = "hub_id") UUID hubId,
-      HubUpdateRequest updateRequest) {
+      @RequestBody HubUpdateRequest updateRequest) {
     return hubService.updateHub(hubId, updateRequest);
   }
 
@@ -71,21 +71,21 @@ public class HubController {
   //인접 허브 추가(중심 허브의 인접 허브 목록에 허브 추가)
   @PostMapping("/center/{hub_id}")
   public List<HubReadResponse> addNearHubList(@PathVariable(value = "hub_id") UUID hubId,
-      NearHubAddRequest nearHubAddRequest) {
+      @RequestBody NearHubAddRequest nearHubAddRequest) {
     return hubService.addNearHubList(hubId, nearHubAddRequest);
   }
 
   //중심 허브에 인접 허브 제거
   @DeleteMapping("/center/{hub_id}")
   public String removeNearHubList(@PathVariable(value = "hub_id") UUID hubId,
-      NearHubRemoveRequest nearHubRemoveRequest) {
+      @RequestBody NearHubRemoveRequest nearHubRemoveRequest) {
     return hubService.removeNearHubList(hubId, nearHubRemoveRequest);
   }
 
   //중심 허브 변경(일반 허브의 중심 허브 수정)
   @PutMapping("/center/{hub_id}")
   public String changeCenterHub(@PathVariable(value = "hub_id") UUID hubId,
-      CenterHubChangeRequest centerHubChangeRequest) {
+      @RequestBody CenterHubChangeRequest centerHubChangeRequest) {
     return hubService.changeCenterHub(hubId, centerHubChangeRequest);
   }
 
@@ -93,5 +93,10 @@ public class HubController {
   @PatchMapping("/center/{hub_id}")
   public String handleCenterHubSetting(@PathVariable(value = "hub_id") UUID hubId) {
     return hubService.handleCenterHubSetting(hubId);
+  }
+
+  @PostMapping("/temp")
+  public UUID generateRandomUUID(){
+    return UUID.randomUUID();
   }
 }

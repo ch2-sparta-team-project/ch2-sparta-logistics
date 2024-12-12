@@ -7,8 +7,7 @@ public record HubUpdateRequest (
     String name,
     String address,
     Double longitude,
-    Double latitude,
-    Boolean isCenter
+    Double latitude
 ){
 
 }
