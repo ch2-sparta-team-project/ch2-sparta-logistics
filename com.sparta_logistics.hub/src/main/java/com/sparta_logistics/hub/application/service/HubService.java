@@ -102,6 +102,8 @@ public class HubService {
   public String handleCenterHubSetting(UUID hubId) {
     Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId);
     if (hub.getIsCenter()) {
+      List<Hub> nearHubList = hubRepository.findByCenterHub(hub);
+      nearHubList.forEach(nearHub -> nearHub.setCenterHub(null));
       hub.deactivateCenterHub();
       return hub.getName() + "가 일반 허브로 설정되었습니다.";
     }

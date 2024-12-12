@@ -9,5 +9,6 @@ public interface HubRepository extends JpaRepository<Hub, UUID>, HubRepositoryCu
   Hub findByIdAndDeletedAtIsNull(UUID hubId);
   Hub findByIdAndDeletedAtIsNotNull(UUID hubId);
   List<Hub> findByIdIn(List<UUID> idList);
+  List<Hub> findByCenterHub(Hub hub);
 
 }
