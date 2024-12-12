@@ -113,6 +113,9 @@ public class HubService {
   public String changeCenterHub(UUID hubId, CenterHubChangeRequest centerHubChangeRequest) {
     Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId);
     Hub newCenterHub = hubRepository.findByIdAndDeletedAtIsNull(centerHubChangeRequest.centerHubId());
+    if (!newCenterHub.getIsCenter()){
+      throw new IllegalArgumentException("중심 허브가 아닌 허브를 중심 허브로 설정할 수 없습니다.");
+    }
     hub.setCenterHub(newCenterHub);
     return hub.getName() + "의 중심 허브가 " + newCenterHub.getName() + "로 변경되었습니다.";
   }

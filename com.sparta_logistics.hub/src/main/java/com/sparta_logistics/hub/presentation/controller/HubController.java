@@ -88,17 +88,17 @@ public class HubController {
     return hubService.removeNearHubList(hubId, nearHubRemoveRequest);
   }
 
+  //중심 허브 설정 활성화/비활성화 (일반 허브 <-> 중심 허브 변경)
+  @PatchMapping("/center/{hub_id}")
+  public String handleCenterHubSetting(@PathVariable(value = "hub_id") UUID hubId) {
+    return hubService.handleCenterHubSetting(hubId);
+  }
+
   //중심 허브 변경(일반 허브의 중심 허브 수정)
   @PutMapping("/center/{hub_id}")
   public String changeCenterHub(@PathVariable(value = "hub_id") UUID hubId,
       @RequestBody CenterHubChangeRequest centerHubChangeRequest) {
     return hubService.changeCenterHub(hubId, centerHubChangeRequest);
-  }
-
-  //중심 허브 설정 활성화/비활성화 (일반 허브 <-> 중심 허브 변경)
-  @PatchMapping("/center/{hub_id}")
-  public String handleCenterHubSetting(@PathVariable(value = "hub_id") UUID hubId) {
-    return hubService.handleCenterHubSetting(hubId);
   }
 
   @PostMapping("/temp")
