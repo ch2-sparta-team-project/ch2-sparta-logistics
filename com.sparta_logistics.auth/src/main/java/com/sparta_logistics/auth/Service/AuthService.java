@@ -6,7 +6,13 @@ import com.sparta_logistics.auth.Entity.User;
 import com.sparta_logistics.auth.Repository.UserRepository;
 import com.sparta_logistics.auth.Security.JwtUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
+import java.util.Date;
+import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,20 +20,21 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Slf4j
-public class UserService {
+public class AuthService {
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
   private final JwtUtil jwtUtil;
+  private final SecretKey secretKey;
 
-
-  public UserService(@Value("${service.jwt.secret-key}") String secretKey,
+  public AuthService(@Value("${service.jwt.secret-key}") String secretKey,
       UserRepository userRepository,
       PasswordEncoder passwordEncoder,
       JwtUtil jwtUtil) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.jwtUtil = jwtUtil;
+    this.secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
   }
 
   /*
@@ -75,5 +82,21 @@ public class UserService {
       return Role.HUB_TO_HUB_DELIVERY;
     } else
       return Role.COMPANY_MANAGER;
+  }
+
+  @Value("${spring.application.name}")
+    private String issuer;
+
+  @Value("${service.jwt.access-expiration}")
+    private Long accessExpiration;
+
+  public String createAccessTokenTemp(String user_id) {
+    return Jwts.builder()
+        .claim("user_id", user_id)
+        .issuer(issuer)
+        .issuedAt(new Date(System.currentTimeMillis()))
+        .expiration(new Date(System.currentTimeMillis() + accessExpiration))
+        .signWith(secretKey, SignatureAlgorithm.HS512)
+        .compact();
   }
 }
