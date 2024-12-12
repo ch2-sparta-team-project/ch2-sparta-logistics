@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class UpdateProductRequest {
+public class ProductUpdateRequest {
   private String productName;
   private Integer productStock;
   private String productImageUrl;
