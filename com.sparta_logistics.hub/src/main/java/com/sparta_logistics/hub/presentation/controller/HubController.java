@@ -68,6 +68,12 @@ public class HubController {
     return hubService.deleteHub(hubId);
   }
 
+  // 허브 복원
+  @PatchMapping("/{hub_id}")
+  public String restoreHub(@PathVariable(value = "hub_id") UUID hubId) {
+    return hubService.restoreHub(hubId);
+  }
+
   //인접 허브 추가(중심 허브의 인접 허브 목록에 허브 추가)
   @PostMapping("/center/{hub_id}")
   public List<HubReadResponse> addNearHubList(@PathVariable(value = "hub_id") UUID hubId,

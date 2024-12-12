@@ -69,6 +69,11 @@ public class Hub extends BaseEntity {
     setDeletedBy(deletedBy);
   }
 
+  public void restoreHub() {
+    setDeletedAt(null);
+    setDeletedBy(null);
+  }
+
   // 중심 허브 설정 활성화
   public void activateCenterHub(){
     this.isCenter = true;

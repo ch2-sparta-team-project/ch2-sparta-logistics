@@ -73,6 +73,13 @@ public class HubService {
     return "허브 삭제가 완료되었습니다.";
   }
 
+  // 허브 복원
+  public String restoreHub(UUID hubId) {
+    Hub hub = hubRepository.findByIdAndDeletedAtIsNotNull(hubId);
+    hub.restoreHub();
+    return "허브가 복원되었습니다.";
+  }
+
   // 중심 허브에 인접 허브 추가
   public List<HubReadResponse> addNearHubList(UUID hubId, NearHubAddRequest nearHubAddRequest) {
     Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId);

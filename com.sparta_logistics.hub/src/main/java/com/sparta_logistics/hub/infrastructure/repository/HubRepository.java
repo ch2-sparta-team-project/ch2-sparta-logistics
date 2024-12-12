@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface HubRepository extends JpaRepository<Hub, UUID>, HubRepositoryCustom {
   Hub findByIdAndDeletedAtIsNull(UUID hubId);
+  Hub findByIdAndDeletedAtIsNotNull(UUID hubId);
   List<Hub> findByIdIn(List<UUID> idList);
 
 }
