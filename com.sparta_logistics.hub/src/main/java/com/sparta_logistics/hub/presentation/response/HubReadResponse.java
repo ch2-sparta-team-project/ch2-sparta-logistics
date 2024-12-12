@@ -1,10 +1,14 @@
 package com.sparta_logistics.hub.presentation.response;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.sparta_logistics.hub.domain.model.Hub;
 import java.util.UUID;
 import lombok.Builder;
 
+
 @Builder
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record HubReadResponse(
     UUID hubId,
     String name,
