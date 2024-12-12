@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   public JwtAuthenticationFilter(JwtUtil jwtUtil) {
     this.jwtUtil = jwtUtil;
-    setFilterProcessesUrl("/user/login");
+    setFilterProcessesUrl("/auth/login");
   }
 
   @Override
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       SignInRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
           SignInRequestDto.class);
 
-      if (requestDto.getUsername() == null || requestDto.getUsername().isEmpty()) {
+      if (requestDto.getUserName() == null || requestDto.getUserName().isEmpty()) {
         throw new IllegalArgumentException("Username cannot be empty");
       }
       if (requestDto.getPassword() == null || requestDto.getPassword().isEmpty()) {
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
       return getAuthenticationManager().authenticate(
           new UsernamePasswordAuthenticationToken(
-              requestDto.getUsername(),
+              requestDto.getUserName(),
               requestDto.getPassword(),
               null
           )

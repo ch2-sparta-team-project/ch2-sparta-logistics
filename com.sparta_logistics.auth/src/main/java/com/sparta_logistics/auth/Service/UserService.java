@@ -38,7 +38,7 @@ public class UserService {
     validateDuplicateUser(signUpRequestDto);
 
     Role role = validateAndGetRole(signUpRequestDto.getRole());
-    User user = User.create(signUpRequestDto.getUsername(), signUpRequestDto.getPassword(), signUpRequestDto.getSlackId(), role, passwordEncoder);
+    User user = User.create(signUpRequestDto.getUserName(), signUpRequestDto.getPassword(), signUpRequestDto.getSlackId(), role, passwordEncoder);
 
     userRepository.save(user);
     return "회원 가입 성공";
@@ -58,7 +58,7 @@ public class UserService {
     if (userRepository.findBySlackId(signUpRequestDto.getSlackId()).isPresent()) {
       throw new RuntimeException("Slack ID가 존재합니다.");
     }
-    if (userRepository.findByUsername(signUpRequestDto.getUsername()).isPresent()) {
+    if (userRepository.findByUserName(signUpRequestDto.getUserName()).isPresent()) {
       throw new RuntimeException("이미 존재하는 회원명입니다.");
     }
   }

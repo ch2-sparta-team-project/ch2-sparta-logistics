@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/auth")
 @Slf4j
 public class UserController {
 
@@ -28,7 +28,7 @@ public class UserController {
     this.serverPort = serverPort;
   }
 
-  @PostMapping("/signUp")
+  @PostMapping("/sign-up")
   public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto SignUpRequestDto) {
     return ResponseEntity.ok((userService.signUp(SignUpRequestDto)));
   }

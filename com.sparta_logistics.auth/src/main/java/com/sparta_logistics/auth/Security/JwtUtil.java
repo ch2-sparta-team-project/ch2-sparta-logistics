@@ -35,10 +35,10 @@ public class JwtUtil {
   }
 
   // 토큰 생성
-  public String generateToken(String username, Role role, String slackId) {
+  public String generateToken(String userName, Role role, String slackId) {
     return Jwts.builder()
-        .subject(username)
-        .claim("username", username)
+        .subject(userName)
+        .claim("userName", userName)
         .claim("role", role)
         .claim("slackId", slackId)
         .issuedAt(new Date())

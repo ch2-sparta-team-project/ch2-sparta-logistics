@@ -29,10 +29,10 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(columnDefinition = "UUID", updatable = false, nullable = false)
-  private UUID id = UUID.randomUUID();
+  private UUID userId = UUID.randomUUID();
 
   @Column(nullable = false, length = 20)
-  private String username;
+  private String userName;
 
   @Column(nullable = false)
   private String password;
@@ -53,7 +53,7 @@ public class User {
       PasswordEncoder passwordEncoder
   ) {
     return User.builder()
-        .username(username)
+        .userName(username)
         .password(passwordEncoder.encode(password))
         .slackId(slackId)
         .role(role)
