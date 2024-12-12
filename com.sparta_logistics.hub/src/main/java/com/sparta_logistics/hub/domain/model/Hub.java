@@ -56,13 +56,12 @@ public class Hub extends BaseEntity {
   }
 
   public void updateHub(UUID userId, String name, String address, Double longitude,
-      Double latitude, Boolean isCenter){
+      Double latitude){
     this.userId = userId != null ? userId : this.userId;
     this.name = name != null ? name : this.name;
     this.address = address != null ? address : this.address;
     this.longitude = longitude != null ? longitude : this.longitude;
     this.latitude = latitude != null ? latitude : this.latitude;
-    this.isCenter = isCenter != null ? isCenter : this.isCenter;
   }
 
   public void deleteHub(String deletedBy) {
@@ -84,6 +83,7 @@ public class Hub extends BaseEntity {
   // 중심 허브 할당
   public void setCenterHub(Hub hub){
     this.centerHub = hub;
+    hub.addNearHub(this);
   }
 
   // 인접 허브 추가
