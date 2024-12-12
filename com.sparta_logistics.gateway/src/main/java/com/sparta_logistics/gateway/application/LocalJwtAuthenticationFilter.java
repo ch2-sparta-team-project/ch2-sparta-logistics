@@ -1,4 +1,4 @@
-package com.sparta_logistics.gateway.Config;
+package com.sparta_logistics.gateway.application;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -18,7 +18,7 @@ import javax.crypto.SecretKey;
 
 @Slf4j
 @Component
-public class JwtAuthenticationFilter implements GlobalFilter {
+public class LocalJwtAuthenticationFilter implements GlobalFilter {
 
   @Value("${service.jwt.secret-key}")
   private String secretKey;
@@ -26,7 +26,7 @@ public class JwtAuthenticationFilter implements GlobalFilter {
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String path = exchange.getRequest().getURI().getPath();
-    if (path.equals("/user/Login") || path.equals(("/auth/signUp"))) {
+    if (path.equals("/auth/login") || path.equals("/auth/sign-up")) {
       return chain.filter(exchange);
     }
 
@@ -48,23 +48,21 @@ public class JwtAuthenticationFilter implements GlobalFilter {
     return null;
   }
 
-  private boolean validateToken(String token, ServerWebExchange exchange) {
+  private boolean validateToken(String token) {
     try {
       SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
       Jws<Claims> claimsJws = Jwts.parser()
           .verifyWith(key)
           .build().parseSignedClaims(token);
       log.info("#####payload :: " + claimsJws.getPayload().toString());
-      Claims claims = claimsJws.getPayload();
-      exchange.getRequest().mutate()
-          .header("X-Username", claims.get("username").toString())
-          .header("X-Role", claims.get("role").toString())
-          .build();
+
+      // 추가적인 검증 로직 (예: 토큰 만료 여부 확인 등)을 여기에 추가할 수 있습니다.
       return true;
     } catch (Exception e) {
       return false;
     }
   }
+
 
 
 }
