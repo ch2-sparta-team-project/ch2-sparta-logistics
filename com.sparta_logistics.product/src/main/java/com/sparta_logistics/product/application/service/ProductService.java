@@ -10,8 +10,11 @@ import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.PagedModel.PageMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,9 +42,25 @@ public class ProductService {
     return ProductReadResponse.of(product);
   }
 
-  public List<ProductReadResponse> readProducts() {
-    List<Product> products = productRepository.findAll();
-    return products.stream().map(ProductReadResponse::of).collect(Collectors.toList());
+  public PagedModel<ProductReadResponse> readProducts(
+      List<UUID> ids,
+      String name,
+      Boolean outOfStock,
+      Long minPrice,
+      Long maxPrice,
+      Pageable pageable
+  ) {
+    return toPagedModel(productRepository.findAll(ids, name, outOfStock, minPrice, maxPrice, pageable));
+  }
+
+  private PagedModel<ProductReadResponse> toPagedModel(Page<ProductReadResponse> page){
+    PagedModel.PageMetadata metadata = new PageMetadata(
+        page.getSize(),
+        page.getNumber(),
+        page.getTotalElements(),
+        page.getTotalPages()
+    );
+    return PagedModel.of(page.getContent(), metadata);
   }
 
   @Transactional
