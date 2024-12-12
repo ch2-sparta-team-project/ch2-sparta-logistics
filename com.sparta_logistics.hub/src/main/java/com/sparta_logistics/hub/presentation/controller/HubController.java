@@ -11,6 +11,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -55,7 +56,10 @@ public class HubController {
     return hubService.updateHub(hubId, updateRequest);
   }
   //허브 삭제
-
+  @DeleteMapping("/{hub_id")
+  public String deleteHub(@PathVariable(value = "hub_id") UUID hubId) {
+    return hubService.deleteHub(hubId);
+  }
   //중심 허브 설정 활성화 (일반 허브 -> 중심 허브 변경)
 
   //중심 허브 설정 비활성화 (중심 허브 -> 일반 허브 변경)

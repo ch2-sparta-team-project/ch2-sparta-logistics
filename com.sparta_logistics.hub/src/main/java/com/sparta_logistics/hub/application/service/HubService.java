@@ -58,4 +58,11 @@ public class HubService {
         updateRequest.isCenter());
     return HubReadResponse.buildResponseByEntity(hub);
   }
+
+  public String deleteHub(UUID hubId) {
+    Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId);
+    //todo: auth 연결 시 컨트롤러에서 받아오는 식으로 변경 필요
+    hub.deleteHub("temp user");
+    return "허브 삭제가 완료되었습니다.";
+  }
 }
