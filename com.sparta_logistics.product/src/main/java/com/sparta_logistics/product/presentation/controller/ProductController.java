@@ -5,6 +5,7 @@ import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
+import com.sparta_logistics.product.presentation.dto.ProductSearchRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
 import java.util.List;
@@ -48,20 +49,12 @@ public class ProductController {
 
   @GetMapping
   public ResponseEntity<PagedModel<ProductReadResponse>> readProducts(
-      @RequestParam(required = false) List<UUID> ids,
-      @RequestParam(required = false) String name,
-      @RequestParam(required = false) Boolean outOfStock,
-      @RequestParam(required = false) Long minPrice,
-      @RequestParam(required = false) Long maxPrice,
+      ProductSearchRequest request,
       @PageableDefault(size = 10, page = 0) Pageable pageable
   ) {
     PagedModel<ProductReadResponse> responses = productService
         .readProducts(
-            ids,
-            name,
-            outOfStock,
-            minPrice,
-            maxPrice,
+            request,
             pageable
         );
     return ResponseEntity.ok(responses);

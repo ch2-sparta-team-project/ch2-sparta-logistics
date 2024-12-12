@@ -6,6 +6,7 @@ import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
+import com.sparta_logistics.product.presentation.dto.ProductSearchRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
 import java.util.List;
@@ -43,17 +44,20 @@ public class ProductService {
   }
 
   public PagedModel<ProductReadResponse> readProducts(
-      List<UUID> ids,
-      String name,
-      Boolean outOfStock,
-      Long minPrice,
-      Long maxPrice,
+      ProductSearchRequest request,
       Pageable pageable
   ) {
-    return toPagedModel(productRepository.findAll(ids, name, outOfStock, minPrice, maxPrice, pageable));
+    return toPagedModel(productRepository.findAll(
+        request.getIds(),
+        request.getName(),
+        request.getOutOfStock(),
+        request.getMinPrice(),
+        request.getMaxPrice(),
+        pageable)
+    );
   }
 
-  private PagedModel<ProductReadResponse> toPagedModel(Page<ProductReadResponse> page){
+  private PagedModel<ProductReadResponse> toPagedModel(Page<ProductReadResponse> page) {
     PagedModel.PageMetadata metadata = new PageMetadata(
         page.getSize(),
         page.getNumber(),
