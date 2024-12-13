@@ -1,6 +1,5 @@
 package com.sparta_logistics.gateway.Config;
 
-import com.sparta_logistics.gateway.GatewayApplication;
 import java.util.logging.Logger;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;

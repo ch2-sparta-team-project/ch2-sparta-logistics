@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -35,9 +36,10 @@ public class JwtUtil {
   }
 
   // 토큰 생성
-  public String generateToken(String userName, Role role, String slackId) {
+  public String generateToken(UUID userId, String userName, Role role, String slackId) {
     return Jwts.builder()
         .subject(userName)
+        .claim("userId",userId)
         .claim("userName", userName)
         .claim("role", role)
         .claim("slackId", slackId)

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @Slf4j
 public class AuthController {
 
@@ -41,12 +42,6 @@ public class AuthController {
   public ResponseEntity<?> userInfo(@RequestHeader("Authorization") String token) {
     String accessToken = token.replace("Bearer ", "");
     return ResponseEntity.ok(authService.getUserInfoFromAccessToken(accessToken));
-  }
-
-  @GetMapping("/token")
-  public ResponseEntity<?> hi(@RequestParam String user_id){
-
-    return ResponseEntity.ok(new AuthResponse(authService.createAccessTokenTemp(user_id)));
   }
 
   @Data
