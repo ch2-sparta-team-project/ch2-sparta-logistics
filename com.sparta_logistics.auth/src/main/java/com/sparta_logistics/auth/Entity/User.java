@@ -24,7 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @Table(name = "p_user")
 @Builder
-public class User {
+public class User extends BaseEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -52,11 +52,16 @@ public class User {
       final Role role,
       PasswordEncoder passwordEncoder
   ) {
-    return User.builder()
+    User user = User.builder()
         .userName(username)
         .password(passwordEncoder.encode(password))
         .slackId(slackId)
         .role(role)
         .build();
+
+    user.initAuditInfo(user);
+
+    return user;
+
   }
 }
