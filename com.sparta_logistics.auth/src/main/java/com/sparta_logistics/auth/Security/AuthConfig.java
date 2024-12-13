@@ -68,8 +68,8 @@ public class AuthConfig {
         )
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(
-                "/auth/sign-up",
-                "/auth/login"
+                "/api/v1/auth/sign-up",
+                "/api/v1/auth/login"
             ).permitAll()
             .anyRequest().authenticated()
         )

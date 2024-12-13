@@ -6,12 +6,9 @@ import com.sparta_logistics.auth.Entity.User;
 import com.sparta_logistics.auth.Repository.UserRepository;
 import com.sparta_logistics.auth.Security.JwtUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.transaction.Transactional;
-import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -89,13 +86,4 @@ public class AuthService {
   @Value("${service.jwt.access-expiration}")
     private Long accessExpiration;
 
-  public String createAccessTokenTemp(String user_id) {
-    return Jwts.builder()
-        .claim("user_id", user_id)
-        .issuer(issuer)
-        .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + accessExpiration))
-        .signWith(secretKey, SignatureAlgorithm.HS512)
-        .compact();
-  }
 }
