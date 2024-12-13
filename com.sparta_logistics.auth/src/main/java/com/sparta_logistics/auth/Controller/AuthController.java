@@ -40,13 +40,13 @@ public class AuthController {
     return ResponseEntity.ok((authService.signUp(SignUpRequestDto)));
   }
 
-  @GetMapping("users/info")
+  @GetMapping("/users/info")
   public ResponseEntity<?> userInfo(@RequestHeader("Authorization") String token) {
     String accessToken = token.replace("Bearer ", "");
     return ResponseEntity.ok(authService.getUserInfoFromAccessToken(accessToken));
   }
 
-  @DeleteMapping("users/delete")
+  @DeleteMapping("/users/delete")
   public ResponseEntity<?> softDeleteUser(@RequestHeader("Authorization") String token) {
     String accessToken = token.replace("Bearer ", "");
     authService.softDeleteUser(accessToken);
