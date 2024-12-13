@@ -24,7 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     String userId = UUID.randomUUID().toString();
     String userName = "user";
-    List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("MASTER"));
+    List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("MASTER_MANAGER"));
 
     UserDetails mockUserDetails = new RequestUserDetails(userId, userName, authorities);
 
