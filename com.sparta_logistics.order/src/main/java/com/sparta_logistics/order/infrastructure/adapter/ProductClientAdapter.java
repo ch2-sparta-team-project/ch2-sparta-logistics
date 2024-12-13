@@ -19,4 +19,9 @@ public class ProductClientAdapter implements ProductClientPort {
   public void updateProductQuantity(int purchaseQuantity) {
     //구매한 만큼 수량 감소
   }
+
+  @Override
+  public String findProductNameByProductId(String productId) {
+    return "mock_product_name";
+  }
 }

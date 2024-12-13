@@ -6,13 +6,12 @@ import lombok.Builder;
 
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record OrderReadResponse(
+public record OrderReadAllResponse(
     String orderId,
-    String supplierCompanyName,
-    String receiverCompanyName,
+    String supplierCompanyId,
+    String receiverCompanyId,
     String username,
     String userId,
-    String productName,
     String productId,
     String deliveryId,
     Integer quantity,

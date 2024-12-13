@@ -19,4 +19,9 @@ public class DeliveryClientAdapter implements DeliveryClientPort {
     return "mock_delivery_id" + UUID.randomUUID();
     //return response.getBody();
   }
+
+  @Override
+  public void deleteDeliveryById(String deliveryId) {
+
+  }
 }
