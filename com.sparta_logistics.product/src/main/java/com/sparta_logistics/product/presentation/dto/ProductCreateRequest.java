@@ -1,5 +1,7 @@
 package com.sparta_logistics.product.presentation.dto;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,7 +12,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateProductRequest {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class ProductCreateRequest {
 
   private UUID companyId;
   private UUID hubId;

@@ -59,7 +59,6 @@ public class AuthService {
     return jwtUtil.getUserInfoFromToken(accessToken);
   }
 
-
   // 회원가입시 회원 존재 여부 검증
   private void validateDuplicateUser(SignUpRequestDto signUpRequestDto) {
     if (userRepository.findBySlackId(signUpRequestDto.getSlackId()).isPresent()) {
