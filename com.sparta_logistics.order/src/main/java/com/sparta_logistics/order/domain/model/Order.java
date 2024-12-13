@@ -67,6 +67,27 @@ public class Order extends Base {
         .build();
   }
 
+  // 모든 필드를 업데이트하는 메서드
+  public void update(
+      String supplierCompanyId,
+      String receiverCompanyId,
+      String userId,
+      String productId,
+      String deliveryId,
+      Integer quantity,
+      String requestDescription,
+      Boolean isRefunded
+  ) {
+    this.supplierCompanyId = supplierCompanyId;
+    this.receiverCompanyId = receiverCompanyId;
+    this.userId = userId;
+    this.productId = productId;
+    this.deliveryId = deliveryId;
+    this.quantity = quantity;
+    this.requestDescription = requestDescription;
+    this.isRefunded = isRefunded;
+  }
+
   public void refund() {
     this.isRefunded = true;
   }

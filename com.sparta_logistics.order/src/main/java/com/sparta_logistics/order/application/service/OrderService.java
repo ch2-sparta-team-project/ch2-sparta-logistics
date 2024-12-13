@@ -2,6 +2,7 @@ package com.sparta_logistics.order.application.service;
 
 import com.sparta_logistics.order.application.dto.OrderDeleteResponse;
 import com.sparta_logistics.order.application.dto.OrderReadResponse;
+import com.sparta_logistics.order.application.dto.OrderUpdateDto;
 import com.sparta_logistics.order.application.dto.OrderUpdateResponse;
 import com.sparta_logistics.order.application.mapper.OrderDtoMapper;
 import com.sparta_logistics.order.global.exception.ApplicationException;
@@ -38,21 +39,21 @@ public class OrderService {
 
     //Delivery 를 생성할 때 필요한 정보 생성
     //외부 포트 연결
-    String sourceHubId = productClientPort.findHubIdByProductId(dto.getProductId());
+    String sourceHubId = productClientPort.findHubIdByProductId(dto.productId());
     CompanyCreateDto companyInfo = companyClientPort.findCompanyInfoForCreateByUserId(
-        dto.getUserId());
-    UserCreateDto userInfo = userClientPort.findUserInfoForCreateByUserId(dto.getUserId());
+        dto.userId());
+    UserCreateDto userInfo = userClientPort.findUserInfoForCreateByUserId(dto.userId());
 
     //Dto 를 Entity 로 변환
     Order order = Order.create(
-        dto.getSupplierCompanyId(),
+        dto.supplierCompanyId(),
         companyInfo.companyId(),
-        dto.getUserId(),
-        dto.getProductId(),
+        dto.userId(),
+        dto.productId(),
         "",
-        dto.getQuantity(),
-        dto.getRequestDescription(),
-        dto.getIsRefunded()
+        dto.quantity(),
+        dto.requestDescription(),
+        dto.isRefunded()
     );
 
     //Order Save
@@ -72,11 +73,11 @@ public class OrderService {
     //Order 에 DeliveryId 연결
     order.assignDelivery(deliveryId);
     //product 수량 감소
-    productClientPort.updateProductQuantity(dto.getQuantity());
+    productClientPort.updateProductQuantity(dto.quantity());
 
     return OrderCreateResponse.builder()
         .orderId(order.getId())
-        .productName(dto.getProductName())
+        .productName(dto.productName())
         .quantity(order.getQuantity())
         .requestDescription(order.getRequestDescription())
         .build();
@@ -116,6 +117,32 @@ public class OrderService {
 
     return OrderDtoMapper.toOrderReadResponse(order, receiverCompanyName, supplierCompanyName,
         userName, productName);
+  }
+
+  @Transactional
+  public OrderUpdateResponse updateOrder(String orderId, String userId, String role,
+      OrderUpdateDto updateData) {
+    // 변경할 Order 찾기
+    Order order = orderRepository.findByIdAndDeletedAtIsNull(orderId)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
+
+    // 허브 매니저일 경우 담당 허브의 주문만 변경 가능하도록 검증
+    if (role.equals("ROLE_HUB_MANAGER")) {
+      verifyOrderAccessForHubManager(userId, order);
+    }
+
+    order.update(
+        updateData.supplierCompanyId(),
+        updateData.receiverCompanyId(),
+        updateData.userId(),
+        updateData.productId(),
+        updateData.deliveryId(),
+        updateData.quantity(),
+        updateData.requestDescription(),
+        updateData.isRefunded()
+    );
+
+    return new OrderUpdateResponse(order.getId());
   }
 
   @Transactional
@@ -168,4 +195,5 @@ public class OrderService {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED_EXCEPTION);
     }
   }
+
 }

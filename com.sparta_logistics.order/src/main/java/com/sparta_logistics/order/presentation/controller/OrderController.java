@@ -5,6 +5,7 @@ import com.sparta_logistics.order.application.dto.OrderDeleteResponse;
 import com.sparta_logistics.order.application.dto.OrderReadResponse;
 import com.sparta_logistics.order.application.dto.OrderUpdateResponse;
 import com.sparta_logistics.order.application.service.OrderService;
+import com.sparta_logistics.order.presentation.request.OrderUpdateRequest;
 import com.sparta_logistics.order.presentation.dto.RequestUserDetails;
 import com.sparta_logistics.order.presentation.request.OrderCreateRequest;
 import jakarta.validation.Valid;
@@ -44,6 +45,16 @@ public class OrderController {
       @PathVariable("orderId") String orderId,
       @AuthenticationPrincipal RequestUserDetails user) {
     return ResponseEntity.ok(orderService.readOrder(orderId, user.getUserId(), user.getRole()));
+  }
+
+  @Secured({"ROLE_MASTER", "ROLE_HUB_MANAGER"})
+  @PatchMapping("{orderId}")
+  public ResponseEntity<OrderUpdateResponse> updateOrder(
+      @PathVariable("orderId") String orderId,
+      @RequestBody @Valid OrderUpdateRequest req,
+      @AuthenticationPrincipal RequestUserDetails user) {
+    return ResponseEntity.ok(
+        orderService.updateOrder(orderId, user.getUserId(), user.getRole(), req.toDTO()));
   }
 
   @Secured({"ROLE_MASTER", "ROLE_HUB_MANAGER"})
