@@ -8,16 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
-@NoArgsConstructor
+@Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class UpdateProductResponse {
+@NoArgsConstructor
+public class ProductCreateResponse {
 
   private UUID productId;
 
-  public static UpdateProductResponse of(UUID productId) {
-    return UpdateProductResponse.builder()
-        .productId(productId)
+  public static ProductCreateResponse of(UUID productId) {
+    return ProductCreateResponse.builder().
+        productId(productId)
         .build();
   }
 }
