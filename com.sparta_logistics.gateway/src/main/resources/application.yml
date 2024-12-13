@@ -9,23 +9,23 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: auth-service
-          uri: lb://auth-service
-          predicates:
-            - Path=/api/v1/**
-
         - id: hub-service
           uri: lb://hub-service
           predicates:
-            - Path=/api/v1/hubs/**
+          - Path=/api/v1/hubs/**
+
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+          - Path=/api/v1/auth/**
 
         - id: company-service
-          uri: lb://company
+          uri: lb://company-service
           predicates:
             - Path=/api/v1/companies/**
 
         - id: order-service
-          uri: lb://order
+          uri: lb://order-service
           predicates:
             - Path=/api/v1/orders/**
 
@@ -35,7 +35,7 @@ spring:
             - Path=/api/v1/products/**
 
         - id: delivery-service
-          uri: lb://delivery
+          uri: lb://delivery-service
           predicates:
             - Path=/api/v1/deliveries/**
 
