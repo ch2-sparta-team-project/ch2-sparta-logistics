@@ -3,7 +3,6 @@ package com.sparta_logistics.auth.jwt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta_logistics.auth.Dto.SignInRequestDto;
 import com.sparta_logistics.auth.Entity.Role;
-import com.sparta_logistics.auth.Entity.User;
 import com.sparta_logistics.auth.Security.JwtUtil;
 import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
@@ -12,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,7 +25,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
   public JwtAuthenticationFilter(JwtUtil jwtUtil) {
     this.jwtUtil = jwtUtil;
-    setFilterProcessesUrl("/user/login");
+    setFilterProcessesUrl("/auth/login");
   }
 
   @Override
@@ -37,7 +37,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       SignInRequestDto requestDto = new ObjectMapper().readValue(request.getInputStream(),
           SignInRequestDto.class);
 
-      if (requestDto.getUsername() == null || requestDto.getUsername().isEmpty()) {
+      if (requestDto.getUserName() == null || requestDto.getUserName().isEmpty()) {
         throw new IllegalArgumentException("Username cannot be empty");
       }
       if (requestDto.getPassword() == null || requestDto.getPassword().isEmpty()) {
@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
       return getAuthenticationManager().authenticate(
           new UsernamePasswordAuthenticationToken(
-              requestDto.getUsername(),
+              requestDto.getUserName(),
               requestDto.getPassword(),
               null
           )
@@ -60,11 +60,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
       FilterChain chain, Authentication authResult) throws IOException {
     log.info("로그인 성공 및 JWT 생성");
+    UUID userId = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getUserId();
     String username = ((UserDetailsImpl) authResult.getPrincipal()).getUsername();
     Role role = ((UserDetailsImpl) authResult.getPrincipal()).getUser().getRole();
     String slackId = ((UserDetailsImpl) authResult.getPrincipal()).getSlackId();
 
-    String token = jwtUtil.generateToken(username, role, slackId);
+    String token = jwtUtil.generateToken(userId, username, role, slackId);
     response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
 
     response.setContentType("application/json");
