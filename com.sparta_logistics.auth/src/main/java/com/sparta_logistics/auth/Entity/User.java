@@ -44,6 +44,8 @@ public class User extends BaseEntity {
   @Column(nullable = false)
   private Role role;
 
+  private boolean isDeleted ;
+
   // 유저 생성 메서드
   public static User create(
       final String username,
@@ -64,4 +66,9 @@ public class User extends BaseEntity {
     return user;
 
   }
+
+  public void softDelete() {
+    this.isDeleted = true;
+  }
+
 }

@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 
   Optional<User> findBySlackId(String slackId);
 
+  Optional<User> findActiveUserBySlackId(String accessToken);
 }

@@ -8,12 +8,12 @@ import com.sparta_logistics.auth.Security.JwtUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.transaction.Transactional;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -54,6 +54,18 @@ public class AuthService {
   public Claims getUserInfoFromAccessToken(String accessToken) {
     // 2. 사용자 정보를 DB에서 조회
     return jwtUtil.getUserInfoFromToken(accessToken);
+  }
+
+  /*
+  *  사용자 SoftDelete 기능(auth/delete)
+  * */
+  @Transactional
+  public void softDeleteUser(String accessToken) {
+    String slackId = jwtUtil.getUserInfoFromToken(accessToken).get("slackId").toString();
+    User user = userRepository.findActiveUserBySlackId(slackId)
+        .orElseThrow(() -> new IllegalArgumentException("slackId가 존재하지 않음"));
+
+    user.softDelete();
   }
 
   // 회원가입시 회원 존재 여부 검증
