@@ -1,48 +1,42 @@
 package com.sparta_logistics.auth.Controller;
 
-import com.sparta_logistics.auth.Dto.SignUpDto;
-import com.sparta_logistics.auth.Entity.User;
-import com.sparta_logistics.auth.Repository.UserRepository;
+import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Service.AuthService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("/auth")
+@Slf4j
 public class AuthController {
 
   private final AuthService authService;
 
-  @Value("${server.port}") //
-  String ServerPort;
+  @Getter
+  private final String serverPort;
 
-  @PostMapping("/auth/Login")
-  public ResponseEntity<?> createAuthenticationToken(@RequestParam String userId){
-    return ResponseEntity.ok(new AuthResponse(authService.createAccessToken(userId)));
+  public AuthController(AuthService authService, @Value("${server.port}") String ServerPort) {
+    this.authService = authService;
+    this.serverPort = ServerPort;
   }
 
-
-  @Data
-  @AllArgsConstructor
-  @NoArgsConstructor
-  static class AuthResponse {
-    private String access_token;
+  @PostMapping("/SignUp")
+  public ResponseEntity<?> SignUp(@RequestBody SignUpRequestDto SignUpRequestDto) {
+    return ResponseEntity.ok((authService.signUp(SignUpRequestDto)));
   }
 
-  public HttpHeaders DefaultHeaders() {
-    HttpHeaders responseHeaders = new HttpHeaders();
-    responseHeaders.set("Server-Port", ServerPort);
-    return responseHeaders;
+  @GetMapping("/info")
+  public ResponseEntity<?> UserInfo(@RequestHeader("Authorization") String token) {
+    String accessToken = token.replace("Bearer ", "");
+    return ResponseEntity.ok(authService.getUserInfoFromAccessToken(accessToken));
   }
 
 }
