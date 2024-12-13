@@ -27,9 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class User {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(columnDefinition = "UUID", updatable = false, nullable = false)
-  private UUID userId = UUID.randomUUID();
+  private UUID userId;
 
   @Column(nullable = false, length = 20)
   private String userName;
