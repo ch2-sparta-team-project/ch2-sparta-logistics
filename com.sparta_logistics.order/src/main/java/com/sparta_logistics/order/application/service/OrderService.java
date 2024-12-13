@@ -1,6 +1,7 @@
 package com.sparta_logistics.order.application.service;
 
 import com.sparta_logistics.order.application.dto.OrderDeleteResponse;
+import com.sparta_logistics.order.application.dto.OrderReadAllResponse;
 import com.sparta_logistics.order.application.dto.OrderReadResponse;
 import com.sparta_logistics.order.application.dto.OrderUpdateDto;
 import com.sparta_logistics.order.application.dto.OrderUpdateResponse;
@@ -18,7 +19,9 @@ import com.sparta_logistics.order.application.port.ProductClientPort;
 import com.sparta_logistics.order.application.port.UserClientPort;
 import com.sparta_logistics.order.domain.model.Order;
 import com.sparta_logistics.order.infrastructure.repository.OrderRepository;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -84,11 +87,37 @@ public class OrderService {
   }
 
   @Transactional(readOnly = true)
-  public List<OrderReadResponse> readAllOrders(String userId, String role) {
+  public List<OrderReadAllResponse> readAllOrders(String userId, String role) {
+
     // ROLE_MASTER 일 경우 전부 조회
     // ROLE_HUB_MANAGER 일 경우 담당 허브만 조회
     // 아닐 경우 본인의 주문만 조회
-    return null;
+    List<Order> orders = new ArrayList<>();
+
+    // ROLE_MASTER 일 경우 전부 조회
+    if ("ROLE_MASTER".equals(role)) {
+      orders = orderRepository.findAllByDeletedAtIsNull();
+    }
+    // ROLE_HUB_MANAGER 일 경우 담당 허브만 조회
+    if ("ROLE_HUB_MANAGER".equals(role)) {
+      String managingHub = companyClientPort.findCompanyAffiliationHubIdByUserId(userId);
+
+      orders = orderRepository.findAllByDeletedAtIsNull();
+      orders = orders.stream()
+          .filter(order -> {
+            String productHub = productClientPort.findHubIdByProductId(order.getProductId());
+            return managingHub.equals(productHub);
+          })
+          .toList();
+    }
+    // 그 외 권한일 경우 본인의 주문만 조회
+    if (role.equals("ROLE_DELIVERY_MANAGER") || role.equals("ROLE_COMPANY_MANAGER")){
+      orders = orderRepository.findAllByUserIdAndDeletedAtIsNull(userId);
+    }
+
+    return orders.stream()
+        .map(OrderDtoMapper::toOrderReadAllResponse)
+        .toList();
   }
 
   @Transactional(readOnly = true)
@@ -134,7 +163,6 @@ public class OrderService {
     order.update(
         updateData.supplierCompanyId(),
         updateData.receiverCompanyId(),
-        updateData.userId(),
         updateData.productId(),
         updateData.deliveryId(),
         updateData.quantity(),

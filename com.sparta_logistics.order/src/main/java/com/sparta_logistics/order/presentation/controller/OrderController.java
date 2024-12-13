@@ -2,6 +2,7 @@ package com.sparta_logistics.order.presentation.controller;
 
 import com.sparta_logistics.order.application.dto.OrderCreateResponse;
 import com.sparta_logistics.order.application.dto.OrderDeleteResponse;
+import com.sparta_logistics.order.application.dto.OrderReadAllResponse;
 import com.sparta_logistics.order.application.dto.OrderReadResponse;
 import com.sparta_logistics.order.application.dto.OrderUpdateResponse;
 import com.sparta_logistics.order.application.service.OrderService;
@@ -34,7 +35,7 @@ public class OrderController {
   }
 
   @GetMapping("")
-  public ResponseEntity<List<OrderReadResponse>> readAllOrders(
+  public ResponseEntity<List<OrderReadAllResponse>> readAllOrders(
       @AuthenticationPrincipal RequestUserDetails user
   ) {
     return ResponseEntity.ok(orderService.readAllOrders(user.getUserId(), user.getRole()));
@@ -48,7 +49,7 @@ public class OrderController {
   }
 
   @Secured({"ROLE_MASTER", "ROLE_HUB_MANAGER"})
-  @PatchMapping("{orderId}")
+  @PutMapping("{orderId}")
   public ResponseEntity<OrderUpdateResponse> updateOrder(
       @PathVariable("orderId") String orderId,
       @RequestBody @Valid OrderUpdateRequest req,

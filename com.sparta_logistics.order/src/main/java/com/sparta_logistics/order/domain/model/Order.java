@@ -71,7 +71,6 @@ public class Order extends Base {
   public void update(
       String supplierCompanyId,
       String receiverCompanyId,
-      String userId,
       String productId,
       String deliveryId,
       Integer quantity,
@@ -80,7 +79,6 @@ public class Order extends Base {
   ) {
     this.supplierCompanyId = supplierCompanyId;
     this.receiverCompanyId = receiverCompanyId;
-    this.userId = userId;
     this.productId = productId;
     this.deliveryId = deliveryId;
     this.quantity = quantity;

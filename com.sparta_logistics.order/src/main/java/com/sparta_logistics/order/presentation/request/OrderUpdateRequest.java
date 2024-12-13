@@ -13,8 +13,6 @@ public record OrderUpdateRequest(
     @NotNull
     String receiverCompanyId,
     @NotNull
-    String userId,
-    @NotNull
     String productId,
     @NotNull
     String deliveryId,
@@ -29,7 +27,6 @@ public record OrderUpdateRequest(
         return OrderUpdateDto.builder()
             .supplierCompanyId(this.supplierCompanyId)
             .receiverCompanyId(this.receiverCompanyId)
-            .userId(this.userId)
             .productId(this.productId)
             .deliveryId(this.deliveryId)
             .quantity(this.quantity)

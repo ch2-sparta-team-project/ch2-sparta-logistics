@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/sparta_logistics_order
     username: postgres
-    password: password
+    password: sky2002369
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -15,4 +15,4 @@ spring:
     init:
       mode: always
 server:
-  port: 19099
+  port: 19096
