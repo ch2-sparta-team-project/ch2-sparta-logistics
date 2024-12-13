@@ -10,34 +10,34 @@ spring:
     gateway:
       routes:
         - id: auth-service
-          uri: lb://auth
+          uri: lb://auth-service
           predicates:
-            - Path=/**
+            - Path=/api/v1/**
 
         - id: hub-service
-          uri: lb://hub
+          uri: lb://hub-service
           predicates:
-            - Path=/**
+            - Path=/api/v1/hubs/**
 
         - id: company-service
           uri: lb://company
           predicates:
-            - Path=/**
+            - Path=/api/v1/companies/**
 
         - id: order-service
           uri: lb://order
           predicates:
-            - Path=/**
+            - Path=/api/v1/orders/**
 
         - id: product-service
-          uri: lb://product
+          uri: lb://product-service
           predicates:
-            - Path=/**
+            - Path=/api/v1/products/**
 
         - id: delivery-service
           uri: lb://delivery
           predicates:
-            - Path=/**
+            - Path=/api/v1/deliveries/**
 
       discovery:
         locator:
