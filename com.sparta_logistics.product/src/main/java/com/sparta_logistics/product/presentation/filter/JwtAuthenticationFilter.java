@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -16,15 +17,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
 
-    String userId = UUID.randomUUID().toString();
-    String userName = "user";
-    List<GrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority("MASTER_MANAGER"));
+    String userId = request.getHeader("X-User-Id");
+    String userName = request.getHeader("X-User-Name");
+    String role = request.getHeader("X-User-Role");
+
+    List<GrantedAuthority> authorities = Arrays.asList(
+        new SimpleGrantedAuthority(role));
 
     UserDetails mockUserDetails = new RequestUserDetails(userId, userName, authorities);
 
