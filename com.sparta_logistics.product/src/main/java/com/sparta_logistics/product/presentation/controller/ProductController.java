@@ -35,7 +35,7 @@ public class ProductController {
   private final ProductService productService;
 
   @PostMapping
-  @Secured({"MASTER_MANAGER", "HUB_MANAGER", "COMPANY_MANAGER"})
+  @Secured({"MASTER", "HUB_MANAGER", "COMPANY_MANAGER"})
   public ResponseEntity<ProductCreateResponse> createProduct(
       @AuthenticationPrincipal RequestUserDetails user,
       @RequestBody ProductCreateRequest request
@@ -64,7 +64,7 @@ public class ProductController {
   }
 
   @PutMapping("/{productId}")
-  @Secured({"MASTER_MANAGER", "HUB_MANAGER", "COMPANY_MANAGER"})
+  @Secured({"MASTER", "HUB_MANAGER", "COMPANY_MANAGER"})
   public ResponseEntity<ProductUpdateResponse> updateProduct(
       @PathVariable UUID productId,
       @RequestBody ProductUpdateRequest request
@@ -74,7 +74,7 @@ public class ProductController {
   }
 
   @DeleteMapping("/{productId}")
-  @Secured({"MASTER_MANAGER", "HUB_MANAGER"})
+  @Secured({"MASTER", "HUB_MANAGER"})
   public ResponseEntity<ProductDeleteResponse> deleteProduct(
       @AuthenticationPrincipal RequestUserDetails user,
       @PathVariable UUID productId
