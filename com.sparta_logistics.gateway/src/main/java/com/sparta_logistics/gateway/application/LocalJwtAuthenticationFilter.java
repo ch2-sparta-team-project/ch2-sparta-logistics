@@ -1,4 +1,4 @@
-package com.sparta_logistics.gateway.Config;
+package com.sparta_logistics.gateway.application;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -26,16 +26,19 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String path = exchange.getRequest().getURI().getPath();
-    if (path.equals("/auth/Login") || path.equals(("/auth/Sign-up"))) {
+
+    if (path.equals("/auth/login") || path.equals("/auth/sign-up")) {
       return chain.filter(exchange);
     }
 
     String token = extractToken(exchange);
 
-    if (token == null || !validateToken(token)) {
+    if (token == null || !validateToken(token, exchange)) {
       exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
       return exchange.getResponse().setComplete();
     }
+
+    getClaimsJwsValue(exchange, chain);
 
     return chain.filter(exchange);
   }
@@ -48,19 +51,41 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
     return null;
   }
 
-  private boolean validateToken(String token) {
+  private boolean validateToken(String token, ServerWebExchange exchange) {
     try {
       SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
       Jws<Claims> claimsJws = Jwts.parser()
           .verifyWith(key)
           .build().parseSignedClaims(token);
-      log.info("#####payload :: " + claimsJws.getPayload().toString());
+      log.info("payload :: " + claimsJws.getPayload().toString());
+
+      Claims claims = claimsJws.getPayload();
+      exchange.getRequest().mutate()
+          .header("X-User-Id", claims.get("userId").toString())
+          .header("X-User-Name", claims.get("userName").toString())
+          .header("X-Role", claims.get("role").toString())
+          .build();
 
       return true;
     } catch (Exception e) {
       return false;
     }
   }
+
+  private Jws<Claims> getClaimsJwsValue(ServerWebExchange exchange, GatewayFilterChain chain) {
+    SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
+
+    Jws<Claims> claimsJws = Jwts.parser()
+        .verifyWith(key)
+        .build().parseSignedClaims(extractToken(exchange));
+    Claims claims = claimsJws.getPayload();
+    exchange.getResponse().getHeaders().add("X-User-Id", claims.get("userId").toString());
+    exchange.getResponse().getHeaders().add("X-User-Name", claims.get("userName").toString());
+    exchange.getResponse().getHeaders().add("X-User-role", claims.get("role").toString());
+
+    return claimsJws;
+  }
+
 
 
 }

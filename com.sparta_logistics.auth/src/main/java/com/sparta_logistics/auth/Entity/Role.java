@@ -22,5 +22,4 @@ public enum Role {
     return new SimpleGrantedAuthority(role);
   }
 
-
 }

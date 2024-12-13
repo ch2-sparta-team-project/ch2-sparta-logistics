@@ -54,7 +54,7 @@ public class Order extends Base {
       Integer quantity,
       String requestDescription,
       Boolean isRefunded
-  ){
+  ) {
     return Order.builder()
         .supplierCompanyId(supplierCompanyId)
         .receiverCompanyId(receiverCompanyId)
@@ -67,7 +67,30 @@ public class Order extends Base {
         .build();
   }
 
-  public void updateDeliveryId(String deliveryId){
+  // 모든 필드를 업데이트하는 메서드
+  public void update(
+      String supplierCompanyId,
+      String receiverCompanyId,
+      String productId,
+      String deliveryId,
+      Integer quantity,
+      String requestDescription,
+      Boolean isRefunded
+  ) {
+    this.supplierCompanyId = supplierCompanyId;
+    this.receiverCompanyId = receiverCompanyId;
+    this.productId = productId;
+    this.deliveryId = deliveryId;
+    this.quantity = quantity;
+    this.requestDescription = requestDescription;
+    this.isRefunded = isRefunded;
+  }
+
+  public void refund() {
+    this.isRefunded = true;
+  }
+
+  public void assignDelivery(String deliveryId) {
     this.deliveryId = deliveryId;
   }
 }

@@ -6,4 +6,6 @@ import com.sparta_logistics.order.infrastructure.client.dto.DeliveryCreateReques
 public interface DeliveryClientPort {
 
   String createDelivery(DeliveryCreateRequest deliveryCreateRequest);
+
+  void deleteDeliveryById(String deliveryId);
 }
