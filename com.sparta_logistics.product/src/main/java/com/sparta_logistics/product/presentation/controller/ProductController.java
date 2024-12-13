@@ -5,11 +5,15 @@ import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
+import com.sparta_logistics.product.presentation.dto.ProductSearchRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,8 +48,15 @@ public class ProductController {
   }
 
   @GetMapping
-  public ResponseEntity<List<ProductReadResponse>> readProducts() {
-    List<ProductReadResponse> responses = productService.readProducts();
+  public ResponseEntity<PagedModel<ProductReadResponse>> readProducts(
+      ProductSearchRequest request,
+      @PageableDefault(size = 10, page = 0) Pageable pageable
+  ) {
+    PagedModel<ProductReadResponse> responses = productService
+        .readProducts(
+            request,
+            pageable
+        );
     return ResponseEntity.ok(responses);
   }
 
