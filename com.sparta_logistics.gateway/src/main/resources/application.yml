@@ -9,35 +9,35 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: auth
-          uri: lb://auth
+        - id: hub-service
+          uri: lb://hub-service
           predicates:
-            - Path=/**
+          - Path=/api/v1/hubs/**
 
-        - id: hub
-          uri: lb://hub
+        - id: auth-service
+          uri: lb://auth-service
           predicates:
-            - Path=/**
+          - Path=/api/v1/auth/**
 
-        - id: company
-          uri: lb://company
+        - id: company-service
+          uri: lb://company-service
           predicates:
-            - Path=/**
+            - Path=/api/v1/companies/**
 
-        - id: order
-          uri: lb://order
+        - id: order-service
+          uri: lb://order-service
           predicates:
-            - Path=/**
+            - Path=/api/v1/orders/**
 
-        - id: product
-          uri: lb://product
+        - id: product-service
+          uri: lb://product-service
           predicates:
-            - Path=/**
+            - Path=/api/v1/products/**
 
-        - id: delivery
-          uri: lb://delivery
+        - id: delivery-service
+          uri: lb://delivery-service
           predicates:
-            - Path=/**
+            - Path=/api/v1/deliveries/**
 
       discovery:
         locator:
@@ -51,5 +51,4 @@ eureka:
 
 service:
   jwt:
-    access-expiration: 3600000
-    secret-key: ${JWT_SECRET_KEY}
+    secret-key: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNwYXJ0YS1ib290Y2FtcC1jaDItc3BhcnRhLWxvZ2lzdGljcy1tYWRlLWJ5LWphYmJlcndvY2tlcjA0

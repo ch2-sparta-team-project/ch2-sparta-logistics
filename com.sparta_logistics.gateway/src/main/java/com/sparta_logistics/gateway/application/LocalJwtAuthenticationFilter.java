@@ -27,13 +27,18 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String path = exchange.getRequest().getURI().getPath();
 
-    if (path.equals("/auth/login") || path.equals("/auth/sign-up")) {
+    if (path.equals("/api/v1/auth/login") || path.equals("/api/v1/auth/sign-up")) {
       return chain.filter(exchange);
     }
 
     String token = extractToken(exchange);
 
-    if (token == null || !validateToken(token, exchange)) {
+    try {
+      if (token == null) {
+        throw new Exception("Token is null");
+      }
+      exchange = validateToken(token, exchange);
+    } catch (Exception e) {
       exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
       return exchange.getResponse().setComplete();
     }
@@ -51,25 +56,22 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
     return null;
   }
 
-  private boolean validateToken(String token, ServerWebExchange exchange) {
-    try {
-      SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
-      Jws<Claims> claimsJws = Jwts.parser()
-          .verifyWith(key)
-          .build().parseSignedClaims(token);
-      log.info("payload :: " + claimsJws.getPayload().toString());
+  private ServerWebExchange validateToken(String token, ServerWebExchange exchange) throws Exception {
+    SecretKey key = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secretKey));
+    Jws<Claims> claimsJws = Jwts.parser()
+        .verifyWith(key)
+        .build().parseSignedClaims(token);
 
-      Claims claims = claimsJws.getPayload();
-      exchange.getRequest().mutate()
-          .header("X-User-Id", claims.get("userId").toString())
-          .header("X-User-Name", claims.get("userName").toString())
-          .header("X-Role", claims.get("role").toString())
-          .build();
+    log.info("payload :: " + claimsJws.getPayload().toString());
 
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+    Claims claims = claimsJws.getPayload();
+
+    // 새로운 exchange 객체를 반환
+    return exchange.mutate().request(exchange.getRequest().mutate()
+        .header("X-User-Id", claims.get("userId").toString())
+        .header("X-User-Name", claims.get("userName").toString())
+        .header("X-User-Role", claims.get("role").toString())
+        .build()).build();
   }
 
   private Jws<Claims> getClaimsJwsValue(ServerWebExchange exchange, GatewayFilterChain chain) {

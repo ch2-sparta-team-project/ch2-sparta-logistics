@@ -24,12 +24,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @AllArgsConstructor
 @Table(name = "p_user")
 @Builder
-public class User {
+public class User extends BaseEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(columnDefinition = "UUID", updatable = false, nullable = false)
-  private UUID userId = UUID.randomUUID();
+  private UUID userId;
 
   @Column(nullable = false, length = 20)
   private String userName;
@@ -44,6 +44,8 @@ public class User {
   @Column(nullable = false)
   private Role role;
 
+  private boolean isDeleted ;
+
   // 유저 생성 메서드
   public static User create(
       final String username,
@@ -52,11 +54,21 @@ public class User {
       final Role role,
       PasswordEncoder passwordEncoder
   ) {
-    return User.builder()
+    User user = User.builder()
         .userName(username)
         .password(passwordEncoder.encode(password))
         .slackId(slackId)
         .role(role)
         .build();
+
+    user.initAuditInfo(user);
+
+    return user;
+
   }
+
+  public void softDelete() {
+    this.isDeleted = true;
+  }
+
 }

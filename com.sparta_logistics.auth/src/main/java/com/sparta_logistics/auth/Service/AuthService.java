@@ -6,17 +6,14 @@ import com.sparta_logistics.auth.Entity.User;
 import com.sparta_logistics.auth.Repository.UserRepository;
 import com.sparta_logistics.auth.Security.JwtUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.transaction.Transactional;
-import java.util.Date;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -59,6 +56,18 @@ public class AuthService {
     return jwtUtil.getUserInfoFromToken(accessToken);
   }
 
+  /*
+  *  사용자 SoftDelete 기능(auth/delete)
+  * */
+  @Transactional
+  public void softDeleteUser(String accessToken) {
+    String slackId = jwtUtil.getUserInfoFromToken(accessToken).get("slackId").toString();
+    User user = userRepository.findActiveUserBySlackId(slackId)
+        .orElseThrow(() -> new IllegalArgumentException("slackId가 존재하지 않음"));
+
+    user.softDelete();
+  }
+
   // 회원가입시 회원 존재 여부 검증
   private void validateDuplicateUser(SignUpRequestDto signUpRequestDto) {
     if (userRepository.findBySlackId(signUpRequestDto.getSlackId()).isPresent()) {
@@ -89,13 +98,4 @@ public class AuthService {
   @Value("${service.jwt.access-expiration}")
     private Long accessExpiration;
 
-  public String createAccessTokenTemp(String user_id) {
-    return Jwts.builder()
-        .claim("user_id", user_id)
-        .issuer(issuer)
-        .issuedAt(new Date(System.currentTimeMillis()))
-        .expiration(new Date(System.currentTimeMillis() + accessExpiration))
-        .signWith(secretKey, SignatureAlgorithm.HS512)
-        .compact();
-  }
 }

@@ -2,6 +2,8 @@ package com.sparta_logistics.product.application.service;
 
 import com.sparta_logistics.product.domain.model.Product;
 import com.sparta_logistics.product.domain.repository.ProductRepository;
+import com.sparta_logistics.product.global.exception.ApplicationException;
+import com.sparta_logistics.product.global.exception.ErrorCode;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
@@ -9,7 +11,6 @@ import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
 import com.sparta_logistics.product.presentation.dto.ProductSearchRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
-import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +29,8 @@ public class ProductService {
 
   @Transactional
   public ProductCreateResponse createProduct(ProductCreateRequest request) {
+    //유저 유효성 체크 (HUB_MANAGER, COMPANY_MANAGER)
+
     //COMPANY 유효성 체크
 
     //HUB 유효성 체크
@@ -38,7 +41,7 @@ public class ProductService {
 
   public ProductReadResponse readProduct(UUID productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
     return ProductReadResponse.of(product);
   }
@@ -70,7 +73,7 @@ public class ProductService {
   @Transactional
   public ProductUpdateResponse updateProduct(UUID productId, ProductUpdateRequest request) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
     product.updateProductUsingRequest(request);
 
@@ -80,7 +83,7 @@ public class ProductService {
   @Transactional
   public ProductDeleteResponse deleteProduct(UUID productId) {
     Product product = productRepository.findById(productId)
-        .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다."));
+        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
     product.delete();
 
