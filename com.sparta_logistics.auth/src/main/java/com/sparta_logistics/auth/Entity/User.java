@@ -71,4 +71,9 @@ public class User extends BaseEntity {
     this.isDeleted = true;
   }
 
+  public void changePassword(String password) {
+    this.password = password;
+    this.initAuditInfo(this);
+  }
+
 }

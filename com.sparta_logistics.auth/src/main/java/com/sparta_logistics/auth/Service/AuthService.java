@@ -1,14 +1,17 @@
 package com.sparta_logistics.auth.Service;
 
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
+import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
 import com.sparta_logistics.auth.Entity.Role;
 import com.sparta_logistics.auth.Entity.User;
 import com.sparta_logistics.auth.Repository.UserRepository;
 import com.sparta_logistics.auth.Security.JwtUtil;
+import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
+import jdk.jshell.spi.ExecutionControl.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -54,6 +57,16 @@ public class AuthService {
   public Claims getUserInfoFromAccessToken(String accessToken) {
     // 2. 사용자 정보를 DB에서 조회
     return jwtUtil.getUserInfoFromToken(accessToken);
+  }
+
+  @Transactional
+  public void changePassword(UserDetailsImpl userDetails, UserChangePasswordReqDto request) {
+
+    User user = userRepository.findById(userDetails.getUser().getUserId())
+        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    request.validate(userDetails.getUser(), passwordEncoder);
+    // 영속 상태의 엔티티 수정 -> 더티체킹 동작
+    user.changePassword(passwordEncoder.encode(request.getNewPassword()));
   }
 
   /*

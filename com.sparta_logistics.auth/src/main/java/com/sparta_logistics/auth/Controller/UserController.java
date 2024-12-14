@@ -1,5 +1,7 @@
 package com.sparta_logistics.auth.Controller;
 
+import com.sparta_logistics.auth.Dto.AuthResponseDto;
+import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
 import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import com.sparta_logistics.auth.Service.AuthService;
 import jakarta.validation.Valid;
@@ -26,13 +28,13 @@ public class UserController {
     this.authService = authService;
   }
 
-  // 패스워드 변경
-//  @PutMapping("/password")
-//  public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody UserChangePasswordReqDto request
-//  ) {
-//    userService.changePassword(userDetails, request);
-//    return ResponseEntity.ok("비밀번호 변경 성공));
-//  }
+//   패스워드 변경
+  @PutMapping("/password")
+  public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody UserChangePasswordReqDto request
+  ) {
+    authService.changePassword(userDetails, request);
+    return ResponseEntity.ok(new AuthResponseDto("비밀번호 변경 완료",200));
+  }
 
   // 사용자 목록 조회(MASTER)
   @GetMapping
