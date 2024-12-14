@@ -1,6 +1,5 @@
 package com.sparta_logistics.product.presentation.filter;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparta_logistics.product.presentation.dto.RequestUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -21,12 +21,17 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-  private final ObjectMapper objectMapper = new ObjectMapper();
-
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
     try {
+      String path = request.getRequestURI();
+
+      if (path.equals("/actuator/refresh")) {
+        filterChain.doFilter(request, response);
+        return;
+      }
+
       // 헤더 값 읽기
       String userId = request.getHeader("X-User-Id");
       String userName = request.getHeader("X-User-Name");
@@ -38,7 +43,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
 
       // 권한 설정
-      List<GrantedAuthority> authorities = Arrays.asList(
+      List<GrantedAuthority> authorities = List.of(
           new SimpleGrantedAuthority(role));
 
       UserDetails mockUserDetails = new RequestUserDetails(userId, userName, authorities);
@@ -49,26 +54,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       SecurityContextHolder.getContext().setAuthentication(authentication);
 
       filterChain.doFilter(request, response);
-    } catch (Exception ex) {
+    }catch (Exception ex) {
       log.error("Authentication failed: {}", ex.getMessage());
-      // Security ExceptionTranslationFilter로 전달
       SecurityContextHolder.clearContext();
-      sendErrorResponse(response, 2003, ex.getMessage());
+      throw new ServletException("Authentication failed: Missing headers");
     }
-  }
-
-  private void sendErrorResponse(HttpServletResponse response, int statusCode, String message)
-      throws IOException {
-    response.setStatus(statusCode);
-    response.setContentType("application/json");
-
-    // JSON 응답 생성
-    String jsonResponse = String.format(
-        "{\"timestamp\": \"%s\", \"code\": %d, \"message\": \"%s\"}",
-        LocalDateTime.now(), statusCode, message
-    );
-
-    // 응답 전송
-    response.getWriter().write(jsonResponse);
   }
 }
