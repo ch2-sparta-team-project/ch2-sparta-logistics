@@ -1,6 +1,6 @@
 package com.sparta_logistics.delivery.presentation.config;
 
-import com.sparta_logistics.order.presentation.custom.SecurityAuditorAware;
+import com.sparta_logistics.delivery.presentation.custom.SecurityAuditorAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
