@@ -75,11 +75,14 @@ public class DeliveryManagerService {
   @Transactional
   public DeliveryManagerResponse update(String deliverManagerId, DeliveryManagerUpdateDto dto,
       String userId, String role) {
-    
+
+    DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliverManagerId)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
+
     // validation: 허브 매니저인 경우 담당 허브 소속만 업데이트 가능
     if ("ROLE_HUB_MANAGER".equals(role)) {
       String managingHubId = companyClientPort.findCompanyAffiliationHubIdByUserId(userId);
-      if (!managingHubId.equals(dto.hubId())) {
+      if (!managingHubId.equals(deliveryManager.getHubId())) {
         throw new ApplicationException(ErrorCode.UNAUTHORIZED_EXCEPTION);
       }
     }
@@ -89,15 +92,35 @@ public class DeliveryManagerService {
       throw new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION);
     }
 
-    DeliveryManager targetDeliveryManager = deliveryManagerRepository.findById(deliverManagerId)
-        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
-
-    targetDeliveryManager.updateStatus(dto.status());
-    targetDeliveryManager.updateHub(dto.hubId());
+    deliveryManager.updateStatus(dto.status());
+    deliveryManager.updateHub(dto.hubId());
 
     // return: Entity -> Response DTO 변환
     return DeliveryManagerResponse.builder()
-        .deliveryManagerId(targetDeliveryManager.getId())
+        .deliveryManagerId(deliveryManager.getId())
+        .build();
+  }
+
+  @Transactional
+  public DeliveryManagerResponse delete(String deliveryManagerId, String userId, String role) {
+
+    DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliveryManagerId)
+        .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
+
+    // validation: 허브 매니저인 경우 담당 허브 소속만 업데이트 가능
+    if ("ROLE_HUB_MANAGER".equals(role)) {
+      String managingHubId = companyClientPort.findCompanyAffiliationHubIdByUserId(userId);
+      if (!managingHubId.equals(deliveryManager.getHubId())) {
+        throw new ApplicationException(ErrorCode.UNAUTHORIZED_EXCEPTION);
+      }
+    }
+
+    // business logic: Entity 삭제
+    deliveryManagerRepository.deleteById(deliveryManagerId);
+
+    // return: Entity -> Response DTO 변환
+    return DeliveryManagerResponse.builder()
+        .deliveryManagerId(deliveryManager.getId())
         .build();
   }
 }

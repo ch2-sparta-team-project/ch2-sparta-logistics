@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -40,9 +41,7 @@ public class DeliveryManagerController {
   }
 
   /**
-   * DeliveryManager 수정
-   * hubId 혹은 status 변경 가능
-   * null 로 전달될 경우 변경되지 않음
+   * DeliveryManager 수정 hubId 혹은 status 변경 가능 null 로 전달될 경우 변경되지 않음
    */
   @Secured({"ROLE_MASTER", "ROLE_HUB_MANAGER"})
   @PatchMapping("/{id}")
@@ -54,5 +53,18 @@ public class DeliveryManagerController {
     return ResponseEntity.ok(
         deliveryManagerService.update(deliverManagerId, request.toDto(), user.getUserId(),
             user.getRole()));
+  }
+
+
+  /**
+   * DeliveryManager 삭제 (Soft Delete)
+   */
+  @Secured({"ROLE_MASTER", "ROLE_HUB_MANAGER"})
+  @DeleteMapping("/{id}")
+  public ResponseEntity<DeliveryManagerResponse> deleteDeliveryManager(
+      @PathVariable("id") String id,
+      @AuthenticationPrincipal RequestUserDetails user
+  ) {
+    return ResponseEntity.ok(deliveryManagerService.delete(id, user.getUserId(), user.getRole()));
   }
 }
