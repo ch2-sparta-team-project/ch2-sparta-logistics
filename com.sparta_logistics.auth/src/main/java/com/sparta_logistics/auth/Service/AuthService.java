@@ -1,7 +1,9 @@
 package com.sparta_logistics.auth.Service;
 
+import com.sparta_logistics.auth.Dto.AuthResponseDto;
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
+import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.Entity.Role;
 import com.sparta_logistics.auth.Entity.User;
 import com.sparta_logistics.auth.Repository.UserRepository;
@@ -11,7 +13,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
-import jdk.jshell.spi.ExecutionControl.UserException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,17 +39,17 @@ public class AuthService {
   }
 
   /*
-  * 회원 가입
-  * */
+   * 회원 가입
+   * */
   @Transactional
-  public String signUp(SignUpRequestDto signUpRequestDto) {
+  public void signUp(SignUpRequestDto signUpRequestDto) {
     validateDuplicateUser(signUpRequestDto);
 
     Role role = validateAndGetRole(signUpRequestDto.getRole());
-    User user = User.create(signUpRequestDto.getUserName(), signUpRequestDto.getPassword(), signUpRequestDto.getSlackId(), role, passwordEncoder);
+    User user = User.create(signUpRequestDto.getUserName(), signUpRequestDto.getPassword(),
+        signUpRequestDto.getSlackId(), role, passwordEncoder);
 
     userRepository.save(user);
-    return "회원 가입 성공";
   }
 
   /*
@@ -61,17 +62,15 @@ public class AuthService {
 
   @Transactional
   public void changePassword(UserDetailsImpl userDetails, UserChangePasswordReqDto request) {
-
     User user = userRepository.findById(userDetails.getUser().getUserId())
         .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
     request.validate(userDetails.getUser(), passwordEncoder);
-    // 영속 상태의 엔티티 수정 -> 더티체킹 동작
     user.changePassword(passwordEncoder.encode(request.getNewPassword()));
   }
 
   /*
-  *  사용자 SoftDelete 기능(auth/delete)
-  * */
+   *  사용자 SoftDelete 기능(auth/delete)
+   * */
   @Transactional
   public void softDeleteUser(String accessToken) {
     String slackId = jwtUtil.getUserInfoFromToken(accessToken).get("slackId").toString();
@@ -106,9 +105,20 @@ public class AuthService {
   }
 
   @Value("${spring.application.name}")
-    private String issuer;
+  private String issuer;
 
   @Value("${service.jwt.access-expiration}")
-    private Long accessExpiration;
+  private Long accessExpiration;
+
+  @Transactional
+  public User update(UserDetailsImpl userDetails, UserUpdateRequestDto request) {
+
+    User user = userRepository.findById(userDetails.getUser().getUserId())
+        .orElseThrow(() -> new IllegalArgumentException("User가 존재하지 않습니다."));
+
+    user.update(request);
+    return user;
+
+  }
 
 }

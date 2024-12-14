@@ -1,15 +1,19 @@
 package com.sparta_logistics.auth.Controller;
 
 import com.sparta_logistics.auth.Dto.AuthResponseDto;
+import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
+import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import com.sparta_logistics.auth.Service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +34,7 @@ public class UserController {
 
 //   패스워드 변경
   @PutMapping("/password")
-  public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody UserChangePasswordReqDto request
+  public ResponseEntity<?> changePassword(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody UserChangePasswordReqDto request
   ) {
     authService.changePassword(userDetails, request);
     return ResponseEntity.ok(new AuthResponseDto("비밀번호 변경 완료",200));
@@ -52,9 +56,11 @@ public class UserController {
   // 코드 구현하기
 
   // 사용자 수정
-  @PutMapping("/{userId}")
-  public ResponseEntity<?> userUpdate(){
-    return null;
+  @PatchMapping
+  public ResponseEntity<?> userUpdate(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody
+      UserUpdateRequestDto request){
+    authService.update(userDetails, request);
+    return ResponseEntity.ok(new AuthResponseDto("회원 정보 수정 완료", HttpStatus.OK.value()));
   }
 
   // 회원 삭제
@@ -62,7 +68,7 @@ public class UserController {
   public ResponseEntity<?> softDeleteUser(@RequestHeader("Authorization") String token) {
     String accessToken = token.replace("Bearer ", "");
     authService.softDeleteUser(accessToken);
-    return ResponseEntity.ok("회원 삭제 완료");
+    return ResponseEntity.ok(new AuthResponseDto("회원 삭제 완료", 200));
   }
 
   // 회원 정보 확인
