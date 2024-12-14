@@ -1,4 +1,4 @@
-package com.sparta_logistics.delivery.presentation.dto;
+package com.sparta_logistics.delivery.presentation.dto.auth;
 
 import java.util.Collection;
 import java.util.List;

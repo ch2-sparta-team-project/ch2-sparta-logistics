@@ -1,4 +1,4 @@
-package com.sparta_logistics.delivery.presentation.request;
+package com.sparta_logistics.delivery.presentation.dto.request;
 
 import com.sparta_logistics.delivery.application.dto.DeliveryManagerCreateDto;
 import com.sparta_logistics.delivery.domain.model.enumerate.DeliveryManagerRole;

@@ -1,6 +1,6 @@
 package com.sparta_logistics.delivery.presentation.custom;
 
-import com.sparta_logistics.delivery.presentation.dto.RequestUserDetails;
+import com.sparta_logistics.delivery.presentation.dto.auth.RequestUserDetails;
 import java.util.Optional;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;

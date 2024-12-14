@@ -24,7 +24,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE p_delivery_manager SET deleted_at = NOW() where id = ?")
 @Table(name = "p_delivery_manager")
-public class DeliveryManager extends Base{
+public class DeliveryManager extends Base {
 
   @Id // user id와 같아야 하므로 자동 생성 사용 X
   private String id;
@@ -43,7 +43,8 @@ public class DeliveryManager extends Base{
   @Column(nullable = false, unique = true)
   private Integer turn;
 
-  public static DeliveryManager create(String id, String hubId, DeliveryManagerRole role, DeliveryManagerStatus status, Integer turn) {
+  public static DeliveryManager create(String id, String hubId, DeliveryManagerRole role,
+      DeliveryManagerStatus status, Integer turn) {
     return DeliveryManager.builder()
         .id(id)
         .hubId(hubId)
@@ -51,5 +52,17 @@ public class DeliveryManager extends Base{
         .status(status)
         .turn(turn)
         .build();
+  }
+
+  public void updateStatus(DeliveryManagerStatus status) {
+    if (status != null) {
+      this.status = status;
+    }
+  }
+
+  public void updateHub(String hubId) {
+    if (hubId != null) {
+      this.hubId = hubId;
+    }
   }
 }

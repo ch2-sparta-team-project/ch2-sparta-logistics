@@ -2,7 +2,7 @@ package com.sparta_logistics.delivery.presentation.filter;
 
 import com.sparta_logistics.delivery.global.exception.ApplicationException;
 import com.sparta_logistics.delivery.global.exception.ErrorCode;
-import com.sparta_logistics.delivery.presentation.dto.RequestUserDetails;
+import com.sparta_logistics.delivery.presentation.dto.auth.RequestUserDetails;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
