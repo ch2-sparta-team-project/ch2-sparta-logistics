@@ -1,16 +1,15 @@
 package com.sparta_logistics.delivery.domain.model;
 
-import com.sparta_logistics.delivery.domain.model.enumerate.DeliveryStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
-import jdk.jfr.Timestamp;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,13 +22,21 @@ import org.hibernate.annotations.SQLDelete;
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLDelete(sql = "UPDATE p_delivery SET deleted_at = NOW() where id = ?")
-@Table(name = "p_delivery")
-public class Delivery {
+@SQLDelete(sql = "UPDATE p_delivery_hub_to_hub_route SET deleted_at = NOW() where id = ?")
+@Table(name = "p_delivery_hub_to_hub_route")
+public class DeliveryHubToHubRoute {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
   private String id;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "delivery_manager_id", nullable = true) //배정할 매니저가 없을 시 null
+  private DeliveryManager hubDeliveryManagerId;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name ="delivery_id", nullable = false)
+  private Delivery deliveryId;
 
   @Column(nullable = false)
   private String sourceHubId;
@@ -38,24 +45,17 @@ public class Delivery {
   private String destinationHubId;
 
   @Column(nullable = false)
-  private String orderId;
-
-  @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
-  private DeliveryStatus status;
+  private Integer sequence;
 
   @Column(nullable = false)
-  private String address;
+  private Double estimatedDistance;
 
   @Column(nullable = false)
-  private String recipientName;
-
-  @Column(nullable = false)
-  private String recipientSlackId;
-
-  @Column(nullable = false)
-  private LocalDateTime estimatedArrivalTime;
+  private Long estimatedDuration;
 
   @Column(nullable = true)
-  private LocalDateTime arrivalTime;
+  private Double distance;
+
+  @Column(nullable = true)
+  private Long duration;
 }
