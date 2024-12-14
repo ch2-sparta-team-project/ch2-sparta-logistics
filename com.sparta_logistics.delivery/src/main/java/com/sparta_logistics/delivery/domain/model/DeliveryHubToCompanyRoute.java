@@ -24,7 +24,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE p_delivery_hub_to_company_route SET deleted_at = NOW() where id = ?")
 @Table(name = "p_delivery_hub_to_company_route")
-public class DeliveryHubToCompanyRoute {
+public class DeliveryHubToCompanyRoute extends Base{
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
