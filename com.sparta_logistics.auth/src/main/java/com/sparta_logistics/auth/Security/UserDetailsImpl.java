@@ -2,6 +2,7 @@ package com.sparta_logistics.auth.Security;
 
 import com.sparta_logistics.auth.Entity.User;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -18,7 +19,7 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of();
+    return Collections.singleton(user.getRole().toAuthority());
   }
 
   @Override
