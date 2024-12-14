@@ -1,4 +1,4 @@
-package com.sparta_logistics.delivery.application.dto;
+package com.sparta_logistics.delivery.application.dto.deliverymanager;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.sparta_logistics.delivery.domain.model.enumerate.DeliveryManagerRole;

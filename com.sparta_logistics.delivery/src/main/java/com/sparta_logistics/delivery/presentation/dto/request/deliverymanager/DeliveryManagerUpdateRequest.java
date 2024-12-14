@@ -1,6 +1,6 @@
-package com.sparta_logistics.delivery.presentation.dto.request;
+package com.sparta_logistics.delivery.presentation.dto.request.deliverymanager;
 
-import com.sparta_logistics.delivery.application.dto.DeliveryManagerUpdateDto;
+import com.sparta_logistics.delivery.application.dto.deliverymanager.DeliveryManagerUpdateDto;
 import com.sparta_logistics.delivery.domain.model.enumerate.DeliveryManagerStatus;
 import jakarta.validation.constraints.NotNull;
 
