@@ -3,6 +3,7 @@ package com.sparta_logistics.auth.Service;
 import com.sparta_logistics.auth.Dto.AuthResponseDto;
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
+import com.sparta_logistics.auth.Dto.UserPageResponseDto;
 import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.Entity.Role;
 import com.sparta_logistics.auth.Entity.User;
@@ -15,6 +16,10 @@ import io.jsonwebtoken.security.Keys;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -119,6 +124,20 @@ public class AuthService {
     user.update(request);
     return user;
 
+  }
+
+  @Transactional(readOnly = true)
+  public Page<UserPageResponseDto> getAllUsers(String sortBy, int page, int size) {
+    int realSize = ConfirmPageSize(size);
+    Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
+    Page<User> userList = userRepository.findAll(pageable);
+    return userList.map(UserPageResponseDto::new);
+  }
+
+  private int ConfirmPageSize(int size) {
+    if ( size != 10 && size != 30 && size != 50){
+      return 10;
+    } else return size;
   }
 
 }

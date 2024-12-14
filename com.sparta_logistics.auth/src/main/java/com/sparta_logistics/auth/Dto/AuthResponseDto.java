@@ -10,19 +10,21 @@ import lombok.Setter;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthResponseDto {
-    private String message;
-    private Integer statusCode;
-    private Object data;
 
-    public AuthResponseDto(String message, Integer statusCode, Object data) {
-      this.message = message;
-      this.statusCode = statusCode;
-      this.data = data;
-    }
+  private String message;
+  private Integer statusCode;
+  private Object data;
 
   public AuthResponseDto(String message, Integer statusCode) {
     this.message = message;
     this.statusCode = statusCode;
   }
+
+  public AuthResponseDto(String message, Integer statusCode, Object data) {
+    this.message = message;
+    this.statusCode = statusCode;
+    this.data = data;
+  }
+
 
 }

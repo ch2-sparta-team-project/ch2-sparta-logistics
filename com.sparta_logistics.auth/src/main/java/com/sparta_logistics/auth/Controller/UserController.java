@@ -1,15 +1,17 @@
 package com.sparta_logistics.auth.Controller;
 
 import com.sparta_logistics.auth.Dto.AuthResponseDto;
-import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
+import com.sparta_logistics.auth.Dto.UserPageResponseDto;
 import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import com.sparta_logistics.auth.Service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -40,10 +43,15 @@ public class UserController {
     return ResponseEntity.ok(new AuthResponseDto("비밀번호 변경 완료",200));
   }
 
-  // 사용자 목록 조회(MASTER)
+  // 사용자 목록 전체 조회(MASTER)
+  @Secured("ROLE_MASTER")
   @GetMapping
-  public ResponseEntity<?> users(@AuthenticationPrincipal UserDetailsImpl userDetails) {
-    return null;
+  public ResponseEntity<AuthResponseDto> users(
+      @RequestParam(defaultValue = "createdAt") String sortBy,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size){
+    Page<UserPageResponseDto> Users = authService.getAllUsers(sortBy, page, size);
+    return ResponseEntity.ok().body(new AuthResponseDto("유저 정보 검색 완료", HttpStatus.OK.value(), Users));
   }
 
   // 사용자 단일 조회
