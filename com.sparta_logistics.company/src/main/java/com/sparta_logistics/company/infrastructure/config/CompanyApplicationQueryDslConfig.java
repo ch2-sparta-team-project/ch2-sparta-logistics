@@ -1,4 +1,4 @@
-package com.sparta_logistics.hub.infrastructure.configuration;
+package com.sparta_logistics.company.infrastructure.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 @Component
-public class OrderApplicationQueryDslConfig {
+public class CompanyApplicationQueryDslConfig {
 
   @Bean
   JPAQueryFactory jpaQueryFactory(EntityManager em) {
