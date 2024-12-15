@@ -39,6 +39,18 @@ spring:
           predicates:
             - Path=/api/v1/deliveries/**
 
+        - id: ai-service
+          uri: lb://ai-service
+          predicates:
+            - Path=/api/v1/ai/**
+
+
+        - id: slack-service
+          uri: lb://slack-service
+          predicates:
+            - Path=/api/v1/slack/**
+
+
       discovery:
         locator:
           enabled: true
