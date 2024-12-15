@@ -1,4 +1,4 @@
-package com.sparta_logistics.slack;
+package com.sparta_logistics.slack.infrastructure.config;
 
 public class SlackChannel {
 
