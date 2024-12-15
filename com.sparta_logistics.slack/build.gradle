@@ -47,6 +47,9 @@ dependencies {
 	implementation("com.slack.api:bolt-servlet:1.44.2")
 	implementation("com.slack.api:bolt-jetty:1.44.2")
 
+	// openfeign
+	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 }
 
 dependencyManagement {
