@@ -69,8 +69,9 @@ public class User extends BaseEntity {
 
   }
 
-  public void softDelete() {
+  public void softDelete(String userName) {
     this.isDeleted = true;
+    softDeleteUser(userName);
   }
 
   public void changePassword(String password) {

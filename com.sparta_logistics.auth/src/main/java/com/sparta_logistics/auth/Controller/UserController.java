@@ -1,6 +1,7 @@
 package com.sparta_logistics.auth.Controller;
 
 import com.sparta_logistics.auth.Dto.AuthResponseDto;
+import com.sparta_logistics.auth.Dto.DeletedUserInfoResponseDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
 import com.sparta_logistics.auth.Dto.UserInfoResponseDto;
 import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
@@ -54,6 +55,17 @@ public class UserController {
     Page<UserInfoResponseDto> UsersInfo = authService.getAllUsers(sortBy, page, size);
     return ResponseEntity.ok().body(new AuthResponseDto("유저 정보 전체 검색 완료", HttpStatus.OK.value(), UsersInfo));
   }
+
+  @Secured("ROLE_MASTER")
+  @GetMapping("/deletedList")
+  public ResponseEntity<AuthResponseDto> deletedUsersPage(
+      @RequestParam(defaultValue = "createdAt") String sortBy,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size){
+    Page<DeletedUserInfoResponseDto> UsersInfo = authService.getDeletedUsers(sortBy, page, size);
+    return ResponseEntity.ok().body(new AuthResponseDto("유저 정보 전체 검색 완료", HttpStatus.OK.value(), UsersInfo));
+  }
+
 
   // 사용자 정보 단일 조회(Master)
   @GetMapping("/{userId}")

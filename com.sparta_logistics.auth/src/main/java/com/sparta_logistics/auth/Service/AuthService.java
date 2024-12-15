@@ -1,5 +1,6 @@
 package com.sparta_logistics.auth.Service;
 
+import com.sparta_logistics.auth.Dto.DeletedUserInfoResponseDto;
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
 import com.sparta_logistics.auth.Dto.UserInfoResponseDto;
@@ -82,7 +83,7 @@ public class AuthService {
     User user = userRepository.findActiveUserBySlackId(slackId)
         .orElseThrow(() -> new IllegalArgumentException("slackId가 존재하지 않음"));
 
-    user.softDelete();
+    user.softDelete(user.getUserName());
   }
 
   // 회원가입시 회원 존재 여부 검증
@@ -134,8 +135,16 @@ public class AuthService {
   public Page<UserInfoResponseDto> getAllUsers(String sortBy, int page, int size) {
     int realSize = ConfirmPageSize(size);
     Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
-    Page<User> userList = userRepository.findAll(pageable);
+    Page<User> userList = userRepository.findAllByIsDeletedFalse(pageable);
     return userList.map(UserInfoResponseDto::new);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<DeletedUserInfoResponseDto> getDeletedUsers(String sortBy, int page, int size) {
+    int realSize = ConfirmPageSize(size);
+    Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
+    Page<User> userList = userRepository.findAllByIsDeletedTrue(pageable); // isDeleted가 true인 사용자만 조회
+    return userList.map(DeletedUserInfoResponseDto::new);
   }
 
 
