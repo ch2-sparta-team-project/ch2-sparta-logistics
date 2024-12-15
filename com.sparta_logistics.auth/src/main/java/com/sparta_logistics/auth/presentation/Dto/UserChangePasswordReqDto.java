@@ -1,11 +1,9 @@
-package com.sparta_logistics.auth.Dto;
+package com.sparta_logistics.auth.presentation.Dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.sparta_logistics.auth.Entity.User;
-import jakarta.validation.constraints.NotBlank;
+import com.sparta_logistics.auth.domain.model.User;
 import jakarta.validation.constraints.Pattern;
-import jdk.jshell.spi.ExecutionControl.UserException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

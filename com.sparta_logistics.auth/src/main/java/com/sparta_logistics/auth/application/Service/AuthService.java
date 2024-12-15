@@ -1,15 +1,15 @@
-package com.sparta_logistics.auth.Service;
+package com.sparta_logistics.auth.application.Service;
 
-import com.sparta_logistics.auth.Dto.DeletedUserInfoResponseDto;
-import com.sparta_logistics.auth.Dto.SignUpRequestDto;
-import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
-import com.sparta_logistics.auth.Dto.UserInfoResponseDto;
-import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
-import com.sparta_logistics.auth.Entity.Role;
-import com.sparta_logistics.auth.Entity.User;
-import com.sparta_logistics.auth.Repository.UserRepository;
-import com.sparta_logistics.auth.Security.JwtUtil;
-import com.sparta_logistics.auth.Security.UserDetailsImpl;
+import com.sparta_logistics.auth.presentation.Dto.DeletedUserInfoResponseDto;
+import com.sparta_logistics.auth.presentation.Dto.SignUpRequestDto;
+import com.sparta_logistics.auth.presentation.Dto.UserChangePasswordReqDto;
+import com.sparta_logistics.auth.presentation.Dto.UserInfoResponseDto;
+import com.sparta_logistics.auth.presentation.Dto.UserUpdateRequestDto;
+import com.sparta_logistics.auth.domain.model.Role;
+import com.sparta_logistics.auth.domain.model.User;
+import com.sparta_logistics.auth.domain.Repository.UserRepository;
+import com.sparta_logistics.auth.application.Security.JwtUtil;
+import com.sparta_logistics.auth.application.Security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

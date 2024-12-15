@@ -1,7 +1,6 @@
-package com.sparta_logistics.auth.Entity;
+package com.sparta_logistics.auth.domain.model;
 
-import com.sparta_logistics.auth.Dto.SignUpRequestDto;
-import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
+import com.sparta_logistics.auth.presentation.Dto.UserUpdateRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -39,7 +38,7 @@ public class User extends BaseEntity {
   @Column(nullable = false)
   private String password;
 
-  @Column(nullable = false, length = 20)
+  @Column(nullable = false, length = 100)
   private String slackId;
 
   @Enumerated(EnumType.STRING)

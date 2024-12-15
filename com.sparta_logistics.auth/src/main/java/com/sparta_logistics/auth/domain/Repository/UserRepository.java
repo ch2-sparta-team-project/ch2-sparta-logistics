@@ -1,6 +1,6 @@
-package com.sparta_logistics.auth.Repository;
+package com.sparta_logistics.auth.domain.Repository;
 
-import com.sparta_logistics.auth.Entity.User;
+import com.sparta_logistics.auth.domain.model.User;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;

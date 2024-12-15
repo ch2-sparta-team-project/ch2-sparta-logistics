@@ -1,6 +1,6 @@
-package com.sparta_logistics.auth.Security;
+package com.sparta_logistics.auth.application.Security;
 
-import com.sparta_logistics.auth.Entity.Role;
+import com.sparta_logistics.auth.domain.model.Role;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;

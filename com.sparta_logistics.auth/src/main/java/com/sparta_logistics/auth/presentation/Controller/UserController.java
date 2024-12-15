@@ -1,12 +1,12 @@
-package com.sparta_logistics.auth.Controller;
+package com.sparta_logistics.auth.presentation.Controller;
 
-import com.sparta_logistics.auth.Dto.AuthResponseDto;
-import com.sparta_logistics.auth.Dto.DeletedUserInfoResponseDto;
-import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
-import com.sparta_logistics.auth.Dto.UserInfoResponseDto;
-import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
-import com.sparta_logistics.auth.Security.UserDetailsImpl;
-import com.sparta_logistics.auth.Service.AuthService;
+import com.sparta_logistics.auth.presentation.Dto.AuthResponseDto;
+import com.sparta_logistics.auth.presentation.Dto.DeletedUserInfoResponseDto;
+import com.sparta_logistics.auth.presentation.Dto.UserChangePasswordReqDto;
+import com.sparta_logistics.auth.presentation.Dto.UserInfoResponseDto;
+import com.sparta_logistics.auth.presentation.Dto.UserUpdateRequestDto;
+import com.sparta_logistics.auth.application.Security.UserDetailsImpl;
+import com.sparta_logistics.auth.application.Service.AuthService;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;

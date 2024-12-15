@@ -1,4 +1,4 @@
-package com.sparta_logistics.auth.Dto;
+package com.sparta_logistics.auth.presentation.Dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

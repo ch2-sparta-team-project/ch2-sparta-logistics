@@ -1,7 +1,7 @@
-package com.sparta_logistics.auth.Dto;
+package com.sparta_logistics.auth.presentation.Dto;
 
-import com.sparta_logistics.auth.Entity.Role;
-import com.sparta_logistics.auth.Entity.User;
+import com.sparta_logistics.auth.domain.model.Role;
+import com.sparta_logistics.auth.domain.model.User;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.Getter;
@@ -11,8 +11,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class DeletedUserInfoResponseDto
-{
+public class UserInfoResponseDto {
+
   private UUID userId;
   private String userName;
   private String slackId;
@@ -23,11 +23,7 @@ public class DeletedUserInfoResponseDto
   private String createdBy;
   private String updatedBy;
 
-  private boolean isDeleted ;
-  private LocalDateTime deletedAt;
-  private String deletedBy;
-
-  public DeletedUserInfoResponseDto(User user){
+  public UserInfoResponseDto(User user){
     this.userId = user.getUserId();
     this.userName = user.getUserName();
     this.slackId = user.getSlackId();
@@ -36,9 +32,6 @@ public class DeletedUserInfoResponseDto
     this.updatedAt = user.getUpdatedAt();
     this.createdBy = user.getCreatedBy();
     this.updatedBy = user.getUpdatedBy();
-    this.isDeleted = user.isDeleted();
-    this.deletedAt = user.getDeletedAt();
-    this.deletedBy = user.getDeletedBy();
   }
 
 }

@@ -1,7 +1,7 @@
-package com.sparta_logistics.auth.Security;
+package com.sparta_logistics.auth.application.Security;
 
-import com.sparta_logistics.auth.Entity.User;
-import com.sparta_logistics.auth.Repository.UserRepository;
+import com.sparta_logistics.auth.domain.model.User;
+import com.sparta_logistics.auth.domain.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

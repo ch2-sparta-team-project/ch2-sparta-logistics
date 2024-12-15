@@ -1,11 +1,10 @@
-package com.sparta_logistics.auth.jwt;
+package com.sparta_logistics.auth.presentation.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta_logistics.auth.Dto.SignInRequestDto;
-import com.sparta_logistics.auth.Entity.Role;
-import com.sparta_logistics.auth.Security.JwtUtil;
-import com.sparta_logistics.auth.Security.UserDetailsImpl;
-import com.sparta_logistics.auth.Service.AuthService;
+import com.sparta_logistics.auth.presentation.Dto.SignInRequestDto;
+import com.sparta_logistics.auth.domain.model.Role;
+import com.sparta_logistics.auth.application.Security.JwtUtil;
+import com.sparta_logistics.auth.application.Security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

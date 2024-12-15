@@ -1,7 +1,7 @@
-package com.sparta_logistics.auth.jwt;
+package com.sparta_logistics.auth.presentation.filter;
 
-import com.sparta_logistics.auth.Security.JwtUtil;
-import com.sparta_logistics.auth.Security.UserDetailsServiceImpl;
+import com.sparta_logistics.auth.application.Security.JwtUtil;
+import com.sparta_logistics.auth.application.Security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

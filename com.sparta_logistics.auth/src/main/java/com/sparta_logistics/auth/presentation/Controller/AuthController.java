@@ -1,8 +1,8 @@
-package com.sparta_logistics.auth.Controller;
+package com.sparta_logistics.auth.presentation.Controller;
 
-import com.sparta_logistics.auth.Dto.AuthResponseDto;
-import com.sparta_logistics.auth.Dto.SignUpRequestDto;
-import com.sparta_logistics.auth.Service.AuthService;
+import com.sparta_logistics.auth.presentation.Dto.AuthResponseDto;
+import com.sparta_logistics.auth.presentation.Dto.SignUpRequestDto;
+import com.sparta_logistics.auth.application.Service.AuthService;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

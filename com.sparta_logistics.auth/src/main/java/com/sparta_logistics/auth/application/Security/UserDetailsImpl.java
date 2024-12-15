@@ -1,9 +1,8 @@
-package com.sparta_logistics.auth.Security;
+package com.sparta_logistics.auth.application.Security;
 
-import com.sparta_logistics.auth.Entity.User;
+import com.sparta_logistics.auth.domain.model.User;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
