@@ -5,6 +5,7 @@ import com.sparta_logistics.auth.Dto.SignInRequestDto;
 import com.sparta_logistics.auth.Entity.Role;
 import com.sparta_logistics.auth.Security.JwtUtil;
 import com.sparta_logistics.auth.Security.UserDetailsImpl;
+import com.sparta_logistics.auth.Service.AuthService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -70,7 +71,15 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
-    new ObjectMapper().writeValue(response.getWriter(), "로그인 성공");
+
+    Map<String, Object> responseBody = new HashMap<>();
+    responseBody.put("accessToken", "Bearer " + token);
+    responseBody.put("username", username);
+    responseBody.put("role", role.toString());
+    responseBody.put("slackId", slackId);
+
+
+    new ObjectMapper().writeValue(response.getWriter(), responseBody);
   }
 
   @Override

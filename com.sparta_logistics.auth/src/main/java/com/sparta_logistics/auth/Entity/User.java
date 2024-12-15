@@ -1,5 +1,7 @@
 package com.sparta_logistics.auth.Entity;
 
+import com.sparta_logistics.auth.Dto.SignUpRequestDto;
+import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -67,8 +69,32 @@ public class User extends BaseEntity {
 
   }
 
-  public void softDelete() {
+  public void softDelete(String userName) {
     this.isDeleted = true;
+    softDeleteUser(userName);
+  }
+
+  public void changePassword(String password) {
+    this.password = password;
+    this.initAuditInfo(this);
+  }
+
+  public void update(UserUpdateRequestDto requestDto) {
+
+    if (requestDto.getUserName() != null && !requestDto.getUserName().isBlank()) {
+      this.setUserName(requestDto.getUserName());
+    }
+
+    if (requestDto.getRole() != null) {
+      this.setRole(requestDto.getRole());
+    }
+
+    if (requestDto.getSlackId() != null && !requestDto.getSlackId().isBlank()) {
+      this.setSlackId(requestDto.getSlackId());
+    }
+
+    this.initAuditInfo(this);
+    setUpdatedBy(requestDto.getUserName());
   }
 
 }

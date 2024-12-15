@@ -1,16 +1,26 @@
 package com.sparta_logistics.auth.Service;
 
+import com.sparta_logistics.auth.Dto.DeletedUserInfoResponseDto;
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
+import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
+import com.sparta_logistics.auth.Dto.UserInfoResponseDto;
+import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.Entity.Role;
 import com.sparta_logistics.auth.Entity.User;
 import com.sparta_logistics.auth.Repository.UserRepository;
 import com.sparta_logistics.auth.Security.JwtUtil;
+import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,17 +45,17 @@ public class AuthService {
   }
 
   /*
-  * 회원 가입
-  * */
+   * 회원 가입
+   * */
   @Transactional
-  public String signUp(SignUpRequestDto signUpRequestDto) {
+  public void signUp(SignUpRequestDto signUpRequestDto) {
     validateDuplicateUser(signUpRequestDto);
 
     Role role = validateAndGetRole(signUpRequestDto.getRole());
-    User user = User.create(signUpRequestDto.getUserName(), signUpRequestDto.getPassword(), signUpRequestDto.getSlackId(), role, passwordEncoder);
+    User user = User.create(signUpRequestDto.getUserName(), signUpRequestDto.getPassword(),
+        signUpRequestDto.getSlackId(), role, passwordEncoder);
 
     userRepository.save(user);
-    return "회원 가입 성공";
   }
 
   /*
@@ -56,16 +66,24 @@ public class AuthService {
     return jwtUtil.getUserInfoFromToken(accessToken);
   }
 
+  @Transactional
+  public void changePassword(UserDetailsImpl userDetails, UserChangePasswordReqDto request) {
+    User user = userRepository.findById(userDetails.getUser().getUserId())
+        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+    request.validate(userDetails.getUser(), passwordEncoder);
+    user.changePassword(passwordEncoder.encode(request.getNewPassword()));
+  }
+
   /*
-  *  사용자 SoftDelete 기능(auth/delete)
-  * */
+   *  사용자 SoftDelete 기능(auth/delete)
+   * */
   @Transactional
   public void softDeleteUser(String accessToken) {
     String slackId = jwtUtil.getUserInfoFromToken(accessToken).get("slackId").toString();
     User user = userRepository.findActiveUserBySlackId(slackId)
         .orElseThrow(() -> new IllegalArgumentException("slackId가 존재하지 않음"));
 
-    user.softDelete();
+    user.softDelete(user.getUserName());
   }
 
   // 회원가입시 회원 존재 여부 검증
@@ -92,10 +110,63 @@ public class AuthService {
       return Role.COMPANY_MANAGER;
   }
 
-  @Value("${spring.application.name}")
-    private String issuer;
+  @Transactional
+  public UserInfoResponseDto update(UserDetailsImpl userDetails, UserUpdateRequestDto request) {
 
-  @Value("${service.jwt.access-expiration}")
-    private Long accessExpiration;
+    User user = userRepository.findById(userDetails.getUser().getUserId())
+        .orElseThrow(() -> new IllegalArgumentException("User가 존재하지 않습니다."));
+
+    user.update(request);
+    return new UserInfoResponseDto(user);
+  }
+
+  @Transactional
+  public UserInfoResponseDto updateForMaster(UserDetailsImpl userDetails, UserUpdateRequestDto request,UUID userId) {
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 User가 존재하지 않습니다."));
+
+    user.update(request);
+    user.setUpdatedBy(userDetails.getUser().getUserName());
+    return new UserInfoResponseDto(user);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<UserInfoResponseDto> getAllUsers(String sortBy, int page, int size) {
+    int realSize = ConfirmPageSize(size);
+    Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
+    Page<User> userList = userRepository.findAllByIsDeletedFalse(pageable);
+    return userList.map(UserInfoResponseDto::new);
+  }
+
+  @Transactional(readOnly = true)
+  public Page<DeletedUserInfoResponseDto> getDeletedUsers(String sortBy, int page, int size) {
+    int realSize = ConfirmPageSize(size);
+    Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
+    Page<User> userList = userRepository.findAllByIsDeletedTrue(pageable); // isDeleted가 true인 사용자만 조회
+    return userList.map(DeletedUserInfoResponseDto::new);
+  }
+
+
+  @Transactional(readOnly = true)
+  public UserInfoResponseDto getOneUsersForMaster(UUID userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("User가 존재하지 않습니다."));
+    return new UserInfoResponseDto(user);
+  }
+
+
+  @Transactional(readOnly = true)
+  public UserInfoResponseDto getOneUsersForUser(UserDetailsImpl userDetails) {
+    User user = userRepository.findById(userDetails.getUser().getUserId())
+        .orElseThrow(() -> new IllegalArgumentException("User가 존재하지 않습니다."));
+    return new UserInfoResponseDto(user);
+  }
+
+  private int ConfirmPageSize(int size) {
+    if ( size != 10 && size != 30 && size != 50){
+      return 10;
+    } else return size;
+  }
 
 }
