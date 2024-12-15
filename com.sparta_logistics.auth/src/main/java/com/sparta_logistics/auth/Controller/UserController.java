@@ -2,11 +2,12 @@ package com.sparta_logistics.auth.Controller;
 
 import com.sparta_logistics.auth.Dto.AuthResponseDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
-import com.sparta_logistics.auth.Dto.UserPageResponseDto;
+import com.sparta_logistics.auth.Dto.UserInfoResponseDto;
 import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import com.sparta_logistics.auth.Service.AuthService;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -46,28 +47,45 @@ public class UserController {
   // 사용자 목록 전체 조회(MASTER)
   @Secured("ROLE_MASTER")
   @GetMapping
-  public ResponseEntity<AuthResponseDto> users(
+  public ResponseEntity<AuthResponseDto> usersPage(
       @RequestParam(defaultValue = "createdAt") String sortBy,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size){
-    Page<UserPageResponseDto> Users = authService.getAllUsers(sortBy, page, size);
-    return ResponseEntity.ok().body(new AuthResponseDto("유저 정보 검색 완료", HttpStatus.OK.value(), Users));
+    Page<UserInfoResponseDto> UsersInfo = authService.getAllUsers(sortBy, page, size);
+    return ResponseEntity.ok().body(new AuthResponseDto("유저 정보 전체 검색 완료", HttpStatus.OK.value(), UsersInfo));
   }
 
-  // 사용자 단일 조회
+  // 사용자 정보 단일 조회(Master)
   @GetMapping("/{userId}")
-  public ResponseEntity<?> userDetails(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable String userId) {
-    return null;
+  public ResponseEntity<?> usersGetInfoForMaster(@AuthenticationPrincipal UserDetailsImpl userDetails, @PathVariable UUID userId) {
+
+    UserInfoResponseDto UserInfo = authService.getOneUsersForMaster(userId);
+    return ResponseEntity.ok().body(new AuthResponseDto("회원 정보 단일 검색 완료",HttpStatus.OK.value(), UserInfo));
   }
 
-  // 사용자 생성 구현 고민
-  // 코드 구현하기
+  // 사용자 정보 조회(User)
+  @Secured({"ROLE_HUB_MANAGER","ROLE_HUB_TO_HUB_DELIVERY","ROLE_HUB_TO_COMPANY_DELIVERY","ROLE_COMPANY_MANAGER"})
+  @GetMapping("/self")
+  public ResponseEntity<?> usersGetInfoForUser(@AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-  // 사용자 수정
+    UserInfoResponseDto UserInfo = authService.getOneUsersForUser(userDetails);
+    return ResponseEntity.ok().body(new AuthResponseDto("내 정보",HttpStatus.OK.value(), UserInfo));
+  }
+
+  // 사용자 정보 수정(USER)
   @PatchMapping
   public ResponseEntity<?> userUpdate(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody
       UserUpdateRequestDto request){
     authService.update(userDetails, request);
+    return ResponseEntity.ok(new AuthResponseDto("회원 정보 수정 완료", HttpStatus.OK.value()));
+  }
+
+  // 사용자 정보 수정(MASTER)
+  @Secured("ROLE_MASTER")
+  @PatchMapping("/{userId}")
+  public ResponseEntity<?> userUpdateForMaster(@AuthenticationPrincipal UserDetailsImpl userDetails, @Valid @RequestBody
+  UserUpdateRequestDto request, @PathVariable UUID userId){
+    authService.updateForMaster(userDetails, request, userId);
     return ResponseEntity.ok(new AuthResponseDto("회원 정보 수정 완료", HttpStatus.OK.value()));
   }
 
@@ -80,8 +98,8 @@ public class UserController {
   }
 
   // 회원 정보 확인
-  @GetMapping("/info")
-  public ResponseEntity<?> userInfo(@RequestHeader("Authorization") String token) {
+  @GetMapping("/token")
+  public ResponseEntity<?> TokenRead(@RequestHeader("Authorization") String token) {
     String accessToken = token.replace("Bearer ", "");
     return ResponseEntity.ok(authService.getUserInfoFromAccessToken(accessToken));
   }

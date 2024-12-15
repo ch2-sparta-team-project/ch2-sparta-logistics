@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserPageResponseDto {
+public class UserInfoResponseDto {
 
   private UUID userId;
   private String userName;
@@ -23,7 +23,7 @@ public class UserPageResponseDto {
   private String createdBy;
   private String updatedBy;
 
-  public UserPageResponseDto(User user){
+  public UserInfoResponseDto(User user){
     this.userId = user.getUserId();
     this.userName = user.getUserName();
     this.slackId = user.getSlackId();

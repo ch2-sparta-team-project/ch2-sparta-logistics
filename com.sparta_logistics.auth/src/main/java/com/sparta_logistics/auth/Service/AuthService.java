@@ -1,9 +1,8 @@
 package com.sparta_logistics.auth.Service;
 
-import com.sparta_logistics.auth.Dto.AuthResponseDto;
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Dto.UserChangePasswordReqDto;
-import com.sparta_logistics.auth.Dto.UserPageResponseDto;
+import com.sparta_logistics.auth.Dto.UserInfoResponseDto;
 import com.sparta_logistics.auth.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.Entity.Role;
 import com.sparta_logistics.auth.Entity.User;
@@ -13,6 +12,7 @@ import com.sparta_logistics.auth.Security.UserDetailsImpl;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import java.util.UUID;
 import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -109,29 +109,49 @@ public class AuthService {
       return Role.COMPANY_MANAGER;
   }
 
-  @Value("${spring.application.name}")
-  private String issuer;
-
-  @Value("${service.jwt.access-expiration}")
-  private Long accessExpiration;
-
   @Transactional
-  public User update(UserDetailsImpl userDetails, UserUpdateRequestDto request) {
+  public UserInfoResponseDto update(UserDetailsImpl userDetails, UserUpdateRequestDto request) {
 
     User user = userRepository.findById(userDetails.getUser().getUserId())
         .orElseThrow(() -> new IllegalArgumentException("User가 존재하지 않습니다."));
 
     user.update(request);
-    return user;
+    return new UserInfoResponseDto(user);
+  }
 
+  @Transactional
+  public UserInfoResponseDto updateForMaster(UserDetailsImpl userDetails, UserUpdateRequestDto request,UUID userId) {
+
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("해당 User가 존재하지 않습니다."));
+
+    user.update(request);
+    user.setUpdatedBy(userDetails.getUser().getUserName());
+    return new UserInfoResponseDto(user);
   }
 
   @Transactional(readOnly = true)
-  public Page<UserPageResponseDto> getAllUsers(String sortBy, int page, int size) {
+  public Page<UserInfoResponseDto> getAllUsers(String sortBy, int page, int size) {
     int realSize = ConfirmPageSize(size);
     Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
     Page<User> userList = userRepository.findAll(pageable);
-    return userList.map(UserPageResponseDto::new);
+    return userList.map(UserInfoResponseDto::new);
+  }
+
+
+  @Transactional(readOnly = true)
+  public UserInfoResponseDto getOneUsersForMaster(UUID userId) {
+    User user = userRepository.findById(userId)
+        .orElseThrow(() -> new IllegalArgumentException("User가 존재하지 않습니다."));
+    return new UserInfoResponseDto(user);
+  }
+
+
+  @Transactional(readOnly = true)
+  public UserInfoResponseDto getOneUsersForUser(UserDetailsImpl userDetails) {
+    User user = userRepository.findById(userDetails.getUser().getUserId())
+        .orElseThrow(() -> new IllegalArgumentException("User가 존재하지 않습니다."));
+    return new UserInfoResponseDto(user);
   }
 
   private int ConfirmPageSize(int size) {
