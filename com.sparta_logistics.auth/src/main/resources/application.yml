@@ -8,9 +8,9 @@ spring:
       username: default
       password: systempass
   datasource:
-    url: jdbc:postgresql://localhost:5432/sparta_logistics_auth
-    username: root
-    password: 12341234
+    url: jdbc:postgresql://localhost:5432/msaPracDB
+    username: postgres
+    password: 1234
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -35,5 +35,5 @@ management:
       probability: 1.0
 service:
   jwt:
-    access-expiration: 3600000
+    access-expiration: 360000000000
     secret-key: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNwYXJ0YS1ib290Y2FtcC1jaDItc3BhcnRhLWxvZ2lzdGljcy1tYWRlLWJ5LWphYmJlcndvY2tlcjA0
