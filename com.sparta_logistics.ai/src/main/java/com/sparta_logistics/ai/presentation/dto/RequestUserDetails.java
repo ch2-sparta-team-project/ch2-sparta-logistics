@@ -1,4 +1,4 @@
-package com.sparta_logistics.product.presentation.dto;
+package com.sparta_logistics.ai.presentation.dto;
 
 import java.util.Collection;
 import lombok.Getter;

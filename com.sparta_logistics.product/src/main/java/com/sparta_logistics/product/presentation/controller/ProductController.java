@@ -11,6 +11,7 @@ import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
 import com.sparta_logistics.product.presentation.dto.RequestUserDetails;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.hateoas.PagedModel;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/products")
@@ -40,7 +42,11 @@ public class ProductController {
       @AuthenticationPrincipal RequestUserDetails user,
       @RequestBody ProductCreateRequest request
   ) {
-    ProductCreateResponse response = productService.createProduct(request);
+    ProductCreateResponse response = productService.createProduct(
+        UUID.fromString(user.getUserId()),
+        user.getRole(),
+        request
+    );
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
@@ -66,10 +72,15 @@ public class ProductController {
   @PutMapping("/{productId}")
   @Secured({"MASTER", "HUB_MANAGER", "COMPANY_MANAGER"})
   public ResponseEntity<ProductUpdateResponse> updateProduct(
+      @AuthenticationPrincipal RequestUserDetails user,
       @PathVariable UUID productId,
       @RequestBody ProductUpdateRequest request
   ) {
-    ProductUpdateResponse response = productService.updateProduct(productId, request);
+    ProductUpdateResponse response = productService.updateProduct(
+        UUID.fromString(user.getUserId()),
+        user.getRole(),
+        productId,
+        request);
     return ResponseEntity.ok(response);
   }
 
@@ -79,7 +90,11 @@ public class ProductController {
       @AuthenticationPrincipal RequestUserDetails user,
       @PathVariable UUID productId
   ) {
-    ProductDeleteResponse response = productService.deleteProduct(productId);
+    ProductDeleteResponse response = productService.deleteProduct(
+        UUID.fromString(user.getUserId()),
+        user.getUsername(),
+        user.getRole(),
+        productId);
     return ResponseEntity.ok(response);
   }
 }
