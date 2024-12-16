@@ -21,6 +21,7 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(HttpStatus.FORBIDDEN)
         .body(new ErrorResponse(ErrorCode.FORBIDDEN_EXCEPTION, "Access is denied"));
   }
+
   @ExceptionHandler(ApplicationException.class)
   protected ResponseEntity<ErrorResponse> handleApplicationException(ApplicationException e){
     log.error("{} {}", e, e.getErrorCode().toString());
