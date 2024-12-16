@@ -32,4 +32,11 @@ public class RequestUserDetails implements UserDetails {
   public String getPassword() {
     return "";
   }
+
+  public String getRole() {
+    return authorities.stream()
+        .findFirst()
+        .map(GrantedAuthority::getAuthority)
+        .orElse(null);
+  }
 }
