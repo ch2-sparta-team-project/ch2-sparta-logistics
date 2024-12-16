@@ -2,18 +2,12 @@ package com.sparta_logistics.auth.presentation.Dto;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import com.sparta_logistics.auth.domain.model.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
 import jakarta.validation.constraints.Pattern;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
 
-@Builder
 @Getter
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class SignUpRequestDto {
+public class SignUpForCompanyManagerRequestDto {
 
   @Pattern(
       regexp = "^[a-z0-9]{4,10}$",
@@ -28,15 +22,7 @@ public class SignUpRequestDto {
   )
   private String password;
   private String slackId;
-  private Role role;
 
-  public static SignUpRequestDto from(SignUpForCompanyManagerRequestDto requestDto) {
-    return SignUpRequestDto.builder()
-        .userName(requestDto.getUserName())
-        .password(requestDto.getPassword())
-        .slackId(requestDto.getSlackId())
-        .role(Role.COMPANY_MANAGER)
-        .build();
-  }
+
 
 }
