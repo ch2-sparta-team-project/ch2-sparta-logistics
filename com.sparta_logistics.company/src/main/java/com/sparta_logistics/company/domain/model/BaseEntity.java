@@ -31,8 +31,14 @@ public abstract class BaseEntity {
 
   private String deletedBy;
 
-  public void delete() {
+  public void delete(String deletedBy) {
+    this.deletedBy = deletedBy;
     this.deletedAt = LocalDateTime.now();
+  }
+
+  public void restore() {
+    this.deletedBy = null;
+    this.deletedAt = null;
   }
 
 }
