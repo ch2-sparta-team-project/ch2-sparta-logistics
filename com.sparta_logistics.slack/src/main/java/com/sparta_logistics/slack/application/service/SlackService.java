@@ -8,6 +8,7 @@ import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.users.UsersLookupByEmailResponse;
 import com.sparta_logistics.slack.SlackEntity;
+import com.sparta_logistics.slack.SlackInfoResponseDto;
 import com.sparta_logistics.slack.SlackSendMessageRequestDto;
 import com.sparta_logistics.slack.UserInfoResponseDto;
 import com.sparta_logistics.slack.application.Repository.SlackRepository;
@@ -15,12 +16,16 @@ import com.sparta_logistics.slack.infrastructure.client.AuthServiceClient;
 import com.sparta_logistics.slack.infrastructure.config.SlackChannel;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Slf4j
@@ -35,6 +40,7 @@ public class SlackService {
   private final AuthServiceClient authServiceClient;
 
   //슬랙 "채널" 에 메세지 발송(전체 공지 기능)
+  @Transactional
   public void sendSlackMessage(SlackSendMessageRequestDto requestDto, String token) {
 
     String channelAddress = "";
@@ -53,7 +59,9 @@ public class SlackService {
           .text(requestDto.getMessage())
           .build();
 
+      //유저정보에서 필요한 정보 가져오기
       ResponseEntity<UserInfoResponseDto> info = authServiceClient.findInfo(token);
+
       methods.chatPostMessage(request);
 
       SlackEntity slack = SlackEntity.create(
@@ -74,8 +82,10 @@ public class SlackService {
   /*
    * Slack ID를 통해 DM 보내기
    */
-  public void sendDirectMessage(String slackId, String message)
+  @Transactional
+  public void sendDirectMessage(String slackId, String message, String token)
       throws IOException, SlackApiException {
+    ResponseEntity<UserInfoResponseDto> info = authServiceClient.findInfo(token);
     ChatPostMessageResponse response = slack.methods(slackToken)
         .chatPostMessage(req -> req
             .channel(slackId) // Slack user ID
@@ -84,6 +94,63 @@ public class SlackService {
       throw new RuntimeException("메세지 발신에 실패했습니다.: " + response.getError());
     }
   }
+
+
+
+
+
+
+
+  //Read
+  @Transactional(readOnly = true)
+  public Page<SlackInfoResponseDto> getAllSlackMessage(String sortBy, int page, int size) {
+
+    int realSize = ConfirmPageSize(size);
+    Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
+    Page<SlackEntity> messageList = slackRepository.findAllByIsSendTrue(pageable);
+    return messageList.map(SlackInfoResponseDto::new);
+  }
+
+  public Page<SlackInfoResponseDto> getNotSendSlackMessage(String sortBy, int page, int size) {
+    int realSize = ConfirmPageSize(size);
+    Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
+    Page<SlackEntity> messageList = slackRepository.findAllByIsSendFalse(pageable);
+    return messageList.map(SlackInfoResponseDto::new);
+
+  }
+
+  //Update
+
+
+
+
+  //Delete
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /*
    * userId(Email 형식) 기반으로 Slack ID 가져오기
@@ -98,6 +165,13 @@ public class SlackService {
       throw new RuntimeException("SlackID(Email)를 통해 내부ID를 불러오는 데 실패했습니다. " + email);
     }
   }
+
+private int ConfirmPageSize(int size) {
+  if ( size != 10 && size != 30 && size != 50){
+    return 10;
+  } else return size;
+}
+
 
 
 }

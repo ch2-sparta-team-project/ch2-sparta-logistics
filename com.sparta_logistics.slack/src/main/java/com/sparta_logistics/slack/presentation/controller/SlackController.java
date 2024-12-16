@@ -2,6 +2,8 @@ package com.sparta_logistics.slack.presentation.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slack.api.methods.SlackApiException;
+import com.sparta_logistics.slack.SlackInfoResponseDto;
+import com.sparta_logistics.slack.ResponseDto;
 import com.sparta_logistics.slack.SlackSendMessageRequestDto;
 import com.sparta_logistics.slack.application.service.SlackService;
 import com.sparta_logistics.slack.infrastructure.client.AuthServiceClient;
@@ -10,6 +12,8 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RefreshScope
 @Controller
@@ -39,8 +44,7 @@ public class SlackController {
 
   @PostMapping("/notice")
   public ResponseEntity<?> NoticeSend(@RequestHeader("Authorization") String token,
-      @RequestBody SlackSendMessageRequestDto requestDto)
-      throws SlackApiException, IOException {
+      @RequestBody SlackSendMessageRequestDto requestDto) {
     log.info("공지 보내기");
     slackService.sendSlackMessage(requestDto, token);
     return ResponseEntity.ok("notice send success");
@@ -62,8 +66,29 @@ public class SlackController {
      * 추후 AiServiceClient에서 배달 메세지를 받아와 전송 하도록 변경
      * */
     slackService.sendDirectMessage(slackService.getSlackIdByEmail(slackId),
-        authServiceClient.findInfo(token).toString());
+        authServiceClient.findInfo(token).toString(), token);
     return ResponseEntity.ok(authServiceClient.findInfo(token).getBody());
   }
+
+  // 발신 메세지(isSend == true)에 따른 조회
+  @GetMapping
+  public ResponseEntity<ResponseDto> SendMessagePage(
+      @RequestParam(defaultValue = "createdAt") String sortBy,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size){
+    Page<SlackInfoResponseDto> messageInfo = slackService.getAllSlackMessage(sortBy, page, size);
+    return ResponseEntity.ok().body(new ResponseDto("슬랙 메세지 전체 조회", HttpStatus.OK.value(), messageInfo));
+  }
+
+  // 발신 메세지(isSend == false)에 따른 조회
+  @GetMapping("/deletedList")
+  public ResponseEntity<ResponseDto> NotSendMessagePage(
+      @RequestParam(defaultValue = "createdAt") String sortBy,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size){
+    Page<SlackInfoResponseDto> UsersInfo = slackService.getNotSendSlackMessage(sortBy, page, size);
+    return ResponseEntity.ok().body(new ResponseDto("보내지지 않은 슬렉 메세지 조회", HttpStatus.OK.value(), UsersInfo));
+  }
+
 
 }
