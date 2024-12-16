@@ -12,5 +12,15 @@ public record HubDto(
     Double latitude,
     Double longitude
 ) {
-
+    public static HubDto from(HubReadResponse hubReadResponse) {
+      return HubDto.builder()
+          .hubId(hubReadResponse.hubId().toString())
+          .name(hubReadResponse.name())
+          .address(hubReadResponse.address())
+          .centerHubId(hubReadResponse.centerHubId().toString())
+          .isCenter(hubReadResponse.isCenter())
+          .latitude(hubReadResponse.latitude())
+          .longitude(hubReadResponse.longitude())
+          .build();
+    }
 }

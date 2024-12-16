@@ -1,28 +1,40 @@
 package com.sparta_logistics.delivery.infrastructure.adapter;
 
 import com.sparta_logistics.delivery.application.port.HubClientPort;
+import com.sparta_logistics.delivery.infrastructure.client.HubClient;
 import com.sparta_logistics.delivery.infrastructure.dto.HubDto;
+import com.sparta_logistics.delivery.infrastructure.dto.HubReadResponse;
 import com.sparta_logistics.delivery.infrastructure.dto.HubRouteDto;
+import com.sparta_logistics.delivery.infrastructure.dto.HubRouteReadResponse;
+import com.sparta_logistics.delivery.infrastructure.dto.HubSearchRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class HubClientAdapter implements HubClientPort {
 
+  private final HubClient hubClient;
+
   @Override
   public Boolean existsByHubId(String hubId) {
-    return true;
+    HubReadResponse hub = hubClient.getHub(UUID.fromString(hubId));
+    return hub != null;
   }
 
   @Override
   public Map<String, HubDto> findHubAll() {
-    Map<String, HubDto> hubMap = new HashMap<>();
-
+    List<HubReadResponse> hubs = hubClient.getHubs();
+    System.out.println(hubs);
     // 경기 남부가 중앙 허브
+    /*
     hubMap.put("00b3aa2f-badc-4a80-b580-2096f464827a", HubDto.builder()
         .hubId("00b3aa2f-badc-4a80-b580-2096f464827a")
         .name("경기 남부 센터")
@@ -194,12 +206,25 @@ public class HubClientAdapter implements HubClientPort {
         .longitude(128.691940442146)
         .build());
 
-    return hubMap;
+     */
+
+    return hubs.stream()
+        .map(HubDto::from)
+        .collect(Collectors.toMap(
+            HubDto::hubId, // 키로 사용할 값
+            hub -> hub     // 값으로 사용할 객체
+        ));
   }
 
   @Override
   public Map<String, HubRouteDto> findHubRouteAll() {
-    return Map.of();
+    List<HubRouteReadResponse> hubRoutes = hubClient.readHubRoutes();
+    return hubRoutes.stream()
+        .map(HubRouteDto::from)
+        .collect(Collectors.toMap(
+            HubRouteDto::sourceHubId,
+            hub -> hub
+        ));
   }
 
 }

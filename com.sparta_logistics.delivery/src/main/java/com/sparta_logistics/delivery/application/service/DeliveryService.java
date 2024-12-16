@@ -97,6 +97,7 @@ public class DeliveryService {
     DeliveryManager companyDeliveryManager = deliveryManagerRepository.findFirstByRoleAndHubIdAndStatusAndDeletedAtIsNullOrderByTurnAsc(
         DeliveryManagerRole.COMPANY_DELIVERY_MANAGER, nearestHub.hubId(),
         DeliveryManagerStatus.NO_WORK).orElse(null);
+    companyDeliveryManager.updateStatus(DeliveryManagerStatus.IN_DELIVERY);
     //---
 
     // hubDeliveryManager 배정
@@ -114,6 +115,7 @@ public class DeliveryService {
         hubDeliverManager = manager;
       }
     }
+    hubDeliverManager.updateStatus(DeliveryManagerStatus.IN_DELIVERY);
     //---
     Long totalDuration = 0L;
     //엔티티들 매핑
