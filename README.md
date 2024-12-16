@@ -1,5 +1,6 @@
 # Sparta Logistics
 ### 물류 관리 및 배송 시스템을 위한 MSA 기반 플랫폼 개발
+![ch2프로젝트](https://github.com/user-attachments/assets/a2ca6db7-a5a1-4141-a02f-5ca3a67d6b81)
 <br>
 
 ## 👨‍👨‍👧‍👦 Our Team
