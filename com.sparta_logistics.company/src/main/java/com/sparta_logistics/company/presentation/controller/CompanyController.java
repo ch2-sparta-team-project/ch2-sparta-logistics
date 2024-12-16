@@ -7,6 +7,7 @@ import com.sparta_logistics.company.presentation.dto.RequestUserDetails;
 import com.sparta_logistics.company.presentation.request.CompanyCreateRequest;
 import com.sparta_logistics.company.presentation.request.CompanySearchRequest;
 import jakarta.validation.Valid;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,13 +50,13 @@ public class CompanyController {
     return ResponseEntity.ok(companyService.searchCompanies(request, pageable));
   }
 
-//  // 업체 단일 조회
-//  @GetMapping("{companyId}")
-//  public ResponseEntity<CompanyReadResponse> readCompany(
-//      @PathVariable("companyId") String orderId,
-//      @AuthenticationPrincipal RequestUserDetails user) {
-//    return ResponseEntity.ok(companyService.readCompany(orderId, user.getUserId(), user.getRole()));
-//  }
+  // 업체 단일 조회
+  // 전체 권한
+  @GetMapping("{companyId}")
+  public ResponseEntity<CompanyReadResponse> readCompany(
+      @PathVariable("companyId") UUID companyId) {
+    return ResponseEntity.ok(companyService.readCompany(companyId));
+  }
 //
 //  // 업체 수정
 //  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER"})

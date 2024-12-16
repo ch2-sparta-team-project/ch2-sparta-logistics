@@ -4,6 +4,8 @@ import com.sparta_logistics.company.application.client.HubClient;
 import com.sparta_logistics.company.application.dto.CompanyCreateResponse;
 import com.sparta_logistics.company.application.dto.CompanyReadResponse;
 import com.sparta_logistics.company.domain.model.Company;
+import com.sparta_logistics.company.global.exception.ApplicationException;
+import com.sparta_logistics.company.global.exception.ErrorCode;
 import com.sparta_logistics.company.infrastructure.repository.CompanyRepository;
 import com.sparta_logistics.company.presentation.request.CompanyCreateRequest;
 import com.sparta_logistics.company.presentation.request.CompanySearchRequest;
@@ -38,5 +40,12 @@ public class CompanyService {
 
   public Page<CompanyReadResponse> searchCompanies(CompanySearchRequest request, Pageable pageable) {
     return companyRepository.searchCompanies(request, pageable);
+  }
+
+  public CompanyReadResponse readCompany(UUID companyId) {
+    Company company = companyRepository.findById(companyId).orElseThrow(
+        () -> new ApplicationException(ErrorCode.INVALID_VALUE_EXCEPTION)
+    );
+    return CompanyReadResponse.of(company);
   }
 }
