@@ -40,7 +40,7 @@ public class DeliveryManager extends Base {
   @Column(nullable = false)
   private DeliveryManagerStatus status;
 
-  @Column(nullable = false, unique = true)
+  @Column(nullable = false)
   private Integer turn;
 
   public static DeliveryManager create(String id, String hubId, DeliveryManagerRole role,
@@ -64,5 +64,9 @@ public class DeliveryManager extends Base {
     if (hubId != null) {
       this.hubId = hubId;
     }
+  }
+
+  public void updateTurn(int turn) {
+    this.turn = turn;
   }
 }

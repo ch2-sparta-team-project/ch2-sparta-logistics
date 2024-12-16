@@ -10,7 +10,7 @@ import com.sparta_logistics.delivery.domain.model.DeliveryManager;
 import com.sparta_logistics.delivery.domain.model.enumerate.DeliveryManagerRole;
 import com.sparta_logistics.delivery.global.exception.ApplicationException;
 import com.sparta_logistics.delivery.global.exception.ErrorCode;
-import com.sparta_logistics.delivery.infrastructure.DeliveryManagerRepository;
+import com.sparta_logistics.delivery.infrastructure.repository.DeliveryManagerRepository;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -46,11 +46,11 @@ public class DeliveryManagerService {
     // business logic: turn 계산 후 주입
     int turn;
     if (dto.role().equals(DeliveryManagerRole.HUB_DELIVERY_MANAGER)) {
-      Integer maxTurn = deliveryManagerRepository.findMaxTurnByRole(dto.role()).
+      Integer maxTurn = deliveryManagerRepository.findMaxTurnByRoleAndDeletedAtIsNull(dto.role()).
           orElse(0);
       turn = maxTurn + 1;
     } else {
-      Integer maxTurn = deliveryManagerRepository.findMaxTurnByRoleAndHubId(dto.role(), dto.hubId())
+      Integer maxTurn = deliveryManagerRepository.findMaxTurnByRoleAndHubIdAndDeletedAtIsNull(dto.role(), dto.hubId())
           .orElse(0);
       turn = maxTurn + 1;
     }
@@ -78,7 +78,7 @@ public class DeliveryManagerService {
   public DeliveryManagerResponse update(String deliverManagerId, DeliveryManagerUpdateDto dto,
       String userId, String role) {
 
-    DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliverManagerId)
+    DeliveryManager deliveryManager = deliveryManagerRepository.findByIdAndDeletedAtIsNull(deliverManagerId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
     // validation: 허브 매니저인 경우 담당 허브 소속만 업데이트 가능
@@ -94,6 +94,14 @@ public class DeliveryManagerService {
       throw new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION);
     }
 
+    if(dto.hubId() != null){
+      // business logic: turn 계산 후 주입
+      if (deliveryManager.getRole().equals(DeliveryManagerRole.COMPANY_DELIVERY_MANAGER)) {
+        Integer maxTurn = deliveryManagerRepository.findMaxTurnByRoleAndHubIdAndDeletedAtIsNull(DeliveryManagerRole.COMPANY_DELIVERY_MANAGER, dto.hubId())
+            .orElse(0);
+        deliveryManager.updateTurn(maxTurn + 1);
+      }
+    }
     deliveryManager.updateStatus(dto.status());
     deliveryManager.updateHub(dto.hubId());
 
@@ -106,7 +114,7 @@ public class DeliveryManagerService {
   @Transactional
   public DeliveryManagerResponse delete(String deliveryManagerId, String userId, String role) {
 
-    DeliveryManager deliveryManager = deliveryManagerRepository.findById(deliveryManagerId)
+    DeliveryManager deliveryManager = deliveryManagerRepository.findByIdAndDeletedAtIsNull(deliveryManagerId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
     // validation: 허브 매니저인 경우 담당 허브 소속만 업데이트 가능
