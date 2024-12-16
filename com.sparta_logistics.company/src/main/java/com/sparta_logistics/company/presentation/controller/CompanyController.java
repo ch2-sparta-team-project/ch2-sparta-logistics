@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -69,13 +71,21 @@ public class CompanyController {
     return ResponseEntity.ok(
         companyService.updateCompany(req, companyId));
   }
-//
-//  // 업체 삭제
-//  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER"})
-//  @DeleteMapping("{companyId}")
-//  public ResponseEntity<String> deleteOrder(
-//      @PathVariable("companyId") String companyId,
-//      @AuthenticationPrincipal RequestUserDetails user) {
-//    return ResponseEntity.ok(companyService.deleteOrder(companyId, user.getUserId(), user.getRole()));
-//  }
+
+  // 업체 삭제
+  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER", "MASTER"})
+  @DeleteMapping("{companyId}")
+  public ResponseEntity<String> deleteCompany(
+      @PathVariable("companyId") UUID companyId,
+      @AuthenticationPrincipal RequestUserDetails user) {
+    return ResponseEntity.ok(companyService.deleteCompany(companyId, user.getUserId()));
+  }
+
+  // 업체 복구
+  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER", "MASTER"})
+  @PatchMapping("{companyId}")
+  public ResponseEntity<CompanyReadResponse> restoreCompany(
+      @PathVariable("companyId") UUID companyId) {
+    return ResponseEntity.ok(companyService.restoreCompany(companyId));
+  }
 }

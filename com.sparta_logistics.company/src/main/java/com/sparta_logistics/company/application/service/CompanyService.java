@@ -44,17 +44,27 @@ public class CompanyService {
   }
 
   public CompanyReadResponse readCompany(UUID companyId) {
-    Company company = companyRepository.findById(companyId).orElseThrow(
-        () -> new ApplicationException(ErrorCode.INVALID_VALUE_EXCEPTION)
-    );
+    Company company = companyRepository.findByIdAndDeletedAtIsNull(companyId);
     return CompanyReadResponse.of(company);
   }
 
   public String updateCompany(CompanyUpdateRequest req, UUID companyId) {
+    Company company = companyRepository.findByIdAndDeletedAtIsNull(companyId);
+    company.update(req);
+    return "업체 정보가 업데이트되었습니다.";
+  }
+
+  public String deleteCompany(UUID companyId, String userId) {
+    Company company = companyRepository.findByIdAndDeletedAtIsNull(companyId);
+    company.delete(userId);
+    return "업체가 삭제되었습니다.";
+  }
+
+  public CompanyReadResponse restoreCompany(UUID companyId) {
     Company company = companyRepository.findById(companyId).orElseThrow(
         () -> new ApplicationException(ErrorCode.INVALID_VALUE_EXCEPTION)
     );
-    company.update(req);
-    return "업체 정보가 업데이트되었습니다.";
+    company.restore();
+    return CompanyReadResponse.of(company);
   }
 }
