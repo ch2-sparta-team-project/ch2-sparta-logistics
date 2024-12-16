@@ -138,10 +138,7 @@ public class HubService {
       Hub destinationHub = hubRepository.findByNameAndDeletedAtIsNull(hubRouteCreateRequest.destinationHubName());
       HubRoute hubRoute =
           HubRoute.createHubRoute(sourceHub, destinationHub, hubRouteCreateRequest.duration(), hubRouteCreateRequest.distance());
-      HubRoute hubRouteReverse =
-          HubRoute.createHubRoute(destinationHub, sourceHub, hubRouteCreateRequest.duration(), hubRouteCreateRequest.distance());
       hubRouteRepository.save(hubRoute);
-      hubRouteRepository.save(hubRouteReverse);
     }
   }
 
@@ -154,10 +151,7 @@ public class HubService {
   public String updateHubRoute(HubRouteUpdateRequest request) {
     HubRoute hubRoute = hubRouteRepository.findBySourceHubNameAndDestinationHubName(
         request.sourceHubName(), request.destinationHubName());
-    HubRoute hubRouteReverse = hubRouteRepository.findBySourceHubNameAndDestinationHubName(
-        request.destinationHubName(), request.sourceHubName());
     hubRoute.update(request.duration(), request.distance());
-    hubRouteReverse.update(request.duration(), request.distance());
     return "허브 경로 수정이 완료되었습니다.";
   }
 
