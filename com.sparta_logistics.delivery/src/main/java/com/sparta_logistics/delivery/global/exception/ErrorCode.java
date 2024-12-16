@@ -23,8 +23,8 @@ public enum ErrorCode {
     INVALID_SORT_EXCEPTION(HttpStatus.BAD_REQUEST, 2007, "올바르지 않은 정렬 값입니다."),
 
     // 3000: User Error
-    USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 3000, "존재하지 않는 사용자입니다.");
-
+    USER_NOT_FOUND_EXCEPTION(HttpStatus.NOT_FOUND, 3000, "존재하지 않는 사용자입니다."),
+    CLIENT_CALL_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, 4000, "Client API 호출 중 오류가 발생했습니다.");
     private final HttpStatus httpStatus;
     private final Integer code;
     private final String message;
