@@ -10,6 +10,7 @@ import lombok.Builder;
 @Builder
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record HubReadResponse(
+    UUID userId,
     UUID hubId,
     String name,
     String address,
@@ -18,6 +19,7 @@ public record HubReadResponse(
 
   public static HubReadResponse buildResponseByEntity(Hub hub) {
     return HubReadResponse.builder()
+        .userId(hub.getUserId())
         .hubId(hub.getId())
         .name(hub.getName())
         .address(hub.getAddress())

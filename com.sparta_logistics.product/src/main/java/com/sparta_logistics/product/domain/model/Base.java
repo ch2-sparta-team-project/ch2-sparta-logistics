@@ -31,8 +31,9 @@ public abstract class Base {
 
   private String deletedBy;
 
-  public void delete() {
+  public void delete(String username) {
     this.deletedAt = LocalDateTime.now();
+    this.deletedBy = username;
   }
 
 }

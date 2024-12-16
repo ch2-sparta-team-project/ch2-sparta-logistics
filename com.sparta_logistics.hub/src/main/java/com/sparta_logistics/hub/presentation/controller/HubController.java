@@ -3,18 +3,24 @@ package com.sparta_logistics.hub.presentation.controller;
 import com.sparta_logistics.hub.application.service.HubService;
 import com.sparta_logistics.hub.presentation.request.CenterHubChangeRequest;
 import com.sparta_logistics.hub.presentation.request.HubCreateRequest;
+import com.sparta_logistics.hub.presentation.request.HubRouteCreateRequest;
+import com.sparta_logistics.hub.presentation.request.HubRouteDeleteRequest;
+import com.sparta_logistics.hub.presentation.request.HubRouteReadRequest;
+import com.sparta_logistics.hub.presentation.request.HubRouteUpdateRequest;
 import com.sparta_logistics.hub.presentation.request.HubSearchRequest;
 import com.sparta_logistics.hub.presentation.request.HubUpdateRequest;
 import com.sparta_logistics.hub.presentation.request.NearHubAddRequest;
 import com.sparta_logistics.hub.presentation.request.NearHubRemoveRequest;
 import com.sparta_logistics.hub.presentation.response.HubCreateResponse;
 import com.sparta_logistics.hub.presentation.response.HubReadResponse;
+import com.sparta_logistics.hub.presentation.response.HubRouteReadResponse;
 import com.sparta_logistics.hub.util.RoleValidator;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -101,6 +107,31 @@ public class HubController {
     return hubService.changeCenterHub(hubId, centerHubChangeRequest);
   }
 
+  // 허브 경로 생성
+  @PostMapping("/hub_route")
+  public void createHubRoute(@RequestBody List<HubRouteCreateRequest> request){
+    hubService.createHubRoute(request);
+  }
+
+  // 허브 경로 조회
+  @GetMapping("/hub_route")
+  public ResponseEntity<HubRouteReadResponse> readHubRoute(HubRouteReadRequest request){
+    return hubService.readHubRoute(request);
+  }
+
+  // 허브 경로 수정
+  @PutMapping("/hub_route")
+  public String updateHubRoute(@RequestBody HubRouteUpdateRequest request){
+    return hubService.updateHubRoute(request);
+  }
+
+  // 허브 경로 삭제
+  @DeleteMapping("/hub_route")
+  public String deleteHubRoute(@RequestBody HubRouteDeleteRequest request){
+    return hubService.deleteHubRoute(request);
+  }
+
+  // 개발용 api
   @PostMapping("/temp")
   public UUID generateRandomUUID(){
     return UUID.randomUUID();

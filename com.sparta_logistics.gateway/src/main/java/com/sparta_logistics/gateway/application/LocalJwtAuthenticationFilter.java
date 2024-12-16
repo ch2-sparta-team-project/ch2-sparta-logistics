@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import javax.crypto.SecretKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -13,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
-
-import javax.crypto.SecretKey;
 
 @Slf4j
 @Component
@@ -27,7 +26,8 @@ public class LocalJwtAuthenticationFilter implements GlobalFilter {
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     String path = exchange.getRequest().getURI().getPath();
 
-    if (path.equals("/api/v1/auth/login") || path.equals("/api/v1/auth/sign-up")) {
+    if (path.equals("/api/v1/auth/login") || path.equals("/api/v1/auth/sign-up")
+        || path.equals("/api/v1/hubs/hub_route")) {
       return chain.filter(exchange);
     }
 
