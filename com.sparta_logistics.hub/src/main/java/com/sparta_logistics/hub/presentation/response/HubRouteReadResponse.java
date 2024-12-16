@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.sparta_logistics.hub.domain.model.HubRoute;
 import java.time.LocalTime;
+import java.util.UUID;
 import lombok.Builder;
 
 @Builder
@@ -11,6 +12,8 @@ import lombok.Builder;
 public record HubRouteReadResponse (
     String sourceHubName,
     String destinationHubName,
+    UUID sourceHubId,
+    UUID destinationHubId,
     LocalTime duration,
     Double distance
 ) {
@@ -19,6 +22,8 @@ public record HubRouteReadResponse (
     return HubRouteReadResponse.builder()
         .sourceHubName(hubRoute.getSourceHub().getName())
         .destinationHubName(hubRoute.getDestinationHub().getName())
+        .sourceHubId(hubRoute.getSourceHub().getId())
+        .destinationHubId(hubRoute.getDestinationHub().getId())
         .duration(hubRoute.getDuration())
         .distance(hubRoute.getDistance())
         .build();
