@@ -1,5 +1,6 @@
 package com.sparta_logistics.auth.Controller;
 
+import com.sparta_logistics.auth.Dto.AuthResponseDto;
 import com.sparta_logistics.auth.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.Service.AuthService;
 import jakarta.validation.Valid;
@@ -35,7 +36,8 @@ public class AuthController {
 
   @PostMapping("/sign-up")
   public ResponseEntity<?> signUp(@RequestBody SignUpRequestDto SignUpRequestDto) {
-    return ResponseEntity.ok((authService.signUp(SignUpRequestDto)));
+    authService.signUp(SignUpRequestDto);
+    return ResponseEntity.ok(new AuthResponseDto("회원가입 성공",200));
   }
 
 }

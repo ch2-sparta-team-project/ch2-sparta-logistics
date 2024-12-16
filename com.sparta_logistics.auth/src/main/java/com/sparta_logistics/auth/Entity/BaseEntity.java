@@ -41,4 +41,9 @@ public abstract class BaseEntity {
     this.updatedBy = user.getUpdatedBy();
   }
 
+  protected void softDeleteUser(String userName) {
+    this.deletedBy = userName;
+    this.deletedAt = LocalDateTime.now();
+  }
+
 }
