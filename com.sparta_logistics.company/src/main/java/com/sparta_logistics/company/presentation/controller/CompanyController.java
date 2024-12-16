@@ -6,6 +6,7 @@ import com.sparta_logistics.company.application.service.CompanyService;
 import com.sparta_logistics.company.presentation.dto.RequestUserDetails;
 import com.sparta_logistics.company.presentation.request.CompanyCreateRequest;
 import com.sparta_logistics.company.presentation.request.CompanySearchRequest;
+import com.sparta_logistics.company.presentation.request.CompanyUpdateRequest;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,17 +59,16 @@ public class CompanyController {
       @PathVariable("companyId") UUID companyId) {
     return ResponseEntity.ok(companyService.readCompany(companyId));
   }
-//
-//  // 업체 수정
-//  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER"})
-//  @PutMapping("{companyId}")
-//  public ResponseEntity<String> updateCompany(
-//      @PathVariable("companyId") String companyId,
-//      @RequestBody @Valid CompanyUpdateRequest req,
-//      @AuthenticationPrincipal RequestUserDetails user) {
-//    return ResponseEntity.ok(
-//        companyService.updateCompany(req, companyId, user.getUserId(), user.getRole()));
-//  }
+
+  // 업체 수정
+  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER", "MASTER"})
+  @PutMapping("{companyId}")
+  public ResponseEntity<String> updateCompany(
+      @PathVariable("companyId") UUID companyId,
+      @RequestBody @Valid CompanyUpdateRequest req) {
+    return ResponseEntity.ok(
+        companyService.updateCompany(req, companyId));
+  }
 //
 //  // 업체 삭제
 //  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER"})
