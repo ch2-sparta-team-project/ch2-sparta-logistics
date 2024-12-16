@@ -1,6 +1,5 @@
-package com.sparta_logistics.slack;
+package com.sparta_logistics.slack.presentation.Dto;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.sparta_logistics.slack;
+package com.sparta_logistics.slack.presentation.Dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;

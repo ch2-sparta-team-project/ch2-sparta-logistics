@@ -1,7 +1,6 @@
-package com.sparta_logistics.slack.application.Repository;
+package com.sparta_logistics.slack.domain.repository;
 
-import com.sparta_logistics.slack.SlackEntity;
-import java.util.Optional;
+import com.sparta_logistics.slack.domain.model.SlackEntity;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

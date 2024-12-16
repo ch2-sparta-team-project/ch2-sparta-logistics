@@ -7,16 +7,17 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.users.UsersLookupByEmailResponse;
-import com.sparta_logistics.slack.DeletedSlackInfoResponseDto;
-import com.sparta_logistics.slack.SlackEntity;
-import com.sparta_logistics.slack.SlackInfoResponseDto;
-import com.sparta_logistics.slack.SlackSendMessageRequestDto;
-import com.sparta_logistics.slack.UserInfoResponseDto;
-import com.sparta_logistics.slack.application.Repository.SlackRepository;
+import com.sparta_logistics.slack.presentation.Dto.DeletedSlackInfoResponseDto;
+import com.sparta_logistics.slack.domain.model.SlackEntity;
+import com.sparta_logistics.slack.presentation.Dto.SlackInfoResponseDto;
+import com.sparta_logistics.slack.presentation.Dto.SlackSendMessageRequestDto;
+import com.sparta_logistics.slack.presentation.Dto.UserInfoResponseDto;
+import com.sparta_logistics.slack.domain.repository.SlackRepository;
 import com.sparta_logistics.slack.infrastructure.client.AuthServiceClient;
 import com.sparta_logistics.slack.infrastructure.config.SlackChannel;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,13 +85,13 @@ public class SlackService {
    * Slack ID를 통해 DM 보내기
    */
   @Transactional
-  public void sendDirectMessage(String slackId, String message, String token)
+  public void sendDirectMessage(String slackId, String content, String token)
       throws IOException, SlackApiException {
     ResponseEntity<UserInfoResponseDto> info = authServiceClient.findInfo(token);
     ChatPostMessageResponse response = slack.methods(slackToken)
         .chatPostMessage(req -> req
             .channel(slackId) // Slack user ID
-            .text(message));
+            .text(content));
     if (!response.isOk()) {
       throw new RuntimeException("메세지 발신에 실패했습니다.: " + response.getError());
     }
@@ -120,12 +121,18 @@ public class SlackService {
 
   }
 
-  //Update
-
-
-
-
   //Delete
+  /*
+   *  사용자 SoftDelete 기능(auth/delete)
+   * */
+  @Transactional
+  public void softDeleteSlackMessage(UUID id) {
+    SlackEntity slack = slackRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Id가 존재하지 않음"));
+
+    slack.softDelete(slack);
+  }
+
 
 
 

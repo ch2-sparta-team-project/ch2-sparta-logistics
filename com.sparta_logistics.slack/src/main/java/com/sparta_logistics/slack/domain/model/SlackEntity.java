@@ -1,4 +1,4 @@
-package com.sparta_logistics.slack;
+package com.sparta_logistics.slack.domain.model;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Column;
@@ -70,19 +70,9 @@ public class SlackEntity extends BaseEntity {
 
   }
 
-  public void softDelete(String userName) {
+  public void softDelete(SlackEntity slack) {
     this.isDeleted = true;
-    softDeleteUser(userName);
-  }
-
-  public void update(SlackUpdateRequestDto requestDto) {
-
-    if (requestDto.getMessage() != null && !requestDto.getMessage().isBlank()) {
-      this.setMessage(requestDto.getMessage());
-    }
-
-    this.initAuditInfo(this);
-    setUpdatedBy(requestDto.getUserName());
+    softDeleteUser(slack);
   }
 
 }

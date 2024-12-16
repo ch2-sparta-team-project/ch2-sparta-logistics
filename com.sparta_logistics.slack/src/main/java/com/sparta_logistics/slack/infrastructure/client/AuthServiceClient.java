@@ -1,6 +1,6 @@
 package com.sparta_logistics.slack.infrastructure.client;
 
-import com.sparta_logistics.slack.UserInfoResponseDto;
+import com.sparta_logistics.slack.presentation.Dto.UserInfoResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

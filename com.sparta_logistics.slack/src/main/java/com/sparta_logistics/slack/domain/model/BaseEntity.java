@@ -1,4 +1,4 @@
-package com.sparta_logistics.slack;
+package com.sparta_logistics.slack.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
@@ -41,8 +41,8 @@ public abstract class BaseEntity {
     this.updatedBy = slackEntity.getUpdatedBy();
   }
 
-  protected void softDeleteUser(String userName) {
-    this.deletedBy = userName;
+  protected void softDeleteUser(SlackEntity slack) {
+    this.deletedBy = slack.getUserName();
     this.deletedAt = LocalDateTime.now();
   }
 
