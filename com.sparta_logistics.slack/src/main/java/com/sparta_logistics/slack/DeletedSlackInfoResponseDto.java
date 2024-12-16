@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class SlackInfoResponseDto {
+public class DeletedSlackInfoResponseDto {
 
   private UUID Id;
   private UUID userId;
@@ -18,14 +18,17 @@ public class SlackInfoResponseDto {
   private String message;
   private boolean isSend;
   private LocalDateTime sendTime;
+  private boolean isDeleted;
 
 
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private String createdBy;
   private String updatedBy;
+  private LocalDateTime deletedAt;
+  private String deletedBy;
 
-  public SlackInfoResponseDto(SlackEntity slack){
+  public DeletedSlackInfoResponseDto(SlackEntity slack){
     this.Id = slack.getId();
     this.userId = slack.getUserId();
     this.userName = slack.getUserName();
@@ -33,10 +36,14 @@ public class SlackInfoResponseDto {
     this.message = slack.getMessage();
     this.isSend = slack.isSend();
     this.sendTime = slack.getSendTime();
+    this.isDeleted = slack.isDeleted();
+
     this.createdAt = slack.getCreatedAt();
     this.updatedAt = slack.getUpdatedAt();
     this.createdBy = slack.getCreatedBy();
     this.updatedBy = slack.getUpdatedBy();
+    this.deletedAt = slack.getDeletedAt();
+    this.deletedBy = slack.getDeletedBy();
   }
 
 }

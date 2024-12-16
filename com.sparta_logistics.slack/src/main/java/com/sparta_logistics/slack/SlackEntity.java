@@ -44,6 +44,8 @@ public class SlackEntity extends BaseEntity {
 
   private LocalDateTime sendTime;
 
+  private boolean isDeleted ;
+
   // 메세지 생성 메서드
   public static SlackEntity create(
       final UUID userId,
@@ -69,9 +71,9 @@ public class SlackEntity extends BaseEntity {
   }
 
   public void softDelete(String userName) {
+    this.isDeleted = true;
     softDeleteUser(userName);
   }
-
 
   public void update(SlackUpdateRequestDto requestDto) {
 

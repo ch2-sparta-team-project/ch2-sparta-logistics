@@ -7,6 +7,7 @@ import com.slack.api.methods.SlackApiException;
 import com.slack.api.methods.request.chat.ChatPostMessageRequest;
 import com.slack.api.methods.response.chat.ChatPostMessageResponse;
 import com.slack.api.methods.response.users.UsersLookupByEmailResponse;
+import com.sparta_logistics.slack.DeletedSlackInfoResponseDto;
 import com.sparta_logistics.slack.SlackEntity;
 import com.sparta_logistics.slack.SlackInfoResponseDto;
 import com.sparta_logistics.slack.SlackSendMessageRequestDto;
@@ -107,15 +108,15 @@ public class SlackService {
 
     int realSize = ConfirmPageSize(size);
     Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
-    Page<SlackEntity> messageList = slackRepository.findAllByIsSendTrue(pageable);
+    Page<SlackEntity> messageList = slackRepository.findAllByIsDeletedFalse(pageable);
     return messageList.map(SlackInfoResponseDto::new);
   }
 
-  public Page<SlackInfoResponseDto> getNotSendSlackMessage(String sortBy, int page, int size) {
+  public Page<DeletedSlackInfoResponseDto> getDeletedSlackMessage(String sortBy, int page, int size) {
     int realSize = ConfirmPageSize(size);
     Pageable pageable = PageRequest.of(page, realSize, Sort.by(sortBy).ascending());
-    Page<SlackEntity> messageList = slackRepository.findAllByIsSendFalse(pageable);
-    return messageList.map(SlackInfoResponseDto::new);
+    Page<SlackEntity> messageList = slackRepository.findAllByIsDeletedTrue(pageable);
+    return messageList.map(DeletedSlackInfoResponseDto::new);
 
   }
 

@@ -2,6 +2,7 @@ package com.sparta_logistics.slack.presentation.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.slack.api.methods.SlackApiException;
+import com.sparta_logistics.slack.DeletedSlackInfoResponseDto;
 import com.sparta_logistics.slack.SlackInfoResponseDto;
 import com.sparta_logistics.slack.ResponseDto;
 import com.sparta_logistics.slack.SlackSendMessageRequestDto;
@@ -86,8 +87,8 @@ public class SlackController {
       @RequestParam(defaultValue = "createdAt") String sortBy,
       @RequestParam(defaultValue = "0") int page,
       @RequestParam(defaultValue = "10") int size){
-    Page<SlackInfoResponseDto> UsersInfo = slackService.getNotSendSlackMessage(sortBy, page, size);
-    return ResponseEntity.ok().body(new ResponseDto("보내지지 않은 슬렉 메세지 조회", HttpStatus.OK.value(), UsersInfo));
+    Page<DeletedSlackInfoResponseDto> messageInfo = slackService.getDeletedSlackMessage(sortBy, page, size);
+    return ResponseEntity.ok().body(new ResponseDto("삭제된 슬렉 메세지 조회", HttpStatus.OK.value(), messageInfo));
   }
 
 

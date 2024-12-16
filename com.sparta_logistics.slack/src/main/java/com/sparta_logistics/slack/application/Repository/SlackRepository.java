@@ -9,8 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SlackRepository extends JpaRepository<SlackEntity, UUID> {
 
-  Page<SlackEntity> findAllByIsSendTrue(Pageable pageable);
+  Page<SlackEntity> findAllByIsDeletedTrue(Pageable pageable);
 
-  Page<SlackEntity> findAllByIsSendFalse(Pageable pageable);
+  Page<SlackEntity> findAllByIsDeletedFalse(Pageable pageable);
 
 }
