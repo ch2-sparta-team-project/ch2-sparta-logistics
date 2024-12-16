@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Company {
+public class Company extends BaseEntity{
 
   @Id @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "p_company_id")

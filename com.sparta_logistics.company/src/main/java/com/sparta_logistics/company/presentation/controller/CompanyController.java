@@ -6,19 +6,17 @@ import com.sparta_logistics.company.application.service.CompanyService;
 import com.sparta_logistics.company.presentation.dto.RequestUserDetails;
 import com.sparta_logistics.company.presentation.request.CompanyCreateRequest;
 import com.sparta_logistics.company.presentation.request.CompanySearchRequest;
-import com.sparta_logistics.company.presentation.request.CompanyUpdateRequest;
 import jakarta.validation.Valid;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,15 +38,16 @@ public class CompanyController {
         .body(companyService.createCompany(request, userDetails.getUserId(), userDetails.getUsername()));
   }
 
-//  // 업체 목록 조회
-//  @GetMapping
-//  public ResponseEntity<List<CompanyReadResponse>> searchCompanies(
-//      @RequestBody CompanySearchRequest request,
-//      @AuthenticationPrincipal RequestUserDetails user
-//  ) {
-//    return ResponseEntity.ok(companyService.searchCompanies(request, user.getUserId(), user.getRole()));
-//  }
-//
+//   업체 목록 조회
+  // 전체 권한
+  @GetMapping
+  public ResponseEntity<Page<CompanyReadResponse>> searchCompanies(
+      CompanySearchRequest request,
+      @PageableDefault Pageable pageable
+  ) {
+    return ResponseEntity.ok(companyService.searchCompanies(request, pageable));
+  }
+
 //  // 업체 단일 조회
 //  @GetMapping("{companyId}")
 //  public ResponseEntity<CompanyReadResponse> readCompany(
