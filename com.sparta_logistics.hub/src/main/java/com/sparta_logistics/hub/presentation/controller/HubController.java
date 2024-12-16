@@ -55,6 +55,11 @@ public class HubController {
     return hubService.getHubs(searchDto, pageable);
   }
 
+  @GetMapping("/all")
+  public List<HubReadResponse> getAllHubs() {
+    return hubService.getAllHubs();
+  }
+
   //허브 단일 조회
   @GetMapping("/{hub_id}")
   public HubReadResponse getHub(@PathVariable(value = "hub_id") UUID hubId) {
@@ -117,6 +122,11 @@ public class HubController {
   @GetMapping("/hub_route")
   public ResponseEntity<HubRouteReadResponse> readHubRoute(HubRouteReadRequest request){
     return hubService.readHubRoute(request);
+  }
+
+  @GetMapping("/hub_route/all")
+  public List<HubRouteReadResponse> readHubRoutes(){
+    return hubService.readAllHubRoute();
   }
 
   // 허브 경로 수정

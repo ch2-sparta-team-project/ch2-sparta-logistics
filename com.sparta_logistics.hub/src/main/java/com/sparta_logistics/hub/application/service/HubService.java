@@ -60,6 +60,9 @@ public class HubService {
   @Transactional(readOnly = true)
   public HubReadResponse getHub(UUID hubId) {
     Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId);
+    if (hub == null) {
+      return null;
+    }
     return HubReadResponse.buildResponseByEntity(hub);
   }
 
@@ -134,10 +137,13 @@ public class HubService {
 
   public void createHubRoute(List<HubRouteCreateRequest> request) {
     for (HubRouteCreateRequest hubRouteCreateRequest : request) {
-      Hub sourceHub = hubRepository.findByNameAndDeletedAtIsNull(hubRouteCreateRequest.sourceHubName());
-      Hub destinationHub = hubRepository.findByNameAndDeletedAtIsNull(hubRouteCreateRequest.destinationHubName());
+      Hub sourceHub = hubRepository.findByNameAndDeletedAtIsNull(
+          hubRouteCreateRequest.sourceHubName());
+      Hub destinationHub = hubRepository.findByNameAndDeletedAtIsNull(
+          hubRouteCreateRequest.destinationHubName());
       HubRoute hubRoute =
-          HubRoute.createHubRoute(sourceHub, destinationHub, hubRouteCreateRequest.duration(), hubRouteCreateRequest.distance());
+          HubRoute.createHubRoute(sourceHub, destinationHub, hubRouteCreateRequest.duration(),
+              hubRouteCreateRequest.distance());
       hubRouteRepository.save(hubRoute);
     }
   }
@@ -156,8 +162,23 @@ public class HubService {
   }
 
   public String deleteHubRoute(HubRouteDeleteRequest request) {
-    hubRouteRepository.deleteBySourceHubNameAndDestinationHubName(request.sourceHubName(), request.destinationHubName());
-    hubRouteRepository.deleteBySourceHubNameAndDestinationHubName(request.destinationHubName(), request.sourceHubName());
+    hubRouteRepository.deleteBySourceHubNameAndDestinationHubName(request.sourceHubName(),
+        request.destinationHubName());
+    hubRouteRepository.deleteBySourceHubNameAndDestinationHubName(request.destinationHubName(),
+        request.sourceHubName());
     return "허브 경로 삭제가 완료되었습니다.";
+  }
+
+  public List<HubReadResponse> getAllHubs() {
+    return hubRepository.findAllByDeletedAtIsNull()
+        .stream()
+        .map(HubReadResponse::buildResponseByEntity)
+        .toList();
+  }
+
+  public List<HubRouteReadResponse> readAllHubRoute() {
+    return hubRouteRepository.findAll().stream()
+        .map(HubRouteReadResponse::buildResponseByEntity)
+        .toList();
   }
 }
