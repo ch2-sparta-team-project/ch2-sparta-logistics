@@ -36,7 +36,7 @@ public class DeliveryHubToHubRoute extends Base{
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name ="delivery_id", nullable = false)
-  private Delivery deliveryId;
+  private Delivery delivery;
 
   @Column(nullable = false)
   private String sourceHubId;
@@ -58,4 +58,19 @@ public class DeliveryHubToHubRoute extends Base{
 
   @Column(nullable = true)
   private Long duration;
+
+  public static DeliveryHubToHubRoute create(DeliveryManager hubDeliveryManagerId,
+      Delivery delivery, String sourceHubId, String destinationHubId,
+      Integer sequence, Double estimatedDistance, Long estimatedDuration
+  ) {
+    return DeliveryHubToHubRoute.builder()
+        .hubDeliveryManagerId(hubDeliveryManagerId)
+        .delivery(delivery)
+        .sourceHubId(sourceHubId)
+        .destinationHubId(destinationHubId)
+        .sequence(sequence)
+        .estimatedDistance(estimatedDistance)
+        .estimatedDuration(estimatedDuration)
+        .build();
+  }
 }

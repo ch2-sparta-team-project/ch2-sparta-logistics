@@ -24,7 +24,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLDelete(sql = "UPDATE p_delivery_hub_to_company_route SET deleted_at = NOW() where id = ?")
 @Table(name = "p_delivery_hub_to_company_route")
-public class DeliveryHubToCompanyRoute extends Base{
+public class DeliveryHubToCompanyRoute extends Base {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,8 +35,8 @@ public class DeliveryHubToCompanyRoute extends Base{
   private DeliveryManager companyDeliveryManagerId;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name ="delivery_id", nullable = false)
-  private Delivery deliveryId;
+  @JoinColumn(name = "delivery_id", nullable = false)
+  private Delivery delivery;
 
   @Column(nullable = false)
   private String sourceHubId;
@@ -58,4 +58,19 @@ public class DeliveryHubToCompanyRoute extends Base{
 
   @Column(nullable = true)
   private Long duration;
+
+  public static DeliveryHubToCompanyRoute create(DeliveryManager companyDeliveryManagerId,
+      Delivery delivery, String sourceHubId, String destinationAddress,
+      Integer sequence, Double estimatedDistance, Long estimatedDuration
+  ) {
+    return DeliveryHubToCompanyRoute.builder()
+        .companyDeliveryManagerId(companyDeliveryManagerId)
+        .delivery(delivery)
+        .sourceHubId(sourceHubId)
+        .destinationAddress(destinationAddress)
+        .sequence(sequence)
+        .estimatedDistance(estimatedDistance)
+        .estimatedDuration(estimatedDuration)
+        .build();
+  }
 }

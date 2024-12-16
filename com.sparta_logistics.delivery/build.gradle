@@ -30,7 +30,11 @@ ext {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// Apache HttpClient
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.1'
 
+	// Jackson Databind
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
