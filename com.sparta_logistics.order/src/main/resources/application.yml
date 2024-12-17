@@ -1,21 +1,23 @@
 spring:
   application:
     name: order-service
-  datasource:
-    url: jdbc:postgresql://localhost:5432/sparta_logistics_order
-    username: postgres
-    password: sky2002369
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  sql:
-    init:
-      mode: always
-server:
-  port: 19096
+  profiles:
+    active: local
+  config:
+    import: "configserver:"
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: config-server
+
+# http://localhost:19097/actuator/refresh 사용을 위한 설정
+# 코드 내 @RefreshScope 적용 필요
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
 
 eureka:
   client:
