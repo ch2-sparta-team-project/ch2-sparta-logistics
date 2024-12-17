@@ -46,6 +46,9 @@ dependencies {
 	//config-client
 	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+	//sweagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
 }
 
 dependencyManagement {

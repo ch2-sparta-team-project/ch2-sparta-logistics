@@ -38,3 +38,9 @@ service:
   jwt:
     access-expiration: 3600000
     secret-key: c3ByaW5nLWJvb3Qtc2VjdXJpdHktand0LXNwYXJ0YS1ib290Y2FtcC1jaDItc3BhcnRhLWxvZ2lzdGljcy1tYWRlLWJ5LWphYmJlcndvY2tlcjA0
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
