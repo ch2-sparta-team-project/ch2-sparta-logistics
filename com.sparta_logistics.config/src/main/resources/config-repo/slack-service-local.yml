@@ -3,8 +3,8 @@ spring:
     name: slack-service
   datasource:
     url: jdbc:postgresql://localhost:5432/sparta_logistics_slack
-    username: root
-    password: 12341234
+    username: postgres
+    password: password
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -12,7 +12,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
 
 server:
