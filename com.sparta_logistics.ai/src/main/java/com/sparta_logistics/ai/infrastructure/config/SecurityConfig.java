@@ -22,6 +22,13 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .formLogin(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers(
+                "/swagger-ui/**",       // Swagger UI 관련 정적 리소스
+                "/v3/api-docs/**",      // OpenAPI 문서
+                "/swagger-ui.html",     // Swagger HTML 경로
+                "/swagger-resources/**", // Swagger 설정 리소스
+                "/webjars/**"           // Swagger 정적 리소스
+            ).permitAll()
             .anyRequest().permitAll()
         )
         .httpBasic(Customizer.withDefaults());
