@@ -13,12 +13,14 @@ import jakarta.validation.Valid;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+@RefreshScope
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/orders")
