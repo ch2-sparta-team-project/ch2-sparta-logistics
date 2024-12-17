@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,12 +42,12 @@ public class HubController {
 
   //  허브 생성
   @PostMapping
-  public HubCreateResponse createHub(@RequestBody @Valid HubCreateRequest hubCreateRequest
-//                        @RequestHeader(value = "X-User-Id") UUID userId,
-//                        @RequestHeader(value = "X-User-role") String userRole
+  public HubCreateResponse createHub(@RequestBody @Valid HubCreateRequest hubCreateRequest,
+                        @RequestHeader(value = "X-User-Id") String userId,
+                        @RequestHeader(value = "X-User-role") String userRole
   ) {
-    RoleValidator.validateIsMaster("Master"); // 헤더에서 값이 넘어오게되면 변경 예정
-    return hubService.createHub(hubCreateRequest, UUID.randomUUID()); // 헤더에서 유저 아이디 넘어오게되면 변경 예정
+    RoleValidator.validateIsHubManager(userRole);
+    return hubService.createHub(hubCreateRequest, userId);
   }
 
   //허브 목록 조회
@@ -65,52 +66,71 @@ public class HubController {
   //허브 정보 수정
   @PutMapping("/{hub_id}")
   public HubReadResponse updateHub(@PathVariable(value = "hub_id") UUID hubId,
+      @RequestHeader(value = "X-User-role") String userRole,
       @RequestBody HubUpdateRequest updateRequest) {
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.updateHub(hubId, updateRequest);
   }
 
   //허브 삭제
   @DeleteMapping("/{hub_id}")
-  public String deleteHub(@PathVariable(value = "hub_id") UUID hubId) {
-    return hubService.deleteHub(hubId);
+  public String deleteHub(@PathVariable(value = "hub_id") UUID hubId,
+      @RequestHeader(value = "X-User-Id") String userId,
+      @RequestHeader(value = "X-User-role") String userRole
+  ) {
+    RoleValidator.validateIsHubManager(userRole);
+    return hubService.deleteHub(hubId, userId);
   }
 
   // 허브 복원
   @PatchMapping("/{hub_id}")
-  public String restoreHub(@PathVariable(value = "hub_id") UUID hubId) {
+  public String restoreHub(@PathVariable(value = "hub_id") UUID hubId,
+      @RequestHeader(value = "X-User-role") String userRole
+      ) {
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.restoreHub(hubId);
   }
 
   //인접 허브 추가(중심 허브의 인접 허브 목록에 허브 추가)
   @PostMapping("/center/{hub_id}")
   public List<HubReadResponse> addNearHubList(@PathVariable(value = "hub_id") UUID hubId,
+      @RequestHeader(value = "X-User-role") String userRole,
       @RequestBody NearHubAddRequest nearHubAddRequest) {
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.addNearHubList(hubId, nearHubAddRequest);
   }
 
   //중심 허브에 인접 허브 제거
   @DeleteMapping("/center/{hub_id}")
   public String removeNearHubList(@PathVariable(value = "hub_id") UUID hubId,
+      @RequestHeader(value = "X-User-role") String userRole,
       @RequestBody NearHubRemoveRequest nearHubRemoveRequest) {
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.removeNearHubList(hubId, nearHubRemoveRequest);
   }
 
   //중심 허브 설정 활성화/비활성화 (일반 허브 <-> 중심 허브 변경)
   @PatchMapping("/center/{hub_id}")
-  public String handleCenterHubSetting(@PathVariable(value = "hub_id") UUID hubId) {
+  public String handleCenterHubSetting(@PathVariable(value = "hub_id") UUID hubId,
+      @RequestHeader(value = "X-User-role") String userRole) {
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.handleCenterHubSetting(hubId);
   }
 
   //중심 허브 변경(일반 허브의 중심 허브 수정)
   @PutMapping("/center/{hub_id}")
   public String changeCenterHub(@PathVariable(value = "hub_id") UUID hubId,
+      @RequestHeader(value = "X-User-role") String userRole,
       @RequestBody @Valid CenterHubChangeRequest centerHubChangeRequest) {
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.changeCenterHub(hubId, centerHubChangeRequest);
   }
 
   // 허브 경로 생성
   @PostMapping("/hub_route")
-  public void createHubRoute(@RequestBody @Valid List<HubRouteCreateRequest> request){
+  public void createHubRoute(@RequestBody @Valid List<HubRouteCreateRequest> request,
+      @RequestHeader(value = "X-User-role") String userRole){
+    RoleValidator.validateIsHubManager(userRole);
     hubService.createHubRoute(request);
   }
 
@@ -122,13 +142,17 @@ public class HubController {
 
   // 허브 경로 수정
   @PutMapping("/hub_route")
-  public String updateHubRoute(@RequestBody @Valid HubRouteUpdateRequest request){
+  public String updateHubRoute(@RequestBody @Valid HubRouteUpdateRequest request,
+      @RequestHeader(value = "X-User-role") String userRole){
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.updateHubRoute(request);
   }
 
   // 허브 경로 삭제
   @DeleteMapping("/hub_route")
-  public String deleteHubRoute(@RequestBody @Valid HubRouteDeleteRequest request){
+  public String deleteHubRoute(@RequestBody @Valid HubRouteDeleteRequest request,
+      @RequestHeader(value = "X-User-role") String userRole){
+    RoleValidator.validateIsHubManager(userRole);
     return hubService.deleteHubRoute(request);
   }
 
