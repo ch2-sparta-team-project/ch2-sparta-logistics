@@ -1,10 +1,10 @@
 package com.sparta_logistics.order.application.port;
 
-import com.sparta_logistics.order.infrastructure.client.dto.CompanyCreateDto;
+import com.sparta_logistics.order.infrastructure.client.dto.company.CompanyReadResponse;
 
 public interface CompanyClientPort {
 
-  CompanyCreateDto findCompanyInfoForCreateByUserId(String userId);
+  CompanyReadResponse findCompanyInfoForCreateByUserId(String userId);
 
   String findCompanyAffiliationHubIdByUserId(String userId);
 

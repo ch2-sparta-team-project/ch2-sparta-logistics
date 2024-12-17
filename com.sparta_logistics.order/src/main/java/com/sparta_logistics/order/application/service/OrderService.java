@@ -8,11 +8,10 @@ import com.sparta_logistics.order.application.dto.OrderUpdateResponse;
 import com.sparta_logistics.order.application.mapper.OrderDtoMapper;
 import com.sparta_logistics.order.global.exception.ApplicationException;
 import com.sparta_logistics.order.global.exception.ErrorCode;
-import com.sparta_logistics.order.infrastructure.client.dto.CompanyCreateDto;
-import com.sparta_logistics.order.infrastructure.client.dto.DeliveryCreateRequest;
+import com.sparta_logistics.order.infrastructure.client.dto.company.CompanyReadResponse;
+import com.sparta_logistics.order.infrastructure.client.dto.delivery.DeliveryCreateRequest;
 import com.sparta_logistics.order.application.dto.OrderCreateDto;
 import com.sparta_logistics.order.application.dto.OrderCreateResponse;
-import com.sparta_logistics.order.infrastructure.client.dto.UserCreateDto;
 import com.sparta_logistics.order.application.port.CompanyClientPort;
 import com.sparta_logistics.order.application.port.DeliveryClientPort;
 import com.sparta_logistics.order.application.port.ProductClientPort;
@@ -21,7 +20,6 @@ import com.sparta_logistics.order.domain.model.Order;
 import com.sparta_logistics.order.infrastructure.repository.OrderRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,20 +36,18 @@ public class OrderService {
   private final UserClientPort userClientPort;
 
   @Transactional
-  public OrderCreateResponse createOrder(OrderCreateDto dto) {
+  public OrderCreateResponse createOrder(OrderCreateDto dto, String userId, String userName, String userSlackId) {
 
     //Delivery 를 생성할 때 필요한 정보 생성
     //외부 포트 연결
     String sourceHubId = productClientPort.findHubIdByProductId(dto.productId());
-    CompanyCreateDto companyInfo = companyClientPort.findCompanyInfoForCreateByUserId(
-        dto.userId());
-    UserCreateDto userInfo = userClientPort.findUserInfoForCreateByUserId(dto.userId());
+    CompanyReadResponse companyInfo = companyClientPort.findCompanyInfoForCreateByUserId(userId);
 
     //Dto 를 Entity 로 변환
     Order order = Order.create(
         dto.supplierCompanyId(),
-        companyInfo.companyId(),
-        dto.userId(),
+        companyInfo.getId().toString(),
+        userId,
         dto.productId(),
         "",
         dto.quantity(),
@@ -67,9 +63,9 @@ public class OrderService {
         DeliveryCreateRequest.builder()
             .sourceHubId(sourceHubId)
             .orderId(order.getId())
-            .address(companyInfo.address())
-            .recipientName(userInfo.name())
-            .recipientSlackId(userInfo.slackId())
+            .address(companyInfo.getAddress())
+            .recipientName(userName)
+            .recipientSlackId(userSlackId)
             .build()
     );
 
@@ -142,7 +138,7 @@ public class OrderService {
         order.getReceiverCompanyId());
     String supplierCompanyName = companyClientPort.findCompanyNameByCompanyId(
         order.getSupplierCompanyId());
-    String userName = userClientPort.findUserNameByUserId(order.getUserId());
+    String userName = userClientPort.findUserSlackIdByUserId(order.getUserId());
 
     return OrderDtoMapper.toOrderReadResponse(order, receiverCompanyName, supplierCompanyName,
         userName, productName);

@@ -1,6 +1,7 @@
 package com.sparta_logistics.order.infrastructure.adapter;
 
 import com.sparta_logistics.order.application.port.ProductClientPort;
+import com.sparta_logistics.order.infrastructure.client.ProductClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,9 +11,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductClientAdapter implements ProductClientPort {
 
+  private final ProductClient productClient;
+
   @Override
   public String findHubIdByProductId(String productId) {
-    return "mock_hub_id" + UUID.randomUUID();
+    return productClient.readProduct(UUID.fromString(productId), "ROLE_MASTER","123","123")
+        .getBody()
+        .getHubId()
+        .toString();
   }
 
   @Override
@@ -22,6 +28,8 @@ public class ProductClientAdapter implements ProductClientPort {
 
   @Override
   public String findProductNameByProductId(String productId) {
-    return "mock_product_name";
+    return productClient.readProduct(UUID.fromString(productId),"ROLE_MASTER","123","123")
+        .getBody()
+        .getProductName();
   }
 }

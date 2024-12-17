@@ -5,11 +5,11 @@ spring:
     redis:
       host: localhost
       port: 6379
-      password: systempass
+      password: sky2002369
   datasource:
     url: jdbc:postgresql://localhost:5432/sparta_logistics_product
     username: postgres
-    password: password
+    password: sky2002369
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:
