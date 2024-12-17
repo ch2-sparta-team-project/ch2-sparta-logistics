@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
     name = "AiClient",
     url = "${gemini.api.url}"
 )
-public interface AiFeignClient {
+public interface GeminiFeignClient {
+
   @PostMapping
   GeminiResponse sendGemini(
       @RequestParam("key") String key,

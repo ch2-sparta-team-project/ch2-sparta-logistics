@@ -1,10 +1,14 @@
 package com.sparta_logistics.ai.application.service;
 
-import com.sparta_logistics.ai.infrastructure.client.AiFeignClient;
+import com.sparta_logistics.ai.infrastructure.client.GeminiFeignClient;
+import com.sparta_logistics.ai.infrastructure.client.OpenAiFeignClient;
 import com.sparta_logistics.ai.infrastructure.dto.GeminiRequest;
 import com.sparta_logistics.ai.infrastructure.dto.GeminiResponse;
+import com.sparta_logistics.ai.infrastructure.dto.OpenAiRequest;
+import com.sparta_logistics.ai.infrastructure.dto.OpenAiResponse;
 import com.sparta_logistics.ai.presentation.dto.AiRequest;
 import com.sparta_logistics.ai.presentation.dto.AiResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,13 +22,24 @@ public class AIService {
   @Value("${gemini.api.key}")
   private String key;
 
-  private final AiFeignClient aiFeignClient;
+  private final GeminiFeignClient geminiFeignClient;
+  private final OpenAiFeignClient openAiFeignClient;
 
+  @CircuitBreaker(name = "aiService", fallbackMethod = "fallbackSendAI")
   public AiResponse sendAI(String role, AiRequest request) {
     String prompt = createMinimalPromptForDeadline(request);
-    GeminiResponse response = aiFeignClient.sendGemini(key, new GeminiRequest(prompt));
+    OpenAiRequest openAiRequest = new OpenAiRequest("gpt-3.5-turbo", prompt, 100);
+    OpenAiResponse openAiResponse = openAiFeignClient.sendOpenAi(openAiRequest);
+    String answer = openAiResponse.getChoices().get(0).getMessage().getContent();
+    log.info("GPT Answer : {}", answer);
+    return AiResponse.of(request, answer);
+  }
+
+  public AiResponse fallbackSendAI(String role, AiRequest request, Throwable t) {
+    String prompt = createMinimalPromptForDeadline(request);
+    GeminiResponse response = geminiFeignClient.sendGemini(key, new GeminiRequest(prompt));
     String answer = extractSingleAnswerFromResponse(response);
-    log.info("Gemini Answer : {}", answer);
+    log.info("Fallback Gemini Answer : {}", answer);
     return AiResponse.of(request, answer);
   }
 
