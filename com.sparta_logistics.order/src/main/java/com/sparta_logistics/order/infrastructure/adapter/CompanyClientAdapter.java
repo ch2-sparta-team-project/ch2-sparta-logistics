@@ -19,7 +19,7 @@ public class CompanyClientAdapter implements CompanyClientPort {
     return companyClient.searchCompanies(
             null, UUID.fromString(userId),
             Pageable.unpaged(),
-            "MASTER","85460f92-558c-4efa-84de-7607dfd941b3","123"
+            "ROLE_MASTER","85460f92-558c-4efa-84de-7607dfd941b3","123"
         ).getBody().getContent()
         .get(0);
   }
@@ -29,7 +29,7 @@ public class CompanyClientAdapter implements CompanyClientPort {
     return companyClient.searchCompanies(
             null, UUID.fromString(userId),
             Pageable.unpaged(),
-            "MASTER","85460f92-558c-4efa-84de-7607dfd941b3","123"
+            "ROLE_MASTER","85460f92-558c-4efa-84de-7607dfd941b3","123"
         ).getBody().getContent()
         .get(0)
         .getHubId().toString();
@@ -37,7 +37,7 @@ public class CompanyClientAdapter implements CompanyClientPort {
 
   @Override
   public String findCompanyNameByCompanyId(String companyId) {
-    return companyClient.readCompany(UUID.fromString(companyId),"MASTER","85460f92-558c-4efa-84de-7607dfd941b3","123")
+    return companyClient.readCompany(UUID.fromString(companyId),"ROLE_MASTER","85460f92-558c-4efa-84de-7607dfd941b3","123")
         .getBody()
         .getName();
   }
