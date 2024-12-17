@@ -15,7 +15,7 @@ public class ProductClientAdapter implements ProductClientPort {
 
   @Override
   public String findHubIdByProductId(String productId) {
-    return productClient.readProduct(UUID.fromString(productId), "MASTER","123","123")
+    return productClient.readProduct(UUID.fromString(productId), "ROLE_MASTER","123","123")
         .getBody()
         .getHubId()
         .toString();
@@ -28,7 +28,7 @@ public class ProductClientAdapter implements ProductClientPort {
 
   @Override
   public String findProductNameByProductId(String productId) {
-    return productClient.readProduct(UUID.fromString(productId),"MASTER","123","123")
+    return productClient.readProduct(UUID.fromString(productId),"ROLE_MASTER","123","123")
         .getBody()
         .getProductName();
   }

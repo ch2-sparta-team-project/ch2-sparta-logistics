@@ -4,6 +4,9 @@ import com.sparta_logistics.product.domain.model.Product;
 import com.sparta_logistics.product.domain.repository.ProductRepository;
 import com.sparta_logistics.product.global.exception.ApplicationException;
 import com.sparta_logistics.product.global.exception.ErrorCode;
+import com.sparta_logistics.product.infrastructure.client.CompanyFeignClient;
+import com.sparta_logistics.product.infrastructure.client.HubFeignClient;
+import com.sparta_logistics.product.infrastructure.dto.HubDto;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
@@ -44,9 +47,9 @@ public class ProductService {
 
     //업체는 소속 허브에서만 상품 등록이 가능한지 확인 필요
 
-    if (role.equals("HUB_MANAGER")) {
+    if (role.equals("ROLE_HUB_MANAGER")) {
       //HUB_MANAGER 담당 허브인지 유효성 체크
-    } else if (role.equals("COMPANY_MANAGER")) {
+    } else if (role.equals("ROLE_COMPANY_MANAGER")) {
       //COMPANY_MANAGER 담당 업체인지 유효성 체크
     }
 
@@ -85,10 +88,10 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
-    if (role.equals("HUB_MANAGER")) {
+    if (role.equals("ROLE_HUB_MANAGER")) {
       HubDto hub = hubFeignClient.readHub(product.getHubId());
       //isValidManager(userId, hub.getUserId());
-    } else if (role.equals("COMPANY_MANAGER")) {
+    } else if (role.equals("ROLE_COMPANY_MANAGER")) {
       //CompanyDto company = companyFeignClient.readCompany(product.getCompanyId());
       //isValidManager(userId, company.getUserId());
     }
@@ -109,7 +112,7 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
-    if (role.equals("HUB_MANAGER")) {
+    if (role.equals("ROLE_HUB_MANAGER")) {
       HubDto hub = hubFeignClient.readHub(product.getHubId());
       //isValidManager(userId, hub.getUserId());
     }

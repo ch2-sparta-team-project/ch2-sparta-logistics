@@ -46,7 +46,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       List<GrantedAuthority> authorities = List.of(
           new SimpleGrantedAuthority(role));
 
-      UserDetails mockUserDetails = new RequestUserDetails(userId, userName, authorities);
+      RequestUserDetails mockUserDetails = new RequestUserDetails(userId, userName, authorities);
 
       UsernamePasswordAuthenticationToken authentication =
           new UsernamePasswordAuthenticationToken(mockUserDetails, null, authorities);
