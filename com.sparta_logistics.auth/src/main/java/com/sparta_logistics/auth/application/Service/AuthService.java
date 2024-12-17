@@ -1,6 +1,9 @@
 package com.sparta_logistics.auth.application.Service;
 
+import com.sparta_logistics.auth.application.global.exception.ErrorCode;
+import com.sparta_logistics.auth.application.global.exception.AuthException;
 import com.sparta_logistics.auth.presentation.Dto.DeletedUserInfoResponseDto;
+import com.sparta_logistics.auth.presentation.Dto.SignUpForCompanyManagerRequestDto;
 import com.sparta_logistics.auth.presentation.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.presentation.Dto.UserChangePasswordReqDto;
 import com.sparta_logistics.auth.presentation.Dto.UserInfoResponseDto;
@@ -59,6 +62,22 @@ public class AuthService {
   }
 
   /*
+   * 회원 가입 For Company Manager
+   * */
+  @Transactional
+  public void signUpForCompanyManager(
+      SignUpForCompanyManagerRequestDto signUpForCompanyManagerRequestDto) {
+
+   SignUpRequestDto signUpRequestDto = SignUpRequestDto.from(signUpForCompanyManagerRequestDto);
+    validateDuplicateUser(signUpRequestDto);
+    Role role = validateAndGetRole(signUpRequestDto.getRole());
+    User user = User.create(signUpRequestDto.getUserName(), signUpRequestDto.getPassword(),
+        signUpRequestDto.getSlackId(), role, passwordEncoder);
+
+    userRepository.save(user);
+  }
+
+  /*
    * 사용자 UserInfo 확인(auth/info)
    * */
   public Claims getUserInfoFromAccessToken(String accessToken) {
@@ -69,7 +88,7 @@ public class AuthService {
   @Transactional
   public void changePassword(UserDetailsImpl userDetails, UserChangePasswordReqDto request) {
     User user = userRepository.findById(userDetails.getUser().getUserId())
-        .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+        .orElseThrow(() -> new AuthException(ErrorCode.SAME_PASSWORD));
     request.validate(userDetails.getUser(), passwordEncoder);
     user.changePassword(passwordEncoder.encode(request.getNewPassword()));
   }
@@ -89,10 +108,10 @@ public class AuthService {
   // 회원가입시 회원 존재 여부 검증
   private void validateDuplicateUser(SignUpRequestDto signUpRequestDto) {
     if (userRepository.findBySlackId(signUpRequestDto.getSlackId()).isPresent()) {
-      throw new RuntimeException("Slack ID가 존재합니다.");
+      throw new AuthException(ErrorCode.DUPLICATED_SLACK_ID);
     }
     if (userRepository.findByUserName(signUpRequestDto.getUserName()).isPresent()) {
-      throw new RuntimeException("이미 존재하는 회원명입니다.");
+      throw new AuthException(ErrorCode.DUPLICATED_USERNAME);
     }
   }
 
