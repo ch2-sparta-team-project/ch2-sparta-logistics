@@ -16,8 +16,8 @@ public class SlackScheduling {
 
   // 매일 아침 6시마다로 변경 예정 (도전 과제)
 //  @Scheduled(cron="0 0/1 * * * *") //1분
-  public void batchTest() {
-    slackService.sendSlackMessage("물류 스케쥴링 테스트", "delivery");
-  }
+//  public void batchTest() {
+//    slackService.sendSlackMessage("물류 스케쥴링 테스트", "delivery");
+//  }
 
 }
