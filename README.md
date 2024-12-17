@@ -153,4 +153,11 @@ project/
 ```
 
 ## API Docs
-- swagger 연동 후 작성
+- [Auth_Swagger](http://localhost:19093/api/v1/auth/swagger-ui/index.html)
+- [Hub_Swagger](http://localhost:19094/api/v1/hubs/swagger-ui/index.html)
+- [Company_Swagger](http://localhost:19095/api/v1/companies/swagger-ui/index.html)
+- [Order_Swagger](http://localhost:19096/api/v1/orders/swagger-ui/index.html)
+- [Product_Swagger](http://localhost:19095/api/v1/products/swagger-ui/index.html)
+- [Delivery_Swagger](http://localhost:19095/api/v1/deliveries/swagger-ui/index.html)
+- [Ai_Swagger](http://localhost:19095/api/v1/ai/swagger-ui/index.html)
+- [slack_Swagger](http://localhost:19095/api/v1/slack/swagger-ui/index.html)

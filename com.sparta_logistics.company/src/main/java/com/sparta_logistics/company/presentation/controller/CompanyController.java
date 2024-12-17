@@ -83,7 +83,7 @@ public class CompanyController {
     return ResponseEntity.ok(companyService.deleteCompany(companyId, user.getUserId()));
   }
 
-  // 업체 복구
+  // 업체 복원
   @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER", "MASTER"})
   @PatchMapping("{companyId}")
   public ResponseEntity<CompanyReadResponse> restoreCompany(
