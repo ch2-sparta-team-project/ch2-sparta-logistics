@@ -27,8 +27,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorize -> authorize
             .anyRequest().permitAll()
         )
-        .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-        .httpBasic(Customizer.withDefaults());
+        .httpBasic(Customizer.withDefaults())
+        .httpBasic(AbstractHttpConfigurer::disable);
 
     return http.build();
   }
