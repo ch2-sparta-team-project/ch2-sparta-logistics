@@ -11,14 +11,6 @@ spring:
         enabled: true
         service-id: config-server
 
-# http://localhost:19097/actuator/refresh 사용을 위한 설정
-# 코드 내 @RefreshScope 적용 필요
-management:
-  endpoints:
-    web:
-      exposure:
-        include: refresh
-
 eureka:
   client:
     service-url:

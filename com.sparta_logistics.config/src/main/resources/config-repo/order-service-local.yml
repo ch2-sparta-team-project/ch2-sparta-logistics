@@ -2,9 +2,9 @@ spring:
   application:
     name: order-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/sparta_logistics_order
+    url: jdbc:postgresql://localhost:5432/msaPracDB
     username: postgres
-    password: sky2002369
+    password: 1234
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -21,3 +21,21 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:19090/eureka/
+management:
+  zipkin:
+    tracing:
+      endpoint: "http://localhost:9411/api/v2/spans"
+  tracing:
+    sampling:
+      probability: 1.0
+  # http://localhost:{포트 번호}/actuator/refresh 사용을 위한 설정
+  # 코드 내 @RefreshScope 적용 필요
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+springdoc:
+  api-docs:
+    path: /api/v1/orders/v3/api-docs
+  swagger-ui:
+    path: /api/v1/orders/swagger-ui.html
