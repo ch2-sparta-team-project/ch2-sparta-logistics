@@ -31,11 +31,17 @@ public class Hub extends BaseEntity {
   @Column(name = "p_hub_id")
   private UUID id;
 
+  @Column(nullable = false)
   private UUID userId;
+  @Column(nullable = false)
   private String name;
+  @Column(nullable = false)
   private String address;
+  @Column(nullable = false)
   private Double longitude;
+  @Column(nullable = false)
   private Double latitude;
+  @Column(nullable = false)
   private Boolean isCenter;
   @ManyToOne
   @JoinColumn(name = "center_hub_id")

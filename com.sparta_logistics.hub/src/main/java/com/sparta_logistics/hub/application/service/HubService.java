@@ -36,9 +36,9 @@ public class HubService {
 
   // 허브 생성
   public HubCreateResponse createHub(HubCreateRequest hubCreateRequest,
-      UUID userId) {
+      String userId) {
     Hub hub = hubRepository.save(Hub.createHub(
-        userId,
+        UUID.fromString(userId),
         hubCreateRequest.name(),
         hubCreateRequest.address(),
         hubCreateRequest.longitude(),
@@ -78,10 +78,10 @@ public class HubService {
   }
 
   // 허브 삭제
-  public String deleteHub(UUID hubId) {
+  public String deleteHub(UUID hubId, String userId) {
     Hub hub = hubRepository.findByIdAndDeletedAtIsNull(hubId);
     //todo: auth 연결 시 컨트롤러에서 받아오는 식으로 변경 필요
-    hub.deleteHub("temp user");
+    hub.deleteHub(userId);
     return "허브 삭제가 완료되었습니다.";
   }
 

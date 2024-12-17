@@ -35,7 +35,7 @@ public class CompanyController {
   private final CompanyService companyService;
 
   // 업체 생성
-  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER", "MASTER"})
+  @Secured({"MASTER", "COMPANY_MANAGER"})
   @PostMapping
   public ResponseEntity<CompanyCreateResponse> createCompany(
       @RequestBody @Valid CompanyCreateRequest request,
@@ -44,7 +44,7 @@ public class CompanyController {
         .body(companyService.createCompany(request, userDetails.getUserId(), userDetails.getUsername()));
   }
 
-//   업체 목록 조회
+  // 업체 목록 조회
   // 전체 권한
   @GetMapping
   public ResponseEntity<Page<CompanyReadResponse>> searchCompanies(
@@ -63,7 +63,7 @@ public class CompanyController {
   }
 
   // 업체 수정
-  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER", "MASTER"})
+  @Secured({"MASTER","HUB_MANAGER","COMPANY_MANAGER"})
   @PutMapping("{companyId}")
   public ResponseEntity<String> updateCompany(
       @PathVariable("companyId") UUID companyId,
@@ -73,7 +73,7 @@ public class CompanyController {
   }
 
   // 업체 삭제
-  @Secured({"ROLE_MASTER", "ROLE_COMPANY_MANAGER", "MASTER"})
+  @Secured({"MASTER","HUB_MANAGER","COMPANY_MANAGER"})
   @DeleteMapping("{companyId}")
   public ResponseEntity<String> deleteCompany(
       @PathVariable("companyId") UUID companyId,
