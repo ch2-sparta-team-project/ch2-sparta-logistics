@@ -21,6 +21,9 @@
 
 ### [Git Hub](https://github.com/ch2-sparta-team-project)
 
+### [도메인별 세부위키](https://github.com/ch2-sparta-team-project/ch2-sparta-logistics/wiki/Wiki-Page)
+
+### [프로젝트 실행 가이드](https://github.com/ch2-sparta-team-project/ch2-sparta-logistics/wiki/Execution-Guide)
 <br>
 
 ## ❓프로젝트 개요
