@@ -26,7 +26,8 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorize -> authorize
             .anyRequest().permitAll()
         )
-        .httpBasic(Customizer.withDefaults());
+        .httpBasic(Customizer.withDefaults())
+        .httpBasic(AbstractHttpConfigurer::disable);
 
     return http.build();
   }
