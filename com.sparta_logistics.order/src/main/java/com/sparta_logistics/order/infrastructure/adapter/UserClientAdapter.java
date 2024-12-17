@@ -1,7 +1,8 @@
 package com.sparta_logistics.order.infrastructure.adapter;
 
-import com.sparta_logistics.order.infrastructure.client.dto.UserCreateDto;
+import com.sparta_logistics.order.infrastructure.client.UserClient;
 import com.sparta_logistics.order.application.port.UserClientPort;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,13 +10,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserClientAdapter implements UserClientPort {
 
-  @Override
-  public UserCreateDto findUserInfoForCreateByUserId(String userId) {
-    return new UserCreateDto("강찬욱", "kan0202@naver.com");
-  }
+  private final UserClient userClient;
 
   @Override
-  public String findUserNameByUserId(String userId) {
-    return "mock_user_name";
+  public String findUserSlackIdByUserId(String userId) {
+    return userClient.usersGetInfoForMaster(UUID.fromString(userId)
+        , "ROLE_MASTER","3a03bfe9-1fc5-4cdc-816d-9acd8d9b6ec8","r")
+        .getBody()
+        .getData()
+        .getSlackId();
   }
 }

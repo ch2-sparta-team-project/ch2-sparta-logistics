@@ -19,9 +19,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
     //Mock 데이터 생성
-    String userId = request.getHeader("ID_HEADER");
-    String userName = request.getHeader("NAME_HEADER");
-    String role = request.getHeader("ROLE_HEADER");
+    String userId = request.getHeader("X-User-Id");
+    String userName = request.getHeader("X-User-Name");
+    String role = request.getHeader("X-User-Role");
 
     if (userId == null || userName == null || role == null) {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED_EXCEPTION);

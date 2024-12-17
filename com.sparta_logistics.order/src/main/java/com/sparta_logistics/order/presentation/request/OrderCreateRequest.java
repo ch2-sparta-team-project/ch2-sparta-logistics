@@ -18,10 +18,9 @@ public record OrderCreateRequest(
     String requestDescription //사용자 기입
 ) {
 
-  public OrderCreateDto toDTO(String userId) {
+  public OrderCreateDto toDTO() {
     return OrderCreateDto.builder()
         .supplierCompanyId(this.supplierCompanyId)
-        .userId(userId)
         .productId(this.productId)
         .productName(this.productName)
         .quantity(this.quantity)

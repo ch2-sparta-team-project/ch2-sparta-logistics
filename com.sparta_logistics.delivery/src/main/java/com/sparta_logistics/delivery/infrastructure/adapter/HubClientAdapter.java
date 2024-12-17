@@ -32,7 +32,6 @@ public class HubClientAdapter implements HubClientPort {
   @Override
   public Map<String, HubDto> findHubAll() {
     List<HubReadResponse> hubs = hubClient.getHubs();
-    System.out.println(hubs);
     // 경기 남부가 중앙 허브
     /*
     hubMap.put("00b3aa2f-badc-4a80-b580-2096f464827a", HubDto.builder()

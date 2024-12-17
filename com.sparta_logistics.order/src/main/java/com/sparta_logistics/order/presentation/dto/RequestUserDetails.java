@@ -15,11 +15,14 @@ public class RequestUserDetails implements UserDetails {
   private final String username;
   @Getter
   private final String role;
+  @Getter
+  private final String userSlackId;
 
-  public RequestUserDetails(String userId, String username, String role) {
+  public RequestUserDetails(String userId, String username, String role, String userSlackId) {
     this.userId = userId;
     this.username = username;
     this.role = role;
+    this.userSlackId = userSlackId;
   }
 
   @Override

@@ -23,13 +23,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     String userId = request.getHeader("ID_HEADER");
     String userName = request.getHeader("NAME_HEADER");
     String role = request.getHeader("ROLE_HEADER");
-
+    String userSlackId = request.getHeader("SLACK_ID_HEADER");
     if (userId == null || userName == null || role == null) {
       throw new ApplicationException(ErrorCode.UNAUTHORIZED_EXCEPTION);
     }
 
     //Mock 유저 생성
-    RequestUserDetails mockUserDetails = new RequestUserDetails(userId, userName, role);
+    RequestUserDetails mockUserDetails = new RequestUserDetails(userId, userName, role, userSlackId);
 
     // Authentication 객체 생성
     UsernamePasswordAuthenticationToken authentication =

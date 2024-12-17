@@ -31,7 +31,7 @@ public class OrderController {
       @RequestBody @Valid OrderCreateRequest req,
       @AuthenticationPrincipal RequestUserDetails user) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(orderService.createOrder(req.toDTO(user.getUserId())));
+        .body(orderService.createOrder(req.toDTO(), user.getUserId(), user.getUsername(), user.getUserSlackId()));
   }
 
   @GetMapping("")

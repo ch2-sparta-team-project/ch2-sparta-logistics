@@ -1,7 +1,7 @@
 package com.sparta_logistics.order.application.port;
 
 
-import com.sparta_logistics.order.infrastructure.client.dto.DeliveryCreateRequest;
+import com.sparta_logistics.order.infrastructure.client.dto.delivery.DeliveryCreateRequest;
 
 public interface DeliveryClientPort {
 

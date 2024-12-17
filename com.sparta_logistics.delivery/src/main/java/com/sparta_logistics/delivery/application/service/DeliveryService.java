@@ -38,7 +38,6 @@ public class DeliveryService {
 
   @Transactional
   public DeliveryResponse create(DeliveryCreateDto dto) {
-
     //Delivery Create
     Delivery delivery = Delivery.create(
         dto.sourceHubId(),

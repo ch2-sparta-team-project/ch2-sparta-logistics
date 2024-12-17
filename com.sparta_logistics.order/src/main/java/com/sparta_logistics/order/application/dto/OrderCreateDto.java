@@ -5,7 +5,6 @@ import lombok.Builder;
 @Builder
 public record OrderCreateDto(
     String supplierCompanyId,
-    String userId,
     String productId,
     String productName,
     Integer quantity,
