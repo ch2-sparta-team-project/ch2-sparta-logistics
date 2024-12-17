@@ -15,6 +15,7 @@ import com.sparta_logistics.hub.presentation.response.HubCreateResponse;
 import com.sparta_logistics.hub.presentation.response.HubReadResponse;
 import com.sparta_logistics.hub.presentation.response.HubRouteReadResponse;
 import com.sparta_logistics.hub.util.RoleValidator;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -40,7 +41,7 @@ public class HubController {
 
   //  허브 생성
   @PostMapping
-  public HubCreateResponse createHub(@RequestBody HubCreateRequest hubCreateRequest
+  public HubCreateResponse createHub(@RequestBody @Valid HubCreateRequest hubCreateRequest
 //                        @RequestHeader(value = "X-User-Id") UUID userId,
 //                        @RequestHeader(value = "X-User-role") String userRole
   ) {
@@ -103,13 +104,13 @@ public class HubController {
   //중심 허브 변경(일반 허브의 중심 허브 수정)
   @PutMapping("/center/{hub_id}")
   public String changeCenterHub(@PathVariable(value = "hub_id") UUID hubId,
-      @RequestBody CenterHubChangeRequest centerHubChangeRequest) {
+      @RequestBody @Valid CenterHubChangeRequest centerHubChangeRequest) {
     return hubService.changeCenterHub(hubId, centerHubChangeRequest);
   }
 
   // 허브 경로 생성
   @PostMapping("/hub_route")
-  public void createHubRoute(@RequestBody List<HubRouteCreateRequest> request){
+  public void createHubRoute(@RequestBody @Valid List<HubRouteCreateRequest> request){
     hubService.createHubRoute(request);
   }
 
@@ -121,13 +122,13 @@ public class HubController {
 
   // 허브 경로 수정
   @PutMapping("/hub_route")
-  public String updateHubRoute(@RequestBody HubRouteUpdateRequest request){
+  public String updateHubRoute(@RequestBody @Valid HubRouteUpdateRequest request){
     return hubService.updateHubRoute(request);
   }
 
   // 허브 경로 삭제
   @DeleteMapping("/hub_route")
-  public String deleteHubRoute(@RequestBody HubRouteDeleteRequest request){
+  public String deleteHubRoute(@RequestBody @Valid HubRouteDeleteRequest request){
     return hubService.deleteHubRoute(request);
   }
 

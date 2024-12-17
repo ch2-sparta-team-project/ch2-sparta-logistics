@@ -26,15 +26,24 @@ public class Company extends BaseEntity{
   @Id @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "p_company_id")
   private UUID id;
+  @Column(nullable = false)
   private UUID userId;
+  @Column(nullable = false)
   private UUID hubId;
+  @Column(nullable = false)
   private String name;
+  @Column(nullable = false)
   private String address;
+  @Column(nullable = false)
   @Enumerated(EnumType.STRING)
   private CompanyType companyType;
+  @Column(nullable = false)
   private Double latitude;
+  @Column(nullable = false)
   private Double longitude;
+  @Column(nullable = false)
   private String phone;
+  @Column(nullable = false)
   private String username;
 
   public static Company createCompany(UUID userId, UUID hubId, String name, String address,
