@@ -7,6 +7,7 @@ import com.sparta_logistics.auth.presentation.Dto.UserInfoResponseDto;
 import com.sparta_logistics.auth.presentation.Dto.UserUpdateRequestDto;
 import com.sparta_logistics.auth.application.Security.UserDetailsImpl;
 import com.sparta_logistics.auth.application.Service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth/users")
 @Slf4j
+@Tag(name = "User API", description = "회원 정보 관련 API")
 public class UserController {
 
   private final AuthService authService;

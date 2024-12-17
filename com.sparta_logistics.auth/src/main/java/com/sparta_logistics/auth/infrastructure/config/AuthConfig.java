@@ -5,6 +5,7 @@ import com.sparta_logistics.auth.application.Security.JwtUtil;
 import com.sparta_logistics.auth.application.Security.UserDetailsServiceImpl;
 import com.sparta_logistics.auth.presentation.filter.JwtAuthenticationFilter;
 import com.sparta_logistics.auth.presentation.filter.JwtAuthorizationFilter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Slf4j
- @EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity(securedEnabled = true)
 public class AuthConfig {
 
   private final JwtUtil jwtUtil;
@@ -70,6 +71,13 @@ public class AuthConfig {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
         .authorizeHttpRequests(authorize -> authorize
+            .requestMatchers(
+                "/swagger-ui/**",       // Swagger UI 관련 정적 리소스
+                "/v3/api-docs/**",      // OpenAPI 문서
+                "/swagger-ui.html",     // Swagger HTML 경로
+                "/swagger-resources/**", // Swagger 설정 리소스
+                "/webjars/**"           // Swagger 정적 리소스
+            ).permitAll()
             .requestMatchers(
                 "/api/v1/auth/sign-up",
                 "/api/v1/auth/login",

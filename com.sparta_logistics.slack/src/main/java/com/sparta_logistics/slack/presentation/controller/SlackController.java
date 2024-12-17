@@ -8,6 +8,7 @@ import com.sparta_logistics.slack.presentation.Dto.ResponseDto;
 import com.sparta_logistics.slack.presentation.Dto.SlackSendMessageRequestDto;
 import com.sparta_logistics.slack.application.service.SlackService;
 import com.sparta_logistics.slack.infrastructure.client.AuthServiceClient;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
@@ -26,12 +27,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RefreshScope
-@Controller
+@RestController
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/slack")
+@Tag(name = "Slack API", description = "슬랙 메세지 관련 API")
 public class SlackController {
 
   private final SlackService slackService;

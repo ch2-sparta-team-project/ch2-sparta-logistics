@@ -92,6 +92,14 @@ public class SlackService {
         .chatPostMessage(req -> req
             .channel(slackId) // Slack user ID
             .text(content));
+
+    SlackEntity slack = SlackEntity.create(
+        info.getBody().getUserId(), info.getBody().getUserName(), info.getBody().getSlackId(),
+        content,
+        true, LocalDateTime.now());
+
+    slackRepository.save(slack);
+
     if (!response.isOk()) {
       throw new RuntimeException("메세지 발신에 실패했습니다.: " + response.getError());
     }

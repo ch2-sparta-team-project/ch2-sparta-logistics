@@ -4,6 +4,7 @@ import com.sparta_logistics.auth.presentation.Dto.AuthResponseDto;
 import com.sparta_logistics.auth.presentation.Dto.SignUpForCompanyManagerRequestDto;
 import com.sparta_logistics.auth.presentation.Dto.SignUpRequestDto;
 import com.sparta_logistics.auth.application.Service.AuthService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RefreshScope
 @RestController
 @RequestMapping("/api/v1/auth")
+@Tag(name = "Auth API", description = "인증 관련 API")
 public class AuthController {
 
   private final AuthService authService;
