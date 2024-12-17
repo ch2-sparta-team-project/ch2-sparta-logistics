@@ -28,16 +28,41 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	//swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0'
+
+	// Validation
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	//Security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+
+	// Apache HttpClient
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.4.1'
+
+	// Jackson Databind
+	implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+	// JPA
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	// Web
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// MSA
 	implementation 'io.micrometer:micrometer-tracing-bridge-brave'
 	implementation 'io.zipkin.reporter2:zipkin-reporter-brave'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 	implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
+
+	// Lombok
 	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+
+	// Postgres
+	runtimeOnly 'org.postgresql:postgresql'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
