@@ -68,11 +68,10 @@
 
 ## 📁ERD
 [ERD_dbdiagram_link](https://dbdiagram.io/d/ch2-sparta-logistics-v2-6760a660e763df1f002158ed)
-- 최종 수정 후 이미지 추가
+![msa-logistics-erd](https://github.com/user-attachments/assets/1e2e7af3-81ab-4c35-9e35-5cc859767638)
 
 ## 🌐Infra Architecture
-
-- 최종 수정 후 이미지 추가
+![infra_structure](https://github.com/user-attachments/assets/05b0b830-08a4-48a3-9932-5c4e14c1344c)
 
 <br>
 
