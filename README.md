@@ -7,7 +7,7 @@
 | 정광호 | 홍예석 | 김지수 | 강찬욱 |
 | --- | --- | --- | --- |
 | 😀 Member | 😀 Member | 👾 Leader | 😀 Sub-Leader |
-| [@jabberwocker04](https://github.com/chanwookK) | [@yshong1998](https://github.com/yshong1998) | [@strongcookdas](https://github.com/strongcookdas) | [@chanwookK](https://github.com/chanwookK) |
+| [@jabberwocker04](https://github.com/jabberwocker04) | [@yshong1998](https://github.com/yshong1998) | [@strongcookdas](https://github.com/strongcookdas) | [@chanwookK](https://github.com/chanwookK) |
 | `Gateway` </br> `User` </br> `Slack`| `Hub` </br> `HubRoute` </br> `Company` | `Product` </br> `AI` </br> `Config`|`Order`</br>`Delivery`</br>`DeliveryRoute`|
 <br>
 
