@@ -72,7 +72,8 @@ public class AuthConfig {
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers(
                 "/api/v1/auth/sign-up",
-                "/api/v1/auth/login"
+                "/api/v1/auth/login",
+                "/api/v1/auth/sign-up/company"
             ).permitAll()
             .anyRequest().authenticated()
         )
@@ -87,7 +88,7 @@ public class AuthConfig {
               ObjectMapper objectMapper = new ObjectMapper();
               String jsonResponse = objectMapper.writeValueAsString(Map.of
                   ("code", "FORBIDDEN",
-                      "message", "접근 권한이 없습니다.")
+                      "message", "인증에 실패했습니다.")
               );
 
               response.getWriter().write(jsonResponse);
