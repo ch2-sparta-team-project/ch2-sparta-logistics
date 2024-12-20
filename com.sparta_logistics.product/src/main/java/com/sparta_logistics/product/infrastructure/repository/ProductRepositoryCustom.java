@@ -1,4 +1,4 @@
-package com.sparta_logistics.product.domain.repository;
+package com.sparta_logistics.product.infrastructure.repository;
 
 import com.sparta_logistics.product.domain.model.Product;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;

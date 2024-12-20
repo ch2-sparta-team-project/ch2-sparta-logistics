@@ -1,12 +1,12 @@
 package com.sparta_logistics.product.infrastructure.config;
 
-import com.sparta_logistics.product.infrastructure.exception.CustomErrorDecoder;
+import com.sparta_logistics.product.infrastructure.exception.HubClientErrorDecoder;
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 
-public class FeignClientConfig {
+public class HubFeignClientConfig {
   @Value("${service.header.id}")
   private String userId;
 
@@ -25,6 +25,6 @@ public class FeignClientConfig {
   }
   @Bean
   public ErrorDecoder errorDecoder() {
-    return new CustomErrorDecoder();
+    return new HubClientErrorDecoder();
   }
 }

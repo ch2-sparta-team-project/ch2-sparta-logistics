@@ -1,11 +1,12 @@
 package com.sparta_logistics.product.application.service;
 
 import com.sparta_logistics.product.domain.model.Product;
-import com.sparta_logistics.product.domain.repository.ProductRepository;
+import com.sparta_logistics.product.infrastructure.repository.ProductRepository;
 import com.sparta_logistics.product.global.exception.ApplicationException;
 import com.sparta_logistics.product.global.exception.ErrorCode;
 import com.sparta_logistics.product.infrastructure.client.CompanyFeignClient;
 import com.sparta_logistics.product.infrastructure.client.HubFeignClient;
+import com.sparta_logistics.product.infrastructure.dto.CompanyDto;
 import com.sparta_logistics.product.infrastructure.dto.HubDto;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
@@ -16,6 +17,7 @@ import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateResponse;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.PagedModel;
@@ -23,6 +25,7 @@ import org.springframework.hateoas.PagedModel.PageMetadata;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -39,24 +42,28 @@ public class ProductService {
       String role,
       ProductCreateRequest request
   ) {
-    //HUB 유효성 체크
-    HubDto hubResponse = hubFeignClient.readHub(request.getHubId());
+    HubDto hubDto = hubFeignClient.readHub(request.getHubId());
+    CompanyDto companyDto = companyFeignClient.readCompany(request.getCompanyId());
 
-    //COMPANY 유효성 체크
-    //CompanyDto companyResponse = companyFeignClient.readCompany(request.getCompanyId());
-
-    //업체는 소속 허브에서만 상품 등록이 가능한지 확인 필요
-
-    if (role.equals("ROLE_HUB_MANAGER")) {
-      //HUB_MANAGER 담당 허브인지 유효성 체크
-    } else if (role.equals("ROLE_COMPANY_MANAGER")) {
-      //COMPANY_MANAGER 담당 업체인지 유효성 체크
+    // 비즈니스 로직
+    if (role.equals("HUB_MANAGER")) {
+      isValidManager(userId, hubDto.getUserId());
+    } else if (role.equals("COMPANY_MANAGER")) {
+      isValidManager(userId, companyDto.getUserId());
+      isValidCompanyByHub(request.getHubId(), companyDto.getHubId());
     }
 
-    Product product = productRepository.save(Product.fromCreateRequest(request));
+    Product product = productRepository.save(
+        Product.create(
+            request.getCompanyId(),
+            request.getHubId(),
+            request.getName(),
+            request.getStock(),
+            request.getImageUrl(),
+            request.getPrice())
+    );
     return ProductCreateResponse.of(product.getId());
   }
-
 
   public ProductReadResponse readProduct(UUID productId) {
     Product product = productRepository.findById(productId)
@@ -88,12 +95,13 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
-    if (role.equals("ROLE_HUB_MANAGER")) {
-      HubDto hub = hubFeignClient.readHub(product.getHubId());
-      //isValidManager(userId, hub.getUserId());
-    } else if (role.equals("ROLE_COMPANY_MANAGER")) {
-      //CompanyDto company = companyFeignClient.readCompany(product.getCompanyId());
-      //isValidManager(userId, company.getUserId());
+    // 비즈니스 로직
+    if (role.equals("HUB_MANAGER")) {
+      HubDto hubDto = hubFeignClient.readHub(product.getHubId());
+      isValidManager(userId, hubDto.getUserId());
+    } else if (role.equals("COMPANY_MANAGER")) {
+      CompanyDto companyDto = companyFeignClient.readCompany(product.getCompanyId());
+      isValidManager(userId, companyDto.getUserId());
     }
 
     product.updateProductUsingRequest(request);
@@ -112,9 +120,9 @@ public class ProductService {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
-    if (role.equals("ROLE_HUB_MANAGER")) {
-      HubDto hub = hubFeignClient.readHub(product.getHubId());
-      //isValidManager(userId, hub.getUserId());
+    if (role.equals("HUB_MANAGER")) {
+      HubDto hubDto = hubFeignClient.readHub(product.getHubId());
+      isValidManager(userId, hubDto.getUserId());
     }
 
     product.delete(username);
@@ -133,6 +141,12 @@ public class ProductService {
 
   private void isValidManager(UUID userId, UUID managerId) {
     if (!userId.equals(managerId)) {
+      throw new ApplicationException(ErrorCode.FORBIDDEN_EXCEPTION);
+    }
+  }
+
+  private void isValidCompanyByHub(UUID hubId, UUID companyHubId) {
+    if (!hubId.equals(companyHubId)) {
       throw new ApplicationException(ErrorCode.FORBIDDEN_EXCEPTION);
     }
   }
