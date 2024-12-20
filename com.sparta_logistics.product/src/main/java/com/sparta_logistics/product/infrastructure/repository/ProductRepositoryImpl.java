@@ -1,4 +1,4 @@
-package com.sparta_logistics.product.domain.repository;
+package com.sparta_logistics.product.infrastructure.repository;
 
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;

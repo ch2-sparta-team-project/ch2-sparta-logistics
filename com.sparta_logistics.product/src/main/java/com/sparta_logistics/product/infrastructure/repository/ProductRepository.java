@@ -1,9 +1,8 @@
-package com.sparta_logistics.product.domain.repository;
+package com.sparta_logistics.product.infrastructure.repository;
 
 import com.sparta_logistics.product.domain.model.Product;
 import java.util.Optional;
 import java.util.UUID;
-import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

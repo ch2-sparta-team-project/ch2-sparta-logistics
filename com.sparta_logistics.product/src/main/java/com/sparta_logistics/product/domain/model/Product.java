@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -63,5 +62,43 @@ public class Product extends Base {
     this.stock = request.getProductStock();
     this.imageUrl = request.getProductImageUrl();
     this.price = request.getProductPrice();
+  }
+
+  public static Product create(
+      UUID companyId,
+      UUID hubId,
+      String name,
+      Integer stock,
+      String imageUrl,
+      Long price
+  ) {
+    return Product.builder()
+        .companyId(companyId)
+        .hubId(hubId)
+        .name(name)
+        .stock(stock)
+        .imageUrl(imageUrl)
+        .price(price)
+        .build();
+  }
+
+  public static Product createTestProduct(
+      UUID productId,
+      UUID companyId,
+      UUID hubId,
+      String name,
+      Integer stock,
+      String imageUrl,
+      Long price
+  ) {
+    return Product.builder()
+        .id(productId)
+        .companyId(companyId)
+        .hubId(hubId)
+        .name(name)
+        .stock(stock)
+        .imageUrl(imageUrl)
+        .price(price)
+        .build();
   }
 }
