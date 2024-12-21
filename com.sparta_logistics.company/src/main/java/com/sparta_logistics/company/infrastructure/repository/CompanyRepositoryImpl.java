@@ -42,8 +42,7 @@ public class CompanyRepositoryImpl implements CompanyRepositoryCustom{
             company.companyType.as("companyType"),
             company.latitude.as("latitude"),
             company.longitude.as("longitude"),
-            company.phone.as("phone"),
-            company.username.as("username")
+            company.phone.as("phone")
         ))
         .from(company)
         .where(
@@ -54,7 +53,6 @@ public class CompanyRepositoryImpl implements CompanyRepositoryCustom{
             companyNameContains(companySearchRequest.name()),
             companyAddressContains(companySearchRequest.address()),
             companyTypeEq(companySearchRequest.companyType()),
-            companyUsernameContains(companySearchRequest.username()),
             company.deletedAt.isNull()
         )
         .orderBy(sortOrders.toArray(new OrderSpecifier<?>[0]))
@@ -69,23 +67,6 @@ public class CompanyRepositoryImpl implements CompanyRepositoryCustom{
             company.deletedAt.isNull()
         );
     return PageableExecutionUtils.getPage(results, pageable, countQuery::fetchOne);
-  }
-
-  private BooleanExpression companyUsernameContains(String username) {
-    if (username != null && !username.trim().isEmpty()) {
-      // 공백 제거 및 검색어 분리
-      String[] keywords = username.trim().split("\\s+");
-
-      // 각 키워드로 조건 생성
-      BooleanExpression condition = null;
-      for (String keyword : keywords) {
-        BooleanExpression keywordCondition = company.username.containsIgnoreCase(keyword);
-        condition = (condition == null) ? keywordCondition : condition.and(keywordCondition);
-      }
-
-      return condition;
-    }
-    return null;
   }
 
   private BooleanExpression companyIdEq(UUID id) {

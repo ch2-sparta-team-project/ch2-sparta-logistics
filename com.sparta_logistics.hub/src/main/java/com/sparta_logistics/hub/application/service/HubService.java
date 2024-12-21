@@ -18,6 +18,7 @@ import com.sparta_logistics.hub.presentation.response.HubCreateResponse;
 import com.sparta_logistics.hub.presentation.response.HubReadResponse;
 import com.sparta_logistics.hub.presentation.response.HubRouteReadResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -180,5 +181,10 @@ public class HubService {
     return hubRouteRepository.findAll().stream()
         .map(HubRouteReadResponse::buildResponseByEntity)
         .toList();
+  }
+
+  public Boolean isHubExist(String hubId) {
+    Optional<Hub> hub = hubRepository.findById(UUID.fromString(hubId));
+    return hub.isPresent();
   }
 }

@@ -43,7 +43,7 @@ public class CompanyController {
       @RequestBody @Valid CompanyCreateRequest request,
       @AuthenticationPrincipal RequestUserDetails userDetails) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(companyService.createCompany(request, userDetails.getUserId(), userDetails.getUsername()));
+        .body(companyService.createCompany(request, userDetails.getUserId()));
   }
 
   // 업체 목록 조회

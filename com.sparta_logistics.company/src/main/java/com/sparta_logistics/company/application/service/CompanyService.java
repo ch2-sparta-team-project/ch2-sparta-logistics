@@ -12,11 +12,13 @@ import com.sparta_logistics.company.presentation.request.CompanySearchRequest;
 import com.sparta_logistics.company.presentation.request.CompanyUpdateRequest;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -25,7 +27,12 @@ public class CompanyService {
   private final CompanyRepository companyRepository;
   private final HubClient hubClient;
 
-  public CompanyCreateResponse createCompany(CompanyCreateRequest request, String userId, String username) {
+  public CompanyCreateResponse createCompany(CompanyCreateRequest request, String userId) {
+    Boolean hubExist = hubClient.isHubExist(request.hubId().toString());
+    if (!hubExist){
+      log.error("Hub Id : {} 가 존재하지 않습니다.", request.hubId());
+      throw new ApplicationException(ErrorCode.INVALID_VALUE_EXCEPTION);
+    }
     Company company = companyRepository.save(
         Company.createCompany(UUID.fromString(userId),
             request.hubId(),
@@ -34,8 +41,7 @@ public class CompanyService {
             request.companyType(),
             request.latitude(),
             request.longitude(),
-            request.phone(),
-            username));
+            request.phone()));
     return new CompanyCreateResponse(company);
   }
 
@@ -49,6 +55,13 @@ public class CompanyService {
   }
 
   public String updateCompany(CompanyUpdateRequest req, UUID companyId) {
+    if (req.hubId() != null){
+      Boolean hubExist = hubClient.isHubExist(req.hubId().toString());
+      if (!hubExist){
+        log.error("Hub Id : {} 가 존재하지 않습니다.", req.hubId());
+        throw new ApplicationException(ErrorCode.INVALID_VALUE_EXCEPTION);
+      }
+    }
     Company company = companyRepository.findByIdAndDeletedAtIsNull(companyId);
     company.update(req);
     return "업체 정보가 업데이트되었습니다.";

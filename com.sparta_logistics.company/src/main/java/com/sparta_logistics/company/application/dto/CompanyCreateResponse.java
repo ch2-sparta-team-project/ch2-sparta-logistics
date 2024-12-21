@@ -17,8 +17,7 @@ public record CompanyCreateResponse(
     CompanyType companyType,
     Double latitude,
     Double longitude,
-    String phone,
-    String username
+    String phone
 ) {
 
   public CompanyCreateResponse(Company company) {
@@ -29,8 +28,7 @@ public record CompanyCreateResponse(
         company.getCompanyType(),
         company.getLatitude(),
         company.getLongitude(),
-        company.getPhone(),
-        company.getUsername());
+        company.getPhone());
   }
 
 }

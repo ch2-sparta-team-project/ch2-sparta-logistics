@@ -12,7 +12,6 @@ public record CompanySearchRequest (
     UUID hubId,
     String name,
     String address,
-    CompanyType companyType,
-    String username
+    CompanyType companyType
 ){
 }

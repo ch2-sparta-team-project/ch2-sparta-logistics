@@ -43,11 +43,9 @@ public class Company extends BaseEntity{
   private Double longitude;
   @Column(nullable = false)
   private String phone;
-  @Column(nullable = false)
-  private String username;
 
   public static Company createCompany(UUID userId, UUID hubId, String name, String address,
-      CompanyType companyType, Double latitude, Double longitude,  String phone, String username) {
+      CompanyType companyType, Double latitude, Double longitude, String phone) {
     return Company.builder()
         .userId(userId)
         .hubId(hubId)
@@ -57,7 +55,7 @@ public class Company extends BaseEntity{
         .latitude(latitude)
         .longitude(longitude)
         .phone(phone)
-        .username(username).build();
+        .build();
   }
 
   public void update(CompanyUpdateRequest req) {
