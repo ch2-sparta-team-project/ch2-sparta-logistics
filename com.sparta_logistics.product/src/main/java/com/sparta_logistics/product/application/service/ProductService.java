@@ -11,6 +11,7 @@ import com.sparta_logistics.product.infrastructure.dto.HubDto;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
+import com.sparta_logistics.product.presentation.dto.ProductReadDetailResponse;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
 import com.sparta_logistics.product.presentation.dto.ProductSearchRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
@@ -65,11 +66,14 @@ public class ProductService {
     return ProductCreateResponse.of(product.getId());
   }
 
-  public ProductReadResponse readProduct(UUID productId) {
+  public ProductReadDetailResponse readProduct(UUID productId) {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
-    return ProductReadResponse.of(product);
+    HubDto hubDto = hubFeignClient.readHub(product.getHubId());
+    CompanyDto companyDto = companyFeignClient.readCompany(product.getCompanyId());
+
+    return ProductReadDetailResponse.of(product, companyDto, hubDto);
   }
 
   public PagedModel<ProductReadResponse> readProducts(
