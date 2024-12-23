@@ -28,7 +28,6 @@ public class Hub extends BaseEntity {
 
   @Id
   @GeneratedValue
-  @Column(name = "p_hub_id")
   private UUID id;
 
   @Column(nullable = false)

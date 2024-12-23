@@ -24,7 +24,6 @@ import lombok.NoArgsConstructor;
 public class Company extends BaseEntity{
 
   @Id @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "p_company_id")
   private UUID id;
   @Column(nullable = false)
   private UUID userId;
