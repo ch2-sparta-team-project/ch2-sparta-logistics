@@ -1,14 +1,12 @@
 package com.sparta_logistics.company.application.client;
 
-import com.sparta_logistics.company.application.dto.HubReadResponse;
-import java.util.UUID;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "Hub-service")
 public interface HubClient {
 
-  @GetMapping("/{hub_id}")
-  HubReadResponse getHub(@PathVariable(value = "hub_id") UUID hubId);
+  @GetMapping("/api/v1/hubs/exist")
+  Boolean isHubExist(@RequestParam String hubId);
 }

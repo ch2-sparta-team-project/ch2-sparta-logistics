@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RefreshScope
@@ -172,5 +173,11 @@ public class HubController {
   @PostMapping("/temp")
   public UUID generateRandomUUID(){
     return UUID.randomUUID();
+  }
+
+  // feignClient 용 api
+  @GetMapping("/exist")
+  public Boolean isHubExist(@RequestParam String hubId){
+    return hubService.isHubExist(hubId);
   }
 }

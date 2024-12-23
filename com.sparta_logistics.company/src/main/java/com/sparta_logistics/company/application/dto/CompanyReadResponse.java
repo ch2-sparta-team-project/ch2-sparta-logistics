@@ -30,7 +30,6 @@ public class CompanyReadResponse {
   private Double latitude;
   private Double longitude;
   private String phone;
-  private String username;
 
   public static CompanyReadResponse of(Company company){
     return CompanyReadResponse.builder()
@@ -43,7 +42,6 @@ public class CompanyReadResponse {
         .latitude(company.getLatitude())
         .longitude(company.getLongitude())
         .phone(company.getPhone())
-        .username(company.getUsername())
         .build();
   }
 }
