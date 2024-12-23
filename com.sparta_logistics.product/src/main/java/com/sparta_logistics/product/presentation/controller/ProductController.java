@@ -13,9 +13,9 @@ import com.sparta_logistics.product.presentation.dto.RequestUserDetails;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -60,11 +60,11 @@ public class ProductController {
   }
 
   @GetMapping
-  public ResponseEntity<PagedModel<ProductReadResponse>> readProducts(
+  public ResponseEntity<Page<ProductReadResponse>> readProducts(
       ProductSearchRequest request,
       @PageableDefault(size = 10, page = 0) Pageable pageable
   ) {
-    PagedModel<ProductReadResponse> responses = productService
+    Page<ProductReadResponse> responses = productService
         .readProducts(request, pageable);
     return ResponseEntity.ok(responses);
   }

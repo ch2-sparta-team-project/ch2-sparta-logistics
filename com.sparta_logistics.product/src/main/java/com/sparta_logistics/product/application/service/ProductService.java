@@ -1,13 +1,13 @@
 package com.sparta_logistics.product.application.service;
 
 import com.sparta_logistics.product.domain.model.Product;
-import com.sparta_logistics.product.infrastructure.repository.ProductRepository;
 import com.sparta_logistics.product.global.exception.ApplicationException;
 import com.sparta_logistics.product.global.exception.ErrorCode;
 import com.sparta_logistics.product.infrastructure.client.CompanyFeignClient;
 import com.sparta_logistics.product.infrastructure.client.HubFeignClient;
 import com.sparta_logistics.product.infrastructure.dto.CompanyDto;
 import com.sparta_logistics.product.infrastructure.dto.HubDto;
+import com.sparta_logistics.product.infrastructure.repository.ProductRepository;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
@@ -76,17 +76,17 @@ public class ProductService {
     return ProductReadDetailResponse.of(product, companyDto, hubDto);
   }
 
-  public PagedModel<ProductReadResponse> readProducts(
+  public Page<ProductReadResponse> readProducts(
       ProductSearchRequest request,
       Pageable pageable
   ) {
-    return toPagedModel(productRepository.findAll(
+    return productRepository.findAll(
         request.getIds(),
         request.getName(),
         request.getOutOfStock(),
         request.getMinPrice(),
         request.getMaxPrice(),
-        pageable));
+        pageable);
   }
 
   @Transactional
