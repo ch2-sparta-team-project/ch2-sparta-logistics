@@ -1,16 +1,17 @@
 package com.sparta_logistics.product.application.service;
 
 import com.sparta_logistics.product.domain.model.Product;
-import com.sparta_logistics.product.infrastructure.repository.ProductRepository;
 import com.sparta_logistics.product.global.exception.ApplicationException;
 import com.sparta_logistics.product.global.exception.ErrorCode;
 import com.sparta_logistics.product.infrastructure.client.CompanyFeignClient;
 import com.sparta_logistics.product.infrastructure.client.HubFeignClient;
 import com.sparta_logistics.product.infrastructure.dto.CompanyDto;
 import com.sparta_logistics.product.infrastructure.dto.HubDto;
+import com.sparta_logistics.product.infrastructure.repository.ProductRepository;
 import com.sparta_logistics.product.presentation.dto.ProductCreateRequest;
 import com.sparta_logistics.product.presentation.dto.ProductCreateResponse;
 import com.sparta_logistics.product.presentation.dto.ProductDeleteResponse;
+import com.sparta_logistics.product.presentation.dto.ProductReadDetailResponse;
 import com.sparta_logistics.product.presentation.dto.ProductReadResponse;
 import com.sparta_logistics.product.presentation.dto.ProductSearchRequest;
 import com.sparta_logistics.product.presentation.dto.ProductUpdateRequest;
@@ -65,24 +66,27 @@ public class ProductService {
     return ProductCreateResponse.of(product.getId());
   }
 
-  public ProductReadResponse readProduct(UUID productId) {
+  public ProductReadDetailResponse readProduct(UUID productId) {
     Product product = productRepository.findById(productId)
         .orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_EXCEPTION));
 
-    return ProductReadResponse.of(product);
+    HubDto hubDto = hubFeignClient.readHub(product.getHubId());
+    CompanyDto companyDto = companyFeignClient.readCompany(product.getCompanyId());
+
+    return ProductReadDetailResponse.of(product, companyDto, hubDto);
   }
 
-  public PagedModel<ProductReadResponse> readProducts(
+  public Page<ProductReadResponse> readProducts(
       ProductSearchRequest request,
       Pageable pageable
   ) {
-    return toPagedModel(productRepository.findAll(
+    return productRepository.findAll(
         request.getIds(),
         request.getName(),
         request.getOutOfStock(),
         request.getMinPrice(),
         request.getMaxPrice(),
-        pageable));
+        pageable);
   }
 
   @Transactional
